@@ -1,0 +1,31 @@
+---
+version: '3.7'
+services:
+    mysql:
+        image: mysql:8.0.28
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: 'wichacks'
+            MYSQL_USER: 'sir_hacksalot'
+            MYSQL_PASSWORD: 'hallie-i-promise-i-know-a-couple-security-things'
+            MYSQL_ROOT_PASSWORD: 'but-today-is-not-the-day-for-good-security'
+        volumes:
+            - ./mysql-data:/var/lib/mysql
+    api:
+        build: ./api
+        restart: always
+        expose:
+            - "5000"
+    ui:
+       build: ./ui
+       restart: always
+       expose:
+            - "3000"
+    load-balancer:
+        build: ./loadBalancer
+        ports:
+            - "80:80"
+        restart: always
+
