@@ -11,16 +11,13 @@ from api.dms import Dms
 from api.login import Login
 from db.migration import migration
 import logging
-#from tests.db.seed_sql import seed_tables
-#from tests.db.test_chat import rebuildTables
-#from db.chat import update_user
 
 logger = logging.getLogger("server")
 
 app = Flask(__name__)
 app.config['BUNDLE_ERRORS'] = True
 api = Api(app)
-cors = CORS(app)
+cors = CORS(app)  # , resources={r"/*": {"origins": "localhost:3000"}}
 
 api.add_resource(Healthcheck, '/')
 
