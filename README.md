@@ -27,3 +27,6 @@ Below is a **non-exhaustive** list of everything that will need updating for thi
 ## License
 
 This software is provided under the MIT License. See [LICENSE](./LICENSE)
+
+## New Section
+These are new changes
