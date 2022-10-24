@@ -4,7 +4,7 @@ export const localAxios = axios.create(
     {
         proxy: {
             protocol: 'http',
-            host: 'localhost',
+            host: 'api',
             port: 8080
         }
     }

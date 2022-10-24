@@ -1,1 +1,6 @@
 flask
+auth0-python
+python-dotenv
+flask-cors
+flask-restful
+mysql-connector-python

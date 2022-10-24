@@ -22,9 +22,9 @@ class Users(Resource):
         return "User Successfully Created", 200
 
     def get(self):
-        auth_id = request.args.get('id')
+        user_id = request.args.get('id')
 
-        userInfo = getUser(auth_id)
+        userInfo = getUser(user_id)
 
         if userInfo is None:
             return "User Not Found", 400
