@@ -45,6 +45,7 @@ def up() -> bool:
         upScripts.append(file)
     upScripts.sort()
     logger.info("Upscripts Found: %s", upScripts)
+    ifExecutedUpdates = False
     for script in upScripts:
         # Safely Get Version
         versionList = script.split(sep='/')
@@ -57,6 +58,7 @@ def up() -> bool:
 
         # If newer than current version, execute
         if scriptVersion > version:
+            ifExecutedUpdates = True
             logger.info("Executing: %s", script)
             if db_utils.exec_migration(scriptVersion):
                 # migration successful
@@ -66,8 +68,10 @@ def up() -> bool:
                 return False
 
     # Migrations Successful
-    logger.info(
-        "Database up migration successful. Currently at version %s", version)
+    if ifExecutedUpdates:
+        logger.info("Database up migration successful. Currently at version %s", version)
+    else:
+        logger.info("Database is up to date. Currently at version %s", version)
     return True
 
 
