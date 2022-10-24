@@ -19,6 +19,7 @@ function App() {
         domain="wichacks.us.auth0.com"
         clientId="oTpWdnroYxfqQrprklhfXTGxIK5Vn8Df"
         redirectUri={`${window.location.origin}/auth`}
+        audience='wichacks.io'
         onRedirectCallback={onRedirectCallback}
       >
         <AppRoutes />

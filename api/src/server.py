@@ -8,11 +8,13 @@ from controller.test import Test
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
+from utils.authErrorHandler import handle_auth_error
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("server")
 
 app = Flask(__name__)
+app.register_error_handler(401, handle_auth_error)
 app.config['BUNDLE_ERRORS'] = True
 api = Api(app)
 cors = CORS(app)  # , resources={r"/*": {"origins": "localhost:3000"}}

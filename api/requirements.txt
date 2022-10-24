@@ -4,3 +4,5 @@ python-dotenv
 flask-cors
 flask-restful
 mysql-connector-python
+python-jose
+six
