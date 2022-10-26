@@ -1,7 +1,7 @@
 import {Route, Outlet, useLocation, Navigate} from "react-router-dom";
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react";
 
-export const ProtectedComponenet = ({component, ...args}) => {
+export const ProtectedComponent = ({component, ...args}) => {
     const { loginWithRedirect } = useAuth0();
     const location = useLocation().pathname;
     console.log(location);
