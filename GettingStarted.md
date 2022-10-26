@@ -27,7 +27,7 @@ If you're a Mac user, don't look any further, it's a pretty simple setup, and wo
 2. Clone this repository
 3. Build and run
 
-#### 1 - Installing Docker
+### 1 - Installing Docker
 
 Docker is a containerization platform which allows you to run a lot of services(like with what we're building) quite easily. While it does much more, this is why we are utilizing it
 
@@ -44,7 +44,7 @@ Docker is a containerization platform which allows you to run a lot of services(
 
 **SIGNIFICANT NOTE:** You will need to keep Docker running while you are working on this project. Without it, running docker containers will fail
 
-#### 2 - Clone this repository
+### 2 - Clone this repository
 
 This step is easy! If you are comfortable using the git CLI, you may do so. If not, open up Github Desktop, and let's get started.
 
@@ -57,7 +57,7 @@ This step is easy! If you are comfortable using the git CLI, you may do so. If n
 **Repository URL:**
 `https://github.com/Women-in-Computing-at-RIT/WicHacker-Manager`
 
-#### 3 - Build and run
+### 3 - Build and run
 
 Finally! You have the code, and everything you need to run it! The next part is super easy!
 
@@ -74,4 +74,61 @@ Finally! You have the code, and everything you need to run it! The next part is 
 5. It should be running! You can test this by visiting `localhost:3000` in your browser window, and you should be greeted with plaintext! If not, time to troubleshoot. Please share error messages if you would like help
 6. When you're done, you'll want to stop the docker container so it stops using resources. You can either `ctrl+c` out of the process if you're still running it, or if it's been lost, you can run `docker-compose down` and it will stop itself! 
 
-**TODO**: Add Windows directions
+## Windows
+
+PC User? We've got you covered! For simplicities sake, make sure you install Visual Studio Code and Github Desktop. Directions will not be written without these
+
+### Steps 
+
+1. Install all the things
+2. Clone repository
+3. Build and run
+
+### 1 - Installing all the things
+
+**IF YOU HAVE THESE THINGS INSTALLED ALREADY, DO NOT REINSTALL THEM. YOUR CURRENT INSTALLATION WILL WORK**
+
+#### Git
+
+Windows does not come with git. Download the exe from [git's official site](https://git-scm.com/download/win), and launch it. Please note:
+
+- Adjusting your PATH Environment: Choose *Git from the command line and also 3rd party software*. This allows GH Desktop and VSCode to utilize it
+
+Everything else should be able to be left to default.
+
+#### WSL 
+
+WSL, or Window's Subsystem for Linux(backwardly defined, oddly enough), is a way to run unix-y commands on Windows, which typically operates with Microsoft's own PowerShell. Docker, which our project heavily relies on, requires WSL to work. Therefore, we'll install it ahead of time to prevent it from causing any issues later
+
+I personally do not feel comfortable giving out install advice for this. Please see [Microsoft's Official Installation Guide]() to get started. 
+
+I installed Ubuntu, and did not have any issues at all. 
+
+If you want to trust me, you can just run `wsl --install` in Command Prompt, so long as it is running as administrator(right click when you launch it)
+
+#### Docker
+
+Docker is a containerization platform which allows you to run a lot of services(like with what we're building) quite easily. While it does much more, this is why we are utilizing it
+
+1. Navigate to [the docker download page](https://docs.docker.com/engine/install/) and click the `Docker Download for Windows` button
+2. Once it's downloaded, run the .exe file, clicking to allow changes. Again, Docker is a trusted source
+3. Click install, and wait for it to do it's thing. When it's done, it will notify you, and ask you to log out, and or restart. Go ahead and let it do that
+4. When you log back in, docker will automatically launch, and will start spinning. Give it a moment as it starts up, and eventually, you will see a tutorial. You are welcome to skip it.
+5. If you are successful, Docker's app should have a green bar in the bottom left corner. If not, it's time to troubleshoot. Make sure to include all screenshots and error messages applicable
+
+### 2 - Clone repository
+
+Feel free to follow the directions below, which utilize GH Desktop, or, if you're comfortable, you can clone it any other way you would like. Please note, using Github Desktop will likely make your life easier later.
+
+1. In the top left corner of GH Desktop, click the down arrow, then click "Add"
+2. This will prompt you if you would like to Clone, add new, or add existing. Select "Clone Repository..."
+3. In the popup that appears, click into the "URL" tab
+4. Paste in the URL to this directory into the URL box, and select the path you would like GH Desktop to clone it to
+5. Click clone! Done!
+
+**Repository URL:**
+`https://github.com/Women-in-Computing-at-RIT/WicHacker-Manager`
+
+### 3 - Build and run
+
+ruh roh scoby
