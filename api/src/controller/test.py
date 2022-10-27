@@ -1,9 +1,10 @@
 from flask_restful import Resource, reqparse
 from flask import request
-from data.users import createUser, getUser
 from utils.authentication import authenticate, getAuthToken
 
 class Test(Resource):
+
+    PATH = '/userTest/<id>'
     def get(self, id):
         print("user_id: " + id)
 
