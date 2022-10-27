@@ -13,16 +13,26 @@ services:
             MYSQL_ROOT_PASSWORD: 'but-today-is-not-the-day-for-good-security'
         volumes:
             - ./mysql-data:/var/lib/mysql
+            - ./mysqlStartupScripts/createMigrationTable.sql:/docker-entrypoint-initdb.d/0_init.sql
     api:
-        build: ./api
+        image: wichacks-api:latest
         restart: always
-        expose:
-            - "5000"
+        ports:
+            - "8080:8080"
+            - "5001:5000"
+        environment:
+            DBNAME: 'wichacks'
+            HOST: 'mysql'
+            PORT: '3306'
+            DB_USER: 'sir_hacksalot'
+            PASSWORD: 'hallie-i-promise-i-know-a-couple-security-things'
+            AUTH0_DOMAIN: 'wichacks.us.auth0.com'
+            AUTH0_CLIENT_ID: 'oTpWdnroYxfqQrprklhfXTGxIK5Vn8Df'
     ui:
-       build: ./ui
+       image: wichacks-ui:latest
        restart: always
-       expose:
-            - "3000"
+       ports:
+            - "3000:3000"
     load-balancer:
         build: ./loadBalancer
         ports:
