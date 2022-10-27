@@ -2,6 +2,8 @@
 
 > Your introduction to working on this project
 
+**Authors**: Hallie(ha1lie), _______________________
+
 ## Where to start?
 
 Looking at this repository, it might feel a bit overwhelming. Don't fret, below is a simple step-by-step guide to getting up and running! Start with whatever operating system you have!
@@ -131,4 +133,19 @@ Feel free to follow the directions below, which utilize GH Desktop, or, if you'r
 
 ### 3 - Build and run
 
-ruh roh scoby
+Running programs on Windows devices is often a little bit different than other platforms due to Powershell, Microsoft's version of bash, or zsh, often used in unix systems. To eliminate some of these issues, we'll be utilizing the fact that installing git also install's git's copy of bash, allowing us to run scripts used for other platforms. 
+
+Below are instructions for completing this using Visual Studio Code, since it is the platform I am most comfortable with. If you'd prefer, you're welcome to use another shell, but this will detail opening a bash shell as well
+
+1. Open the project in VSCode
+2. In the menu bar, go to "Terminal" -> "New Terminal" and you will see a Powershell terminal open at the bottom of your window
+3. On the top bar of the terminal section, click on the down arrow next to the "+" symbol
+4. Click on "Git Bash". You'll see new colors in the terminal window, a different prompt ("$"), and on the right side you will see powershell and bash listed. From here on out you'll want to make sure bash is selected.
+5. Run the command `./rebuildDockerImages.sh`. This will create a docker image. The first time you run it this may take a while
+6. Run `docker-compose up`. This will start the docker container. It may end with errors(this will be fixed eventually), but everything should be up and running. 
+
+Yay! Let's test this progress. Go to `localhost:3000` in your browser window, and you should see "WiCHacks Landing Page" in your browser window. If so, success! If not, it's time to do some trouble shooting, make sure to share all applicable error messages. 
+
+## Finally!
+
+Nice! Now it's time to get to work! You're prepared to be absolute STEM ROYALTY!
