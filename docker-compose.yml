@@ -18,7 +18,6 @@ services:
         image: wichacks-api:latest
         restart: always
         ports:
-            - "8080:8080"
             - "5001:5000"
         environment:
             DBNAME: 'wichacks'
@@ -32,10 +31,11 @@ services:
        image: wichacks-ui:latest
        restart: always
        ports:
-            - "3000:3000"
-    load-balancer:
-        build: ./loadBalancer
-        ports:
-            - "80:80"
-        restart: always
+            - "80:3000"
+# Comment out Load Balancer for now
+#    load-balancer:
+#        build: ./loadBalancer
+#        ports:
+#            - "80:80"
+#        restart: always
 
