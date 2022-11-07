@@ -26,5 +26,9 @@ jobs:
           pip install -r requirements.txt
       - name: Test with pytest
         run: |
+          pwd
+          ls
           cd src
-          pytest
+          pwd
+          ls
+          python -m pytest
