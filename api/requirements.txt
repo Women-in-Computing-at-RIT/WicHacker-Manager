@@ -6,3 +6,4 @@ flask-restful
 mysql-connector-python
 python-jose
 six
+pytest

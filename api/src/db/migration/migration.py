@@ -16,10 +16,12 @@ def initializeMigrations() -> bool:
     """
     global version
     global dirtyVersion
-    (version, dirtyVersion) = getCurrentMigration()
+    migrationInformation = getCurrentMigration()
+    version = migrationInformation["version"]
+    dirtyVersion = migrationInformation["dirtyVersion"]
     return not dirtyVersion
 
-def getCurrentMigration() -> (str, bool):
+def getCurrentMigration() -> dict:
     sql = "SELECT version, dirtyVersion FROM Migrations ORDER BY version DESC LIMIT 1;"
     migrationInformation = db_utils.exec_get_one(sql)
     if migrationInformation is None:
@@ -35,7 +37,9 @@ def up() -> bool:
         print(file)
 
     # get current state of migrations
-    (version, dirtyVersion) = getCurrentMigration()
+    migrationInformation = getCurrentMigration()
+    version = migrationInformation["version"]
+    dirtyVersion = migrationInformation["dirtyVersion"]
 
     if dirtyVersion:
         return False
@@ -80,7 +84,9 @@ def down(rollbackNumber=1) -> bool:
     global dirtyVersion
 
     # get current state of migrations
-    (version, dirtyVersion) = getCurrentMigration()
+    migrationInformation = getCurrentMigration()
+    version = migrationInformation["version"]
+    dirtyVersion = migrationInformation["dirtyVersion"]
 
     if dirtyVersion:
         return False
