@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Users(
     pronouns VARCHAR(63) NOT NULL,
     address_id INT,
     application_id INT,
-    is_virtual BOOLEAN NOT NULL,
+    is_virtual BOOLEAN,
     sponsor_id INT,
     status_id ENUM('APPLIED', 'ACCEPTED', 'REJECTED', 'CONFIRMED') DEFAULT NULL,
     PRIMARY KEY (user_id)

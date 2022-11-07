@@ -1,9 +1,8 @@
-import db_utils
+import os
+
+import db.db_utils as db_utils
 import glob
 import logging
-
-FORMAT = '%(level)s %(asctime)s %(message)s %(err)s %(migrationFile)s'
-logging.basicConfig(format=FORMAT)
 logger = logging.getLogger("Migrations")
 
 version = None
@@ -11,34 +10,61 @@ dirtyVersion = False
 
 
 def initializeMigrations() -> bool:
+    """
+    Checks if current version is dirty, returns True if version is clean
+    :return:
+    """
     global version
     global dirtyVersion
-    sql = "SELECT version, dirtyVersion FROM migrations WHERE migration_id=1;"
-    (version, dirtyVersion) = db_utils.exec_get_one(sql)
-    return dirtyVersion
+    migrationInformation = getCurrentMigration()
+    version = migrationInformation["version"]
+    dirtyVersion = migrationInformation["dirtyVersion"]
+    return not dirtyVersion
 
+def getCurrentMigration() -> dict:
+    sql = "SELECT version, dirtyVersion FROM Migrations ORDER BY version DESC LIMIT 1;"
+    migrationInformation = db_utils.exec_get_one(sql)
+    if migrationInformation is None:
+        logger.error("Migration Information is None")
+        return None, True
+    return migrationInformation
 
 def up() -> bool:
     global version
     global dirtyVersion
+
+    for file in glob.glob("**.up.sql"):
+        print(file)
+
+    # get current state of migrations
+    migrationInformation = getCurrentMigration()
+    version = migrationInformation["version"]
+    dirtyVersion = migrationInformation["dirtyVersion"]
+
+    if dirtyVersion:
+        return False
+
     upScripts = []
-    for file in glob.glob("scripts/*.up.sql"):
+    for file in glob.glob("src/db/migration/scripts/*.up.sql"):
         upScripts.append(file)
     upScripts.sort()
+    logger.info("Upscripts Found: %s", upScripts)
+    ifExecutedUpdates = False
     for script in upScripts:
         # Safely Get Version
-        versionList = script.split()
-        if len(versionList) != 2:
-            logInfo = {"level": "CRITICAL", "err": None, "migrationFile": script}
+        versionList = script.split(sep='/')
+        if len(versionList) != 5:
             logger.error(
-                "Migration File Format Incorrect. Aborting Further Migration, shut down application to avoid conflicts",
-                extra=logInfo)
+                "Migration File Format or Location Incorrect. Aborting Further Migration, shut down application to avoid conflicts"
+                "\nmigrationFile:%s", script)
             return False
-        scriptVersion = versionList[1]
+        scriptVersion = versionList[4]
 
         # If newer than current version, execute
         if scriptVersion > version:
-            if db_utils.exec_migration(script):
+            ifExecutedUpdates = True
+            logger.info("Executing: %s", script)
+            if db_utils.exec_migration(scriptVersion):
                 # migration successful
                 version = scriptVersion
             else:
@@ -46,32 +72,41 @@ def up() -> bool:
                 return False
 
     # Migrations Successful
-    logInfo = {"level": "INFO", "err": None, "migrationFile": None}
-    logger.error(
-        "Database up migration successful. Currently at version %s", version, extra=logInfo)
+    if ifExecutedUpdates:
+        logger.info("Database up migration successful. Currently at version %s", version)
+    else:
+        logger.info("Database is up to date. Currently at version %s", version)
     return True
 
 
 def down(rollbackNumber=1) -> bool:
     global version
     global dirtyVersion
+
+    # get current state of migrations
+    migrationInformation = getCurrentMigration()
+    version = migrationInformation["version"]
+    dirtyVersion = migrationInformation["dirtyVersion"]
+
+    if dirtyVersion:
+        return False
+
     downScripts = []
-    for file in glob.glob("scripts/*.down.sql"):
+    for file in glob.glob("db/migration/scripts/*.up.sql"):
         downScripts.append(file)
     downScripts.sort(reverse=True)
     for idx in range(rollbackNumber):
         script = downScripts[idx]
         # Safely Get Version
-        versionList = script.split()
-        if len(versionList) != 2:
-            logInfo = {"level": "CRITICAL", "err": None, "migrationFile": script}
+        versionList = script.split(sep='/')
+        if len(versionList) != 4:
             logger.error(
-                "Migration File Format Incorrect. Aborting Further Migration, shut down application to avoid conflicts",
-                extra=logInfo)
+                "Migration File Format or Location Incorrect. Aborting Further Migration, shut down application to avoid conflicts"
+                "\nmigrationFile:%s", script)
             return False
-        scriptVersion = versionList[1]
+        scriptVersion = versionList[3]
 
-        if db_utils.exec_migration(script):
+        if db_utils.exec_migration(scriptVersion):
             # migration successful
             version = scriptVersion
         else:
@@ -79,7 +114,6 @@ def down(rollbackNumber=1) -> bool:
             return False
 
     # Migrations Successful
-    logInfo = {"level": "INFO", "err": None, "migrationFile": None}
     logger.error(
-        "Database down migration successful. Currently at version %s", version, extra=logInfo)
+        "Database down migration successful. Currently at version %s", version)
     return True
