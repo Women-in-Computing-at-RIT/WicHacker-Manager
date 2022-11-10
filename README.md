@@ -7,11 +7,12 @@ A hackathon manager homegrown by the WiCHacks Committee, allowing us to run an [
 Below is a **non-exhaustive** list of everything that will need updating for this product to be considered "working". *Note*: This 
 
 - [x] Update README.md
-- [ ] Write out [GettingStarted.md](./GettingStarted.md) with a guide to setup your development environment
+- [x] Write out [GettingStarted.md](./GettingStarted.md) with a guide to setup your development environment
 - [ ] Finish stubbing out this to do list
 
 ### Front End
 
+- [ ] Landing page
 - [ ] Create registration form
 - [ ] Build out admin view
 - [ ] ----Registrant View
@@ -21,7 +22,7 @@ Below is a **non-exhaustive** list of everything that will need updating for thi
     
 ### Back End
 
-- [ ] Registration submission 
+- [ ] Registration submission
 - [ ] Email routes
 
 ## License

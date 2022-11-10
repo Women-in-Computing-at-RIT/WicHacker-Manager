@@ -3,3 +3,4 @@
 .vscode
 **/.DS_Store
 **/__pycache__
+mysql-data/
