@@ -29,3 +29,4 @@ def test_get_user(mock_db_exec, client):
     # Validate
     assert response.status_code == 200
     assert json.loads(response.data)["first_name"] == "Lenny"
+
