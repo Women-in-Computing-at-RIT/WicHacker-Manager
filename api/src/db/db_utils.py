@@ -9,7 +9,6 @@ logger = logging.getLogger("DB_Utils")
 
 
 def connect():
-    print(os.environ.get('DB_USER'))
     try:
         return mysql.connect(database=os.environ.get('DBNAME'),
                          user=os.environ.get('DB_USER'),
@@ -58,7 +57,7 @@ def exec_get_one(sql, args={}):
     conn = connect()
     if conn is None:
         return None
-    cur = conn.cursor()
+    cur = conn.cursor(dictionary=True)
     try:
         cur.execute(sql, args)
         one = cur.fetchone()
@@ -77,14 +76,13 @@ def exec_get_all(sql, args={}):
     conn = connect()
     if conn is None:
         return None
-    cur = conn.cursor()
+    cur = conn.cursor(dictionary=True)
     try:
         cur.execute(sql, args)
-
-        list_of_tuples = cur.fetchall()
+        results = cur.fetchall()
         cur.close()
         conn.close()
-        return list_of_tuples
+        return results
     except Exception as error:
         logger.error("SQL Execution Error: %s", error)
         conn.rollback()
@@ -105,6 +103,31 @@ def exec_commit(sql, args={}):
         conn.commit()
         conn.close()
         return result
+    except Exception as error:
+        logger.error("SQL Execution Error: %s", error)
+        conn.rollback()
+        cur.close()
+        conn.close()
+        return None
+
+
+def exec_commit_return_autoincremented_id(sql, args={}):
+    conn = connect()
+    if conn is None:
+        return None
+    cur = conn.cursor()
+    try:
+        cur.execute(sql, args)
+        # LAST_INSERT_ID is connection dependent so will not be impacted by writes on other connections
+        # https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_last-insert-id
+        cur.execute("SELECT LAST_INSERT_ID();")
+        one = cur.fetchone()
+        cur.close()
+        conn.close()
+        if len(one) != 1:
+            logger.error("LAST_INSERT_ID returned no values")
+            raise Exception("LAST_INSERT_ID returned no values")
+        return one.get(0)
     except Exception as error:
         logger.error("SQL Execution Error: %s", error)
         conn.rollback()
