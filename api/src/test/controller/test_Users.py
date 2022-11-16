@@ -5,7 +5,7 @@ from flask import Flask
 from flask_restful import Api
 import json
 
-from controller.users import User
+from controller.user import User
 
 
 @pytest.fixture

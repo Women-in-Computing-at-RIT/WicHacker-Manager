@@ -10,7 +10,7 @@ class Test(Resource):
 
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
-            return "Authorization Header Failure", 401
-        return "Successfully authenticated", 200
+            return {"message": "Authorization Header Failure"}, 401
+        return {"message": "Successfully authenticated"}, 200
 
 

@@ -123,11 +123,12 @@ def exec_commit_return_autoincremented_id(sql, args={}):
         cur.execute("SELECT LAST_INSERT_ID();")
         one = cur.fetchone()
         cur.close()
+        conn.commit()
         conn.close()
         if len(one) != 1:
             logger.error("LAST_INSERT_ID returned no values")
             raise Exception("LAST_INSERT_ID returned no values")
-        return one.get(0)
+        return one[0]
     except Exception as error:
         logger.error("SQL Execution Error: %s", error)
         conn.rollback()
