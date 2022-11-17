@@ -1,4 +1,8 @@
 # Testing Dev Notes #
+* Tests must be run from /src directory
+  * Run tests using 'python3 -m pytest'
+  * Can also use runUnitTests.sh script
+  * Running from /src directory allows mock routes to be standardized
 * I know the controller unit tests are not true unit tests
   * Feel free to refactor these later
   * It was quicker on initial development to do quasi integration tests than full unit tests for everything
