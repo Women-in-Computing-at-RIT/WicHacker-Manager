@@ -23,8 +23,8 @@ def initializeMigrations() -> bool:
 
 def getCurrentMigration() -> dict:
     sql = "SELECT version, dirtyVersion FROM Migrations ORDER BY version DESC LIMIT 1;"
-    migrationInformation = db_utils.exec_get_one(sql)
-    if migrationInformation is None:
+    migrationInformation, didError = db_utils.exec_get_one(sql)
+    if migrationInformation is None or didError:
         logger.error("Migration Information is None")
         return None, True
     return migrationInformation

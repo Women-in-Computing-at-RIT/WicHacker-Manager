@@ -1,6 +1,8 @@
-import {localAxios} from "../config/axios";
+import {localAxios} from "../../config/axios";
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
+import {useNavigate} from "react-router-dom";
+import {Button, Grommet} from "grommet";
 
 const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
     const token = await getAccessTokenSilently({
@@ -25,6 +27,11 @@ export default function HackathonManagerLandingPage() {
         callApi(getAccessTokenSilently, setUserResponse, user.sub)
     }, [])
 
+    let navigate = useNavigate()
+    const onClickNavigate = (path) => {
+        navigate(path)
+    }
+
     let display;
     if (userResponse?.error){
         console.log(userResponse.error)
@@ -37,10 +44,13 @@ export default function HackathonManagerLandingPage() {
     }
 
     return (
-        <div>
-            <h1>WiCHacks HM Landing</h1>
-            <h3>Hello {user.name}</h3>
-            {display}
-        </div>
+        <Grommet>
+            <div>
+                <h1>WiCHacks HM Landing</h1>
+                <h3>Hello {user.name}</h3>
+                {display}
+                <Button label="Applications" onClick={() => {onClickNavigate("/manage/applications")}}/>
+            </div>
+        </Grommet>
     );
 }

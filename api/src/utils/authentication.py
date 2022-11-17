@@ -4,7 +4,7 @@ from functools import wraps
 from .authErrorHandler import AuthError
 
 from flask import _request_ctx_stack
-from jose import jwt
+from jose import jwt, JWTError
 from auth0.v3.authentication.token_verifier import TokenVerifier, AsymmetricSignatureVerifier, TokenValidationError
 import os
 
@@ -36,9 +36,20 @@ def getAuthToken(headers):
 
 def authenticate(headers):
     token = getAuthToken(headers)
+    if token is None:
+        raise AuthError({"code": "invalid_header",
+                         "description":
+                             "Authentication Token Format Incorrect"}, 401)
     jsonurl = urlopen("https://" + domain + "/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
-    unverified_header = jwt.get_unverified_header(token)
+    unverified_header = None
+    try:
+        unverified_header = jwt.get_unverified_header(token)
+    except JWTError:
+        raise AuthError({"code": "invalid_header",
+                         "description":
+                             "Unable to decode authentication"
+                             " token."}, 401)
     rsa_key = {}
     for key in jwks["keys"]:
         if key["kid"] == unverified_header["kid"]:
@@ -72,7 +83,6 @@ def authenticate(headers):
                                  "Unable to parse authentication"
                                  " token."}, 401)
 
-        print(payload)
         _request_ctx_stack.top.current_user = payload
         return payload
     raise AuthError({"code": "invalid_header",

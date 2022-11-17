@@ -1,32 +1,36 @@
-from unittest.mock import Mock, patch
-
-import pytest
-from flask import Flask
-from flask_restful import Api
+from unittest.mock import patch
 import json
 
-from controller.users import User
+
+from controller.users import Users
+
+# client imported for side effects
+from test.testSetupHelper import client
 
 
-@pytest.fixture
-def client():
-    app = Flask(__name__)
-    api = Api(app)
-    api.add_resource(User, User.PATH, endpoint="user")
-    api.add_resource(User, User.PATH_WITH_ID, endpoint="user_with_id")
-    return app.test_client()
-
-
-@patch('data.users.exec_get_one')
-def test_get_user(mock_db_exec, client):
+@patch('controller.user.authenticate')
+@patch('data.users.exec_get_all')
+def test_get_users_successfully(mock_db_exec, mock_authenticate, client):
     # mock object responses
-    mock_db_exec.return_value = {"user_id": 5, "first_name": "Lenny"}
+    mock_db_exec.return_value = [{"user_id": 5, "first_name": "Lenny"}]
+    mock_authenticate.return_value = {"sub": "testAuth0ID"}
 
     # call endpoint
-    print(User.PATH_WITH_ID.replace("<user_id>", "1"))
-    response = client.get(User.PATH_WITH_ID.replace("<id>", "1"))
+    response = client.get(Users.PATH)
 
     # Validate
     assert response.status_code == 200
-    assert json.loads(response.data)["first_name"] == "Lenny"
+    assert json.loads(response.data)[0]["first_name"] == "Lenny"
 
+@patch('controller.user.authenticate')
+@patch('data.users.exec_get_all')
+def test_get_users_failed(mock_db_exec, mock_authenticate, client):
+    # mock object responses
+    mock_db_exec.return_value = None
+    mock_authenticate.return_value = {"sub": "testAuth0ID"}
+
+    # call endpoint
+    response = client.get(Users.PATH)
+
+    # Validate
+    assert response.status_code == 400

@@ -1,4 +1,7 @@
-from flask import jsonify
+from flask import jsonify, make_response
+import logging
+
+logger = logging.getLogger("AuthError")
 
 
 # Error handler
@@ -9,6 +12,8 @@ class AuthError(Exception):
 
 
 def handle_auth_error(ex):
-    response = jsonify(ex.error)
-    response.status_code = ex.status_code
+    logger.error(ex.error)
+    response = make_response(jsonify(ex.error), 401)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
     return response
