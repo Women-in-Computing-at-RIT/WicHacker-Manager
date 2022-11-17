@@ -53,23 +53,29 @@ def exec_migration(version) -> bool:
     return True
 
 
-def exec_get_one(sql, args={}):
+def exec_get_one(sql, args={}) -> (dict, bool):
+    """
+    return tuple with first element being return dictionary, second being if error occurred
+    :param sql:
+    :param args:
+    :return:
+    """
     conn = connect()
     if conn is None:
-        return None
+        return None, True
     cur = conn.cursor(dictionary=True)
     try:
         cur.execute(sql, args)
         one = cur.fetchone()
         cur.close()
         conn.close()
-        return one
+        return one, False
     except Exception as error:
         logger.error("SQL Execution Error: %s", error)
         conn.rollback()
         cur.close()
         conn.close()
-        return None
+        return None, True
 
 
 def exec_get_all(sql, args={}):

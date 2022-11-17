@@ -56,4 +56,9 @@ def getUserById(auth_id=None, user_id=None) -> dict:
         sql += "WHERE u.user_id = %s"
         args = args + (user_id,)
 
-    return exec_get_one(sql, args)
+    userData, didError = exec_get_one(sql, args)
+    if didError:
+        return None
+    elif userData is None:
+        return {}
+    return userData

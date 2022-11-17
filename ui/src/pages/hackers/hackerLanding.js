@@ -17,8 +17,7 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) =
                 return
             }
             setUserResponse({data: await response.data, error: null})
-        }).catch(async (error) => {
-        console.log(await error.response)
+        }).catch(async () => {
         setUserResponse({data: null, error: true})
     })
 }
@@ -29,13 +28,12 @@ export default function UserHomepage() {
     const {getAccessTokenSilently} = useAuth0();
 
     useEffect(() => {
-        getUserData(getAccessTokenSilently, setUserData, setNewUser())
+        getUserData(getAccessTokenSilently, setUserData, setNewUser)
     }, [])
 
     let navigate = useNavigate()
     if (newUser){
         navigate("/user/create")
-        // redirect to account creation
     }
     const navigateToPage = (path) => {
         navigate(path)

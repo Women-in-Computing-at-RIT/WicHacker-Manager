@@ -83,7 +83,6 @@ def authenticate(headers):
                                  "Unable to parse authentication"
                                  " token."}, 401)
 
-        print(payload)
         _request_ctx_stack.top.current_user = payload
         return payload
     raise AuthError({"code": "invalid_header",

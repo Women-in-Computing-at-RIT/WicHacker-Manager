@@ -1,8 +1,12 @@
+import logging
+
 from flask_restful import Resource, reqparse
 from flask import request
 from data.users import createUser, getUserByUserID, getUserByAuthID
 from utils.authErrorHandler import AuthError, handle_auth_error
 from utils.authentication import authenticate
+
+logger = logging.getLogger("User")
 
 class User(Resource):
     PATH = '/user'
@@ -12,7 +16,7 @@ class User(Resource):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
             return {"message": "Authorization Header Failure"}, 401
-        auth0_id = authenticationPayload.sub
+        auth0_id = authenticationPayload['sub']
 
         parser = reqparse.RequestParser()
         parser.add_argument('firstName', type=str, required=True)
@@ -38,10 +42,13 @@ class User(Resource):
                 return handle_auth_error(error)
             if authenticationPayload is None:
                 return {"message": "Must be logged in"}, 400
-            auth0_id = authenticationPayload.sub
+            auth0_id = authenticationPayload['sub']
             userData = getUserByAuthID(auth0_id)
             if userData is None:
                 return {"message": "User not Found"}, 400
+            if len(userData.keys()) == 0:
+                # User created in Auth0 but not in WiCHacker Manager
+                return None, 204
             return userData
         # get info on user with user_id
         userData = getUserByUserID(user_id)
