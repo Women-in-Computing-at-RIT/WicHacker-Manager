@@ -115,7 +115,7 @@ def test_post_user_with_error(mock_db_exec, mock_authenticate, client):
     mock_authenticate.return_value = {"sub": "testAuth0ID"}
 
     # call endpoint
-    response = client.post(User.PATH, data={'firstName': 'testFirstName',
+    response = client.post(User.PATH, json={'firstName': 'testFirstName',
                                                 'lastName': 'testLastName',
                                                 'pronouns': 'testPronouns',
                                                 'isVirtual': True})

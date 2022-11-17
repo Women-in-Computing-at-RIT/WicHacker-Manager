@@ -1,8 +1,10 @@
 from unittest.mock import patch
 import json
 
-# client imported for side effects
+
 from controller.users import Users
+
+# client imported for side effects
 from test.testSetupHelper import client
 
 
