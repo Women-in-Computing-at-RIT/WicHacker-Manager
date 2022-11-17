@@ -92,7 +92,7 @@ def test_get_user_with_exception(mock_db_exec, mock_authenticate, client):
 
 @patch('controller.user.authenticate')
 @patch('data.users.exec_commit_return_autoincremented_id')
-def test_get_user_successfully(mock_db_exec, mock_authenticate, client):
+def test_post_user_successfully(mock_db_exec, mock_authenticate, client):
     # mock object responses
     mock_db_exec.return_value = 1
     mock_authenticate.return_value = {"sub": "testAuth0ID"}
@@ -109,7 +109,7 @@ def test_get_user_successfully(mock_db_exec, mock_authenticate, client):
 
 @patch('controller.user.authenticate')
 @patch('data.users.exec_commit_return_autoincremented_id')
-def test_get_user_with_error(mock_db_exec, mock_authenticate, client):
+def test_post_user_with_error(mock_db_exec, mock_authenticate, client):
     # mock object responses
     mock_db_exec.return_value = None
     mock_authenticate.return_value = {"sub": "testAuth0ID"}
@@ -118,14 +118,14 @@ def test_get_user_with_error(mock_db_exec, mock_authenticate, client):
     response = client.post(User.PATH, data={'firstName': 'testFirstName',
                                                 'lastName': 'testLastName',
                                                 'pronouns': 'testPronouns',
-                                                'isVirtual': 'isVirtual'})
+                                                'isVirtual': True})
 
     # Validate
     assert response.status_code == 500
 
 @patch('controller.user.authenticate')
 @patch('data.users.exec_commit_return_autoincremented_id')
-def test_get_user_with_missing_field(mock_db_exec, mock_authenticate, client):
+def test_post_user_with_missing_field(mock_db_exec, mock_authenticate, client):
     # mock object responses
     mock_db_exec.return_value = 1
     mock_authenticate.return_value = {"sub": "testAuth0ID"}
@@ -133,7 +133,7 @@ def test_get_user_with_missing_field(mock_db_exec, mock_authenticate, client):
     # call endpoint
     response = client.post(User.PATH, data={'firstName': 'testFirstName',
                                                 'pronouns': 'testPronouns',
-                                                'isVirtual': 'isVirtual'})
+                                                'isVirtual': True})
 
     # Validate
     assert response.status_code == 400
