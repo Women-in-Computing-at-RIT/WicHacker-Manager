@@ -1,6 +1,8 @@
 import logging
 from flask import make_response
 
+from utils.authErrorHandler import AuthError, handle_auth_error
+
 logger = logging.getLogger("error_handler")
 
 

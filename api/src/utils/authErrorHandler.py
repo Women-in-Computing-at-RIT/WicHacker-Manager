@@ -13,7 +13,7 @@ class AuthError(Exception):
 
 def handle_auth_error(ex):
     logger.error(ex.error)
-    response = make_response(jsonify(ex.error), 500)
+    response = make_response(jsonify(ex.error), 401)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     return response
