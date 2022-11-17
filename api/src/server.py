@@ -10,13 +10,15 @@ from controller.users import Users
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
-from utils.authErrorHandler import handle_auth_error
+from utils.authErrorHandler import handle_auth_error, AuthError
+from utils.genericErrorHandler import handle_error
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("server")
 
 app = Flask(__name__)
-app.register_error_handler(401, handle_auth_error)
+app.register_error_handler(AuthError, handle_auth_error)
+app.register_error_handler(Exception, handle_error)
 app.config['BUNDLE_ERRORS'] = True
 api = Api(app)
 cors = CORS(app)  # , resources={r"/*": {"origins": "localhost:3000"}}
@@ -34,4 +36,4 @@ if not (migration.initializeMigrations() and migration.up()):
 logger.info("Starting Server")
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port='5002')

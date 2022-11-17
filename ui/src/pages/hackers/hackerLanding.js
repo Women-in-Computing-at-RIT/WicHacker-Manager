@@ -10,15 +10,16 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) =
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(`http://localhost:5001/user`, config)
+    localAxios.get(`http://localhost:5002/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 setNewUser(true)
                 return
             }
             setUserResponse({data: await response.data, error: null})
-        }).catch((response, error) => {
-        setUserResponse({data: null, error: error})
+        }).catch(async (error) => {
+        console.log(await error.response)
+        setUserResponse({data: null, error: true})
     })
 }
 
