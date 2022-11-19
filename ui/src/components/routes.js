@@ -6,15 +6,18 @@ import { ProtectedComponent } from "../hocs/protectedRoute";
 import ApplicationList from "../pages/manage/applicationList";
 import UserHomepage from "../pages/hackers/hackerLanding";
 import NewUserForm from "../pages/hackers/createNewUser";
+import HackerApplication from "../pages/hackers/application";
 
 export default function AppRoutes(){
     return (
         <Routes>
             <Route path="/" element={<WiCHacksLanding />}/>
             <Route path="/user" element={<ProtectedComponent component={UserHomepage} />} />
-            <Route path="/user/create" element={<ProtectedComponent component={NewUserForm} />} />
+            <Route path="/user/create" element={<ProtectedComponent component={NewUserForm(true)} />} />
+            <Route path="/user/apply" element={<ProtectedComponent component={HackerApplication} />} />
             <Route path="/manage" element={<ProtectedComponent component={HackathonManagerLandingPage} />} />
             <Route path="/manage/applications" element={<ProtectedComponent component={ApplicationList} />} />
+            <Route path="/manage/admin/signup" element={<ProtectedComponent component={NewUserForm(false)} />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     )

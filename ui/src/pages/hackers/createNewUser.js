@@ -10,7 +10,7 @@ function useInput({ type /*...*/ }) {
     return [value, input];
 }
 
-const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage) => {
+const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired) => {
     const token = await getAccessTokenSilently({
         audience: 'wichacks.io',
     });
@@ -19,13 +19,16 @@ const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, n
     }
     localAxios.post(`http://localhost:5001/user`, userJson, config)
         .then(async (response) => {
-            navigateToPage("/user")
+            if (!applicationRedirectRequired){
+                navigateToPage("/user")
+            }
+            navigateToPage("/user/apply")
         }).catch(async () => {
             setSubmissionError(true)
     })
 }
 
-export default function NewUserForm() {
+export default function NewUserForm(applicationRedirectRequired) {
     let navigate = useNavigate()
     const [submissionError, setSubmissionError] = useState(null)
     const {getAccessTokenSilently} = useAuth0();
@@ -42,7 +45,7 @@ export default function NewUserForm() {
             "pronouns": pronouns,
             "isVirtual": isVirtual
         }
-        await createUser(userData, getAccessTokenSilently, setSubmissionError, navigateToPage)
+        await createUser(userData, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired)
     }
 
     const [firstName, firstNameInput] = useInput({ type: "text" });

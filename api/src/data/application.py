@@ -21,7 +21,7 @@ def createApplication(auth0_id, major, year, birthday, resumeLink, shirtSize, ha
     applicationArgs = {"major": major, "year": year, "birthday": birthday, "resume": resumeLink,
                        "shirtSize": shirtSize, "hasAttendedWiCHacks": hasPreviouslyAttended, "university": university}
 
-    linkApplicationSQL = "UPDATE Users set application_id = %(added_id)s WHERE auth0_id = %(auth0_id)s"
+    linkApplicationSQL = "UPDATE Users set application_id = %(added_id)s, status = 'APPLIED' WHERE auth0_id = %(auth0_id)s"
     linkApplicationArgs = {"auth0_id": auth0_id}
 
     rowsAffected = exec_commit_link(insertSQL=createApplicationSQL, linkSql=linkApplicationSQL, insertArgs=applicationArgs, linkArgs=linkApplicationArgs)

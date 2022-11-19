@@ -26,7 +26,7 @@ def getUserQuery():
     Accessor for reuse of user query
     :return:
     """
-    return "SELECT u.user_id, u.first_name, u.last_name, u.pronouns, a.address_id, a.address1, a.address2, a.city, a.subdivision, a.country, app.application_id, app.major, app.year, app.birthday, app.resume, app.shirt_size, app.has_attended, u.is_virtual, s.sponsor_id, s.company_name, u.status_id FROM " \
+    return "SELECT u.user_id, u.first_name, u.last_name, u.pronouns, a.address_id, a.address1, a.address2, a.city, a.subdivision, a.country, app.application_id, app.major, app.year, app.birthday, app.resume, app.shirt_size, app.has_attended, u.is_virtual, s.sponsor_id, s.company_name, u.status FROM " \
            "Users as u LEFT JOIN Addresses as a ON u.address_id = a.address_id " \
            "LEFT JOIN Applications as app ON u.application_id = app.application_id " \
            "LEFT JOIN Sponsors as s ON u.sponsor_id = s.sponsor_id "
