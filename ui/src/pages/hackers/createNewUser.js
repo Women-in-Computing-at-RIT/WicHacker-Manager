@@ -17,7 +17,7 @@ const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, n
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.post(`http://localhost:5002/user`, userJson, config)
+    localAxios.post(`http://localhost:5001/user`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
         }).catch(async () => {

@@ -1,0 +1,1 @@
+ALTER TABLE Applications RENAME COLUMN shirt_id TO shirt_size;

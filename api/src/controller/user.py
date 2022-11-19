@@ -10,7 +10,7 @@ logger = logging.getLogger("User")
 
 class User(Resource):
     PATH = '/user'
-    PATH_WITH_ID = '/user/<user_id>'
+    PATH_WITH_ID = '/user/id/<user_id>'
 
     def post(self):
         authenticationPayload = authenticate(request.headers)
