@@ -4,6 +4,8 @@ from flask_restful import Resource, reqparse
 from flask import request
 from data.application import createApplication
 from utils.authentication import authenticate
+from utils.convertDatetime import convertDatetimeToString
+from datetime import datetime
 
 logger = logging.getLogger("Application")
 
@@ -20,7 +22,7 @@ class Application(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('major', type=str, required=True)
         parser.add_argument('year', type=str, required=True)
-        parser.add_argument('birthday', type=str, required=True)
+        parser.add_argument('birthday', type=convertDatetimeToString, required=True)
         parser.add_argument('resume', type=str, required=True)
         parser.add_argument('shirtSize', type=str, required=True)
         parser.add_argument('hasAttendedWiCHacks', type=bool, required=True)
