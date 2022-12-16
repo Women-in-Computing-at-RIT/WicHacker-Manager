@@ -17,7 +17,7 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.post(`http://localhost:5001/user`, userJson, config)
+    localAxios.post(`http://localhost:5002/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
         }).catch(async () => {
@@ -50,10 +50,10 @@ export default function HackerApplication() {
 
     const [major, majorInput] = useInput({ type: "text" });
     const [year, yearInput] = useInput({ type: "text" });
-    const [birthday, birthdayInput] = useInput({ type: "text" });
+    const [birthday, birthdayInput] = useInput({ type: "date" });
     const [resume, resumeInput] = useInput({ type: "text" });
     const [shirtSize, setShirtSize] = useState();
-    const [hasAttendedWiCHacks, hasAttendedWiCHacksInput] = useInput({ type: "text" });
+    const [hasAttendedWiCHacks, setAttendedWiCHacksInput] = useState();
     const [university, universityInput] = useInput({ type: "text" });
 
 
@@ -87,14 +87,23 @@ export default function HackerApplication() {
                     <label>
                         Shirt Size:
                         <select value={shirtSize} onChange={e => setShirtSize(e.target.value)}>
-                            <option value="one">one</option>
-                            <option value="two">two</option>
-                            <option value="three">three</option>
+                            <option value="X-Small">one</option>
+                            <option value="Small">two</option>
+                            <option value="Medium">three</option>
                         </select>
                     </label><br />
                     <label>
                         Have you attended WiCHacks:
-                        {hasAttendedWiCHacksInput}
+                        <input type = "checkbox" onChange={(e) => {
+                            if(e.target.type === 'checkbox'){
+                                let checkboxValue = e.target.checked ? "checked": ""
+                                setAttendedWiCHacksInput(true)
+                            }
+                            else {
+                                setAttendedWiCHacksInput(true)
+                            }
+                        }}
+                        />
                     </label><br />
                     <label>
                         University:

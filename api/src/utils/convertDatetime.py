@@ -8,7 +8,9 @@ def convertDatetimeToString(value):
     :return:
     """
     try:
-        datetime.strptime(value, '%Y/%m/%d')  # try and convert input
+        datetime.strptime(value, '%Y-%m-%d')  # try and convert input
         return value   # if no exception string is in correct format
     except Exception as err:
+        print("error")
+        print(err)
         raise ValueError(err)
