@@ -1,12 +1,12 @@
 import {useNavigate} from "react-router-dom";
-import {Grommet, Button} from "grommet";
+import {Grommet} from "grommet";
 import {useState} from "react";
 import {localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 
 function useInput({ type /*...*/ }) {
     const [value, setValue] = useState("");
-    const input = <input value={value} onChange={e => setValue(e.target.value)} type={type} />;
+    const input = <input value={value} onChange={e => setValue(e.target.value)} type={type} />
     return [value, input];
 }
 
@@ -60,11 +60,11 @@ export default function HackerApplication() {
     return (
         <Grommet>
             {submissionError &&
-            <div>
-                <h2>
-                    Error Creating User Account
-                </h2>
-            </div>
+                <div>
+                    <h2>
+                        Error Creating User Account
+                    </h2>
+                </div>
             }
             <div>
                 <form>
@@ -87,7 +87,6 @@ export default function HackerApplication() {
                     <label>
                         Shirt Size:
                         <select value={shirtSize} onChange={e => setShirtSize(e.target.value)}>
-                            <option></option>
                             <option value="one">one</option>
                             <option value="two">two</option>
                             <option value="three">three</option>

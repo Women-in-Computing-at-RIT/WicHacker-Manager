@@ -33,10 +33,7 @@ export default function UserHomepage() {
 
     let navigate = useNavigate()
     if (newUser){
-        navigate("/user/create")
-    }
-    const navigateToPage = (path) => {
-        navigate(path)
+        navigate("/user/create");
     }
 
     if (userData?.error){

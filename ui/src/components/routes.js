@@ -1,4 +1,4 @@
-import {Routes, Route, Navigate } from "react-router-dom";
+import {Routes, Route } from "react-router-dom";
 import HackathonManagerLandingPage from "../pages/manage/hmLanding";
 import PageNotFound from "../pages/404Page";
 import WiCHacksLanding from "../pages/wichacksLanding";
