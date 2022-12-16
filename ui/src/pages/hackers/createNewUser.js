@@ -4,6 +4,19 @@ import {useState} from "react";
 import {localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 
+
+export function NewHackerForm(){
+    return(
+        <NewUserForm applicationRedirectRequired={true}/>
+    )
+}
+
+export function NewAdminForm(){
+    return(
+        <NewUserForm applicationRedirectRequired={false}/>
+    )
+}
+
 function useInput({ type /*...*/ }) {
     const [value, setValue] = useState("");
     const input = <input value={value} onChange={e => setValue(e.target.value)} type={type} />;
@@ -28,7 +41,7 @@ const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, n
     })
 }
 
-export default function NewUserForm(applicationRedirectRequired) {
+export function NewUserForm({applicationRedirectRequired}) {
     let navigate = useNavigate()
     const [submissionError, setSubmissionError] = useState(null)
     const {getAccessTokenSilently} = useAuth0();
