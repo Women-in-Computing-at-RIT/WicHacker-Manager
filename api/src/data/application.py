@@ -3,28 +3,45 @@
 from db.db_utils import exec_commit_link, exec_commit, exec_get_one
 
 
-def createApplication(auth0_id, major, year, birthday, resumeLink, shirtSize, hasPreviouslyAttended, university) -> int:
+def createApplication(auth0_id, major, levelOfStudy, birthday, shirtSize, hasAttendedWiCHacks, hasAttendedHackathons,
+                      university, gender, busRider, busStop, dietaryRestrictions, specialAccommodations,
+                      affirmedAgreements, isVirtual) -> int:
     """
     Create application, add application_id to user
+    :param specialAccommodations:
+    :param isVirtual:
+    :param affirmedAgreements:
+    :param dietaryRestrictions:
+    :param busStop:
+    :param busRider:
+    :param hasAttendedWiCHacks:
+    :param hasAttendedHackathons:
+    :param gender:
     :param auth0_id:
     :param major:
-    :param year:
+    :param levelOfStudy:
     :param birthday:
-    :param resumeLink:
     :param shirtSize:
-    :param hasPreviouslyAttended:
     :param university:
     :return: bool True if successful, False if failed, or None if error
     """
-    createApplicationSQL = "INSERT INTO Applications (major, year, birthday, resume, shirt_size, has_attended, university) " \
-                           "VALUES (%(major)s, %(year)s, %(birthday)s, %(resume)s, %(shirtSize)s, %(hasAttendedWiCHacks)s, %(university)s)"
-    applicationArgs = {"major": major, "year": year, "birthday": birthday, "resume": resumeLink,
-                       "shirtSize": shirtSize, "hasAttendedWiCHacks": hasPreviouslyAttended, "university": university}
+    createApplicationSQL = "INSERT INTO Applications (major, level_of_study, birthday, shirt_size, has_attended_wichacks, has_attended_hackathons, " \
+                           "university, gender, bus_rider, bus_stop, dietary_restrictions, special_accommodations, affirmed_agreements, status, is_virtual) " \
+                           "VALUES (%(major)s, %(level_of_study)s, %(birthday)s, %(shirtSize)s, %(has_attended_wichacks)s, %(has_attended_hackathons)s, " \
+                           "%(university)s, %(gender)s, %(bus_rider)s, %(bus_stop)s, %(dietary_restrictions)s, %(special_accommodations)s, %(affirmed_agreements)s," \
+                           "%(status)s, %(is_virtual)s)"
+    applicationArgs = {"major": major, "level_of_study": levelOfStudy, "birthday": birthday,
+                       "shirtSize": shirtSize, "has_attended_wichacks": hasAttendedWiCHacks,
+                       "has_attended_hackathons": hasAttendedHackathons, "university": university,
+                       "gender": gender, "bus_rider": busRider, "bus_stop": busStop,
+                       "dietary_restrictions": dietaryRestrictions, "special_accommodations": specialAccommodations,
+                       "affirmed_agreements": affirmedAgreements, "status": "APPLIED", "is_virtual": isVirtual}
 
-    linkApplicationSQL = "UPDATE Users set application_id = %(added_id)s, status = 'APPLIED' WHERE auth0_id = %(auth0_id)s"
+    linkApplicationSQL = "UPDATE Users set application_id = %(added_id)s WHERE auth0_id = %(auth0_id)s"
     linkApplicationArgs = {"auth0_id": auth0_id}
 
-    rowsAffected = exec_commit_link(insertSQL=createApplicationSQL, linkSql=linkApplicationSQL, insertArgs=applicationArgs, linkArgs=linkApplicationArgs)
+    rowsAffected = exec_commit_link(insertSQL=createApplicationSQL, linkSql=linkApplicationSQL,
+                                    insertArgs=applicationArgs, linkArgs=linkApplicationArgs)
     if rowsAffected is None:
         return None
     elif rowsAffected == 1:
@@ -32,26 +49,41 @@ def createApplication(auth0_id, major, year, birthday, resumeLink, shirtSize, ha
         return True
     return False
 
-def updateApplication(applicationId, major, year, birthday, resumeLink, shirtSize, hasPreviouslyAttended, university):
+
+def updateApplication(applicationId, major, levelOfStudy, birthday, shirtSize, hasAttendedWiCHacks,
+                      hasAttendedHackathons,
+                      university, gender, busRider, busStop, dietaryRestrictions, specialAccommodations,
+                      affirmedAgreements, status, isVirtual):
     """
     Update all values for application id, return number of rows affected
+    :param status:
+    :param affirmedAgreements:
+    :param dietaryRestrictions:
+    :param busStop:
+    :param busRider:
+    :param gender:
+    :param hasAttendedHackathons:
+    :param hasAttendedWiCHacks:
+    :param levelOfStudy:
     :param applicationId:
     :param major:
-    :param year:
     :param birthday:
-    :param resumeLink:
     :param shirtSize:
-    :param hasPreviouslyAttended:
     :param university:
     :return:
     """
     createApplicationSQL = "UPDATE Applications " \
-                           "SET major = %(major)s, year = %(year)s, birthday = %(birthday)s, resume = %(resume)s, shirt_size = %(shirtSize)s, " \
-                           "has_attended = %(hasAttendedWiCHacks)s, university = %(university)s " \
-                           "WHERE application_id = %(applicationId)s"
-    applicationArgs = {"major": major, "year": year, "birthday": birthday, "resume": resumeLink,
-                       "shirtSize": shirtSize, "hasAttendedWiCHacks": hasPreviouslyAttended, "university": university,
-                       "applicationId": applicationId}
+                           " SET major = %(major)s, level_of_study = %(level_of_study)s, birthday = %(birthday)s, shirt_size = %(shirtSize)s, " \
+                           " has_attended_wichacks = %(has_attended_wichacks)s, has_attended_hackathons = %(has_attended_hackathons)s, university = %(university)s, " \
+                           " status = %(status)s, gender = %(gender)s, bus_rider = %(bus_rider)s, bus_stop = %(bus_stop)s, dietary_restrictions = %(dietary_restrictions)s, " \
+                           " special_accommodations = %(special_accommodations)s, affirmed_agreements = %(affirmed_agreements)s, is_virtual = %(is_virtual)s " \
+                           " WHERE application_id = %(applicationId)s"
+    applicationArgs = {"major": major, "level_of_study": levelOfStudy, "birthday": birthday,
+                       "shirtSize": shirtSize, "has_attended_wichacks": hasAttendedWiCHacks,
+                       "has_attended_hackathons": hasAttendedHackathons, "university": university,
+                       "gender": gender, "bus_rider": busRider, "bus_stop": busStop,
+                       "dietary_restrictions": dietaryRestrictions, "special_accommodations": specialAccommodations,
+                       "affirmed_agreements": affirmedAgreements, "status": status, "is_virtual":isVirtual, "applicationId": applicationId}
 
     return exec_commit(createApplicationSQL, applicationArgs)
 
@@ -61,7 +93,7 @@ def getApplicationSelectSQL():
     Accessor for reuse of Application query
     :return:
     """
-    return "SELECT app.major, app.year, app.birthday, app.resume, app.shirt_size, app.has_attended, app.university FROM Applications as app "
+    return "SELECT app.major, app.level_of_study, app.birthday, app.shirt_size, app.has_attended_wichacks, app.has_attended_hackathons, app.university, app.gender, app.bus_stop, app.bus_rider, app.dietary_restrictions, app.special_accommodations, app.affirmed_agreements, app.status, app.is_virtual FROM Applications as app "
 
 
 def getApplicationByApplicationId(applicationId):

@@ -21,12 +21,9 @@ class User(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('firstName', type=str, required=True)
         parser.add_argument('lastName', type=str, required=True)
-        parser.add_argument('pronouns', type=str, required=True)
-        parser.add_argument('isVirtual', type=bool, required=True)
         args = parser.parse_args()
 
-        userId = createUser(auth0_id, firstName=args['firstName'], lastName=args['lastName'],
-                            pronouns=args['pronouns'], is_virtual=args['isVirtual'])
+        userId = createUser(auth0_id, firstName=args['firstName'], lastName=args['lastName'])
         if userId is None:
             return {"message": "Internal Server Error"}, 500
         return {"user_id": userId}, 200

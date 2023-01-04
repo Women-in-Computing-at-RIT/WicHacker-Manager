@@ -30,7 +30,7 @@ const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, n
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.post(`http://localhost:5001/user`, userJson, config)
+    localAxios.post(`http://localhost:5002/user`, userJson, config)
         .then(async (response) => {
             if (!applicationRedirectRequired){
                 navigateToPage("/user")
@@ -54,17 +54,14 @@ export function NewUserForm({applicationRedirectRequired}) {
         e.preventDefault()
         let userData = {
             "firstName": firstName,
-            "lastName": lastName,
-            "pronouns": pronouns,
-            "isVirtual": isVirtual
+            "lastName": lastName
         }
         await createUser(userData, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired)
     }
 
     const [firstName, firstNameInput] = useInput({ type: "text" });
     const [lastName, lastNameInput] = useInput({ type: "text" });
-    const [pronouns, pronounsInput] = useInput({ type: "text" });
-    const [isVirtual, isVirtualInput] = useInput({ type: "checkbox" });
+
 
 
     return (
@@ -86,19 +83,8 @@ export function NewUserForm({applicationRedirectRequired}) {
                         Last Name:
                         {lastNameInput}
                     </label><br />
-                    <label>
-                        Pronouns:
-                        {pronounsInput}
-                    </label><br />
-                    <label>
-                        Will You Be Attending Virtually:
-                        {isVirtualInput}
-                    </label><br />
                     <input type="submit" onClick={submitUserCreation}/>
                 </form>
-            </div>
-            <div>
-                <Button label="Hacker Homepage" onClick={() => {navigateToPage("/user")}}/>
             </div>
         </Grommet>
     );

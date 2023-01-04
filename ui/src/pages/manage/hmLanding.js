@@ -11,7 +11,7 @@ const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(`http://localhost:5001/userTest/${userId}`, config)
+    localAxios.get(`http://localhost:5002/userTest/${userId}`, config)
         .then(async (response) => {
             setUserResponse({data: await response.data, error: null})
         }).catch((response, error) => {

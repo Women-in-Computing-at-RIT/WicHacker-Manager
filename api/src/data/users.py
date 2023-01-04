@@ -1,7 +1,7 @@
 from db.db_utils import exec_get_one, exec_commit_return_autoincremented_id, exec_get_all
 
 
-def createUser(auth0_id, firstName, lastName, pronouns, is_virtual) -> dict:
+def createUser(auth0_id, firstName, lastName) -> dict:
     """
     Creates a new user and attatches their auth0 id
     :param auth0_id:
@@ -11,10 +11,9 @@ def createUser(auth0_id, firstName, lastName, pronouns, is_virtual) -> dict:
     :param is_virtual:
     :return: user id or None if unsuccessful
     """
-    sql = "INSERT INTO Users (auth0_id, first_name, last_name, pronouns, is_virtual) " \
-          "VALUES (%(auth0_id)s, %(firstName)s, %(lastName)s, %(pronouns)s, %(is_virtual)s);"
-    values = {"auth0_id": auth0_id, "firstName": firstName, "lastName": lastName, "pronouns": pronouns,
-              "is_virtual": is_virtual}
+    sql = "INSERT INTO Users (auth0_id, first_name, last_name) " \
+          "VALUES (%(auth0_id)s, %(firstName)s, %(lastName)s);"
+    values = {"auth0_id": auth0_id, "firstName": firstName, "lastName": lastName}
     userIdDict = exec_commit_return_autoincremented_id(sql, values)
     if userIdDict is None:
         return None
@@ -26,7 +25,7 @@ def getUserQuery():
     Accessor for reuse of user query
     :return:
     """
-    return "SELECT u.user_id, u.first_name, u.last_name, u.pronouns, a.address_id, a.address1, a.address2, a.city, a.subdivision, a.country, app.application_id, app.major, app.year, app.birthday, app.resume, app.shirt_size, app.has_attended, u.is_virtual, s.sponsor_id, s.company_name, u.status FROM " \
+    return "SELECT u.user_id, u.first_name, u.last_name, a.address_id, a.address1, a.address2, a.city, a.subdivision, a.country, app.application_id, app.major, app.level_of_study, app.birthday, app.shirt_size, app.has_attended_wichacks, app.has_attended_hackathons, app.is_virtual, s.sponsor_id, s.company_name, app.status, app.bus_rider, app.status, app.dietary_restrictions, app.special_accommodations, app.affirmed_agreements, app.gender FROM " \
            "Users as u LEFT JOIN Addresses as a ON u.address_id = a.address_id " \
            "LEFT JOIN Applications as app ON u.application_id = app.application_id " \
            "LEFT JOIN Sponsors as s ON u.sponsor_id = s.sponsor_id "
@@ -43,13 +42,13 @@ def getUsers(status=None, is_virtual=None) -> list:
     sql = getUserQuery()
     args = ()
     if status is not None:
-        sql += "WHERE status = %s"
+        sql += "WHERE app.status = %s"
         args = args + (status,)
         if is_virtual is not None:
-            sql += "AND WHERE is_virtual = %s"
+            sql += "AND WHERE app.is_virtual = %s"
             args = args + (is_virtual,)
     elif is_virtual is not None:
-        sql += "WHERE is_virtual = %s"
+        sql += "WHERE app.is_virtual = %s"
         args = args + (is_virtual,)
 
     return exec_get_all(sql, args)
@@ -62,6 +61,15 @@ def getUserByAuthID(auth_id) -> dict:
     :return:
     """
     return getUserById(auth_id=auth_id)
+
+
+def getUserIdFromAuthID(auth_id) -> int:
+    """
+    Get user id from auth0 id
+    :param auth_id:
+    :return: user id or None
+    """
+    return getUserById(auth_id=auth_id).get("user_id", None)
 
 
 def getUserByUserID(user_id) -> dict:

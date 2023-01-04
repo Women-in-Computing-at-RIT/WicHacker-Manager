@@ -9,7 +9,7 @@ const getApplicantsFromApi = async(getAccessTokenSilently, setApplications) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(`http://localhost:5001/users`, config)
+    localAxios.get(`http://localhost:5002/users`, config)
         .then(async (response) => {
             setApplications({data: await response.data, error: null})
         }).catch((response, error) => {
