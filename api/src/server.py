@@ -3,15 +3,19 @@ import sys
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Resource, Api
+
+from controller.application import Application
 from controller.healthcheck import Healthcheck
 from controller.test import Test
 from controller.user import User
 from controller.users import Users
+from controller.resume import Resume
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
 from utils.authErrorHandler import handle_auth_error, AuthError
 from utils.genericErrorHandler import handle_error
+from utils.aws import initializeAWSClients
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("server")
@@ -29,9 +33,17 @@ api.add_resource(Test, Test.PATH)
 api.add_resource(User, User.PATH, endpoint="user")
 api.add_resource(User, User.PATH_WITH_ID, endpoint="user_with_id")
 api.add_resource(Users, Users.PATH)
+api.add_resource(Application, Application.PATH)
+api.add_resource(Resume, Resume.PATH)
 
-if not (migration.initializeMigrations() and migration.up()):
+if not migration.initializeMigrations():
+    logger.error("Initialize Migration Failure")
+    sys.exit(1)
+if not migration.up():
     logger.error("Migration Failure")
+    sys.exit(1)
+if not initializeAWSClients():
+    logger.error("AWS Client Initialization Failure")
     sys.exit(1)
 logger.info("Starting Server")
 

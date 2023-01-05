@@ -1,0 +1,4 @@
+ALTER TABLE Users ADD COLUMN is_virtual BOOLEAN;
+ALTER TABLE Applications DROP COLUMN is_virtual;
+
+ALTER TABLE Users ADD COLUMN pronouns VARCHAR(63) NOT NULL;

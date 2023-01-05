@@ -1,4 +1,4 @@
-import {localAxios} from "../../config/axios";
+import {apiDomain, localAxios} from "../../config/axios";
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate} from "react-router-dom";
@@ -11,7 +11,7 @@ const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(`http://localhost:5001/userTest/${userId}`, config)
+    localAxios.get(apiDomain + `/userTest/${userId}`, config)
         .then(async (response) => {
             setUserResponse({data: await response.data, error: null})
         }).catch((response, error) => {

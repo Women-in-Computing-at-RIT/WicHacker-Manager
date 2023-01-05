@@ -1,7 +1,6 @@
 from unittest.mock import patch
 import json
 
-
 from controller.users import Users
 
 # client imported for side effects
@@ -21,6 +20,7 @@ def test_get_users_successfully(mock_db_exec, mock_authenticate, client):
     # Validate
     assert response.status_code == 200
     assert json.loads(response.data)[0]["first_name"] == "Lenny"
+
 
 @patch('controller.user.authenticate')
 @patch('data.users.exec_get_all')

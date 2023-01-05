@@ -4,13 +4,14 @@ from flask_restful import Resource, reqparse
 from flask import request
 from data.users import createUser, getUserByUserID, getUserByAuthID
 from utils.authentication import authenticate
+from data.validation import validatePhoneNumberString, validateEmailAddress
 
 logger = logging.getLogger("User")
 
 
 class User(Resource):
     PATH = '/user'
-    PATH_WITH_ID = '/user/<user_id>'
+    PATH_WITH_ID = '/user/id/<user_id>'
 
     def post(self):
         authenticationPayload = authenticate(request.headers)
@@ -21,12 +22,15 @@ class User(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('firstName', type=str, required=True)
         parser.add_argument('lastName', type=str, required=True)
-        parser.add_argument('pronouns', type=str, required=True)
-        parser.add_argument('isVirtual', type=bool, required=True)
+        parser.add_argument('email', type=str, required=True)
+        parser.add_argument('phoneNumber', type=str, required=True)
         args = parser.parse_args()
 
-        userId = createUser(auth0_id, firstName=args['firstName'], lastName=args['lastName'],
-                            pronouns=args['pronouns'], is_virtual=args['isVirtual'])
+        # Validate phone number and email
+        if not (validatePhoneNumberString(args['phoneNumber']) and validateEmailAddress(args['email'])):
+            return {"message": "Phone Number or Email Invalid"}, 400
+
+        userId = createUser(auth0_id, firstName=args['firstName'], lastName=args['lastName'], email=args['email'], phoneNumber=args['phoneNumber'])
         if userId is None:
             return {"message": "Internal Server Error"}, 500
         return {"user_id": userId}, 200

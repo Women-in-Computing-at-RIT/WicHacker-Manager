@@ -1,31 +1,48 @@
 import {useNavigate} from "react-router-dom";
 import {Grommet, Button} from "grommet";
 import {useState} from "react";
-import {localAxios} from "../../config/axios";
+import {apiDomain, localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
+import css from "./style/form.module.css"
 
-function useInput({ type /*...*/ }) {
+
+export function NewHackerForm(){
+    return(
+        <NewUserForm applicationRedirectRequired={true}/>
+    )
+}
+
+export function NewAdminForm(){
+    return(
+        <NewUserForm applicationRedirectRequired={false}/>
+    )
+}
+
+function useTextInput() {
     const [value, setValue] = useState("");
-    const input = <input value={value} onChange={e => setValue(e.target.value)} type={type} />;
+    const input = <input className={css.textInput} value={value} onChange={e => setValue(e.target.value)} type="text" />;
     return [value, input];
 }
 
-const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage) => {
+const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired) => {
     const token = await getAccessTokenSilently({
         audience: 'wichacks.io',
     });
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.post(`http://localhost:5002/user`, userJson, config)
+    localAxios.post(apiDomain + `/user`, userJson, config)
         .then(async (response) => {
-            navigateToPage("/user")
+            if (!applicationRedirectRequired){
+                navigateToPage("/user")
+            }
+            navigateToPage("/user/apply")
         }).catch(async () => {
             setSubmissionError(true)
     })
 }
 
-export default function NewUserForm() {
+export function NewUserForm({applicationRedirectRequired}) {
     let navigate = useNavigate()
     const [submissionError, setSubmissionError] = useState(null)
     const {getAccessTokenSilently} = useAuth0();
@@ -39,20 +56,22 @@ export default function NewUserForm() {
         let userData = {
             "firstName": firstName,
             "lastName": lastName,
-            "pronouns": pronouns,
-            "isVirtual": isVirtual
+            "email": email,
+            "phoneNumber": phoneNumber
         }
-        await createUser(userData, getAccessTokenSilently, setSubmissionError, navigateToPage)
+        await createUser(userData, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired)
     }
 
-    const [firstName, firstNameInput] = useInput({ type: "text" });
-    const [lastName, lastNameInput] = useInput({ type: "text" });
-    const [pronouns, pronounsInput] = useInput({ type: "text" });
-    const [isVirtual, isVirtualInput] = useInput({ type: "checkbox" });
+    const [firstName, firstNameInput] = useTextInput();
+    const [lastName, lastNameInput] = useTextInput();
+    const [email, emailInput] = useTextInput();
+    const [phoneNumber, phoneNumberInput] = useTextInput();
+
 
 
     return (
-        <Grommet>
+        <div>
+            <h2 className={css.pageTitle}>Hacker Profile Creation</h2>
             {submissionError &&
                 <div>
                     <h2>
@@ -61,29 +80,28 @@ export default function NewUserForm() {
                 </div>
             }
             <div>
-                <form>
-                    <label>
-                        First Name:
-                        {firstNameInput}
-                    </label><br />
-                    <label>
-                        Last Name:
-                        {lastNameInput}
-                    </label><br />
-                    <label>
-                        Pronouns:
-                        {pronounsInput}
-                    </label><br />
-                    <label>
-                        Will You Be Attending Virtually:
-                        {isVirtualInput}
-                    </label><br />
-                    <input type="submit" onClick={submitUserCreation}/>
+                <form className={css.applicationForm}>
+                    <div className={css.hackerProfileFormFields}>
+                        <label>
+                            First Name: <br />
+                            {firstNameInput}
+                        </label><br />
+                        <label>
+                            Last Name: <br />
+                            {lastNameInput}
+                        </label><br />
+                        <label>
+                            Email: <br />
+                            {emailInput}
+                        </label><br />
+                        <label>
+                            Phone Number: <br />
+                            {phoneNumberInput}
+                        </label><br />
+                        <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
+                    </div>
                 </form>
             </div>
-            <div>
-                <Button label="Hacker Homepage" onClick={() => {navigateToPage("/user")}}/>
-            </div>
-        </Grommet>
+        </div>
     );
 }

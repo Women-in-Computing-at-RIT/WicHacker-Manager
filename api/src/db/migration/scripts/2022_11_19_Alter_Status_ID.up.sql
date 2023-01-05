@@ -1,0 +1,1 @@
+ALTER TABLE Users RENAME COLUMN status_id TO status;

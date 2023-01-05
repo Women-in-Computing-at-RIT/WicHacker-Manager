@@ -27,6 +27,8 @@ services:
             PASSWORD: 'hallie-i-promise-i-know-a-couple-security-things'
             AUTH0_DOMAIN: 'wichacks.us.auth0.com'
             AUTH0_CLIENT_ID: 'oTpWdnroYxfqQrprklhfXTGxIK5Vn8Df'
+        volumes:
+            -   ~/.aws:/root/.aws:ro
     ui:
        image: wichacks-ui:latest
        restart: always
