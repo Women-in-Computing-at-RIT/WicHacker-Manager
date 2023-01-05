@@ -80,7 +80,7 @@ export function NewUserForm({applicationRedirectRequired}) {
                 </div>
             }
             <div>
-                <form>
+                <form className={css.applicationForm}>
                     <div className={css.hackerProfileFormFields}>
                         <label>
                             First Name: <br />

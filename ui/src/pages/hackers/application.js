@@ -87,8 +87,10 @@ export default function HackerApplication() {
     const [gender, setGender] = useState();
     const [busRider, setBusRider] = useState();
     const [busStop, setBusStop] = useState();
-    const [dietaryRestriction, setDietaryRestriction] = useState(null);
-    const [specialAccommodations, setSpecialAccommodations] = useState(null);
+    const [hasDietaryRestriction, setHasDietaryRestriction] = useState();
+    const [dietaryRestriction, setDietaryRestriction] = useState();
+    const [hasSpecialAccommodations, setHasSpecialAccommodations] = useState();
+    const [specialAccommodations, setSpecialAccommodations] = useState();
     const [wichacksEventPolicies, setWichacksEventPolicies] = useState();
     const [mlhCodeOfConduct, setMlhCodeOfConduct] = useState();
     const [mlhDataSharing, setMlhDataSharing] = useState();
@@ -99,7 +101,8 @@ export default function HackerApplication() {
 
     // form based on Registration Form Guideline https://docs.google.com/document/d/1FxLkwcFK-W513G10m53Jxulou0wpJNiXDZmEYvfpW8o/edit#
     return (
-        <Grommet>
+        <div>
+            <h2 className={css.pageTitle}>Hacker Application</h2>
             {submissionError &&
                 <div>
                     <h2>
@@ -108,7 +111,7 @@ export default function HackerApplication() {
                 </div>
             }
             <div>
-                <form>
+                <form className={css.applicationForm}>
                     <h2 className={css.sectionHeader}>General Information</h2>
                     <label>
                         Gender:
@@ -182,24 +185,24 @@ export default function HackerApplication() {
                     <label>
                         Have you participated in any hackathons before?:
                         <div onChange={e => setAttendedHackathonsInput(e.target.value)}>
-                            <input class={css.radioInput} type="radio" value={"true"} name={"attendedHackathons"} />Yes
-                            <input class={css.radioInput} type="radio" value={"false"} name={"attendedHackathons"} />No
+                            <input className={css.radioInput} type="radio" value={"true"} name={"attendedHackathons"} />Yes
+                            <input className={css.radioInput} type="radio" value={"false"} name={"attendedHackathons"} />No
                         </div>
                     </label><br />
                     <label>
                         Have you participated in WiCHacks before?:
                         <div onChange={e => setAttendedWiCHacksInput(e.target.value)}>
-                            <input class={css.radioInput} type="radio" value={"true"} name={"attendedWiCHacks"} />Yes
-                            <input class={css.radioInput} type="radio" value={"false"} name={"attendedWiCHacks"} />No
+                            <input className={css.radioInput} type="radio" value={"true"} name={"attendedWiCHacks"} />Yes
+                            <input className={css.radioInput} type="radio" value={"false"} name={"attendedWiCHacks"} />No
                         </div>
                     </label><br />
-
+                    <hr className={css.sectionBreak}/>
                     <h2 className={css.sectionHeader}>Attendance and Travel</h2>
                     <label>
                         How will you be participating?:
                         <div onChange={e => setIsVirtual(e.target.value)}>
-                            <input class={css.radioInput} type="radio" value={"true"} name={"isVirtual"} />In-Person
-                            <input class={css.radioInput} type="radio" value={"false"} name={"isVirtual"} />Online Only
+                            <input className={css.radioInput} type="radio" value={"true"} name={"isVirtual"} />In-Person
+                            <input className={css.radioInput} type="radio" value={"false"} name={"isVirtual"} />Online Only
                         </div>
                     </label><br />
                     {eligibleForBusing &&
@@ -207,8 +210,8 @@ export default function HackerApplication() {
                             <label>
                                 Would you like to travel to RIT via one of the buses?:
                                 <div onChange={e => setBusRider(e.target.value)}>
-                                    <input class={css.radioInput} type="radio" value={"true"} name={"busRider"} />Yes
-                                    <input class={css.radioInput} type="radio" value={"false"} name={"busRider"} />No
+                                    <input className={css.radioInput} type="radio" value={"true"} name={"busRider"} />Yes
+                                    <input className={css.radioInput} type="radio" value={"false"} name={"busRider"} />No
                                 </div>
                             </label><br />
                             {(busRider && busRider === "true") &&
@@ -226,15 +229,16 @@ export default function HackerApplication() {
                     }
 
                     <h2>Special Information and Accommodations</h2>
+                    <hr className={css.sectionBreak}/>
                     <label>
                         Do you have any dietary restrictions?:
-                        <div onChange={e => setDietaryRestriction(e.target.value)}>
-                            <input class={css.radioInput} type="radio" value={"true"} name={"dietRestriction"} />Yes
-                            <input class={css.radioInput} type="radio" value={"false"} name={"dietRestriction"} />No
+                        <div onChange={e => setHasDietaryRestriction(e.target.value)}>
+                            <input className={css.radioInput} type="radio" value={"true"} name={"dietRestriction"} />Yes
+                            <input className={css.radioInput} type="radio" value={"false"} name={"dietRestriction"} />No
                         </div>
                     </label><br />
 
-                    {(dietaryRestriction && dietaryRestriction !== "false") &&
+                    {(hasDietaryRestriction && hasDietaryRestriction === "true") &&
                         <>
                             <label className={css.paragraphLabel}>
                                 Please list your dietary restrictions below so we can ensure to have food available for you:
@@ -247,13 +251,13 @@ export default function HackerApplication() {
                         Will you require any special accommodations you feel may not be already planned?
                         <p className={css.secondaryInformation}>Please note, we will have interpreting/captioning for opening and closing ceremonies, but if you need interpreting services for your team, this
                             request will need to be made via RIT Department of Access Services. Regardless, please indicate a need for interpreting/captioning services below</p>
-                        <div onChange={e => setSpecialAccommodations(e.target.value)}>
-                            <input class={css.radioInput} type="radio" value={"true"} name={"accommodations"} />Yes
-                            <input class={css.radioInput} type="radio" value={"false"} name={"accommodations"} />No
+                        <div onChange={e => setHasSpecialAccommodations(e.target.value)}>
+                            <input className={css.radioInput} type="radio" value={"true"} name={"accommodations"} />Yes
+                            <input className={css.radioInput} type="radio" value={"false"} name={"accommodations"} />No
                         </div>
                     </label><br />
 
-                    {(specialAccommodations && specialAccommodations !== "false") &&
+                    {(hasSpecialAccommodations && hasSpecialAccommodations === "true") &&
                     <>
                         <label>
                             Please list and describe accommodations below :
@@ -261,7 +265,7 @@ export default function HackerApplication() {
                         </label><br />
                     </>
                     }
-
+                    <hr className={css.sectionBreak}/>
                     <h2>Agreements</h2>
                     <label>
                         I have read and agree to the WiCHacks Event Policies:
@@ -318,6 +322,6 @@ export default function HackerApplication() {
                     <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
                 </form>
             </div>
-        </Grommet>
+        </div>
     );
 }

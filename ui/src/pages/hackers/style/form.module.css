@@ -1,9 +1,5 @@
-body{
-  background: lavender;
-  height: 100%;
-  width: 100%;
-}
-form{
+
+.applicationForm{
   margin-top: 40px;
   margin-left: 15%;
   margin-right: 15%;
@@ -69,6 +65,12 @@ label{
   margin-top: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+
+.sectionBreak{
+  width: 100%;
+  margin-left: -2%;
+  border-top: 1px solid lavender;
 }
 
 .secondaryInformation{

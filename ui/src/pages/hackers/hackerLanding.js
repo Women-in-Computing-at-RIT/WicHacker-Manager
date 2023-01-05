@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
 import {localAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
-import {Grommet} from "grommet";
+import css from "./style/hackerLanding.module.css"
 
 const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) => {
     const token = await getAccessTokenSilently({
@@ -81,20 +81,19 @@ export default function UserHomepage() {
     return (
         <div>
             <h1>Welcome {user.first_name} {user.last_name}!</h1>
-            {user.application_id ? <p>*Insert Edit Application Button</p> : <p>*Insert Apply Button</p>}
+            {user.application_id ? <p>*Insert View Application Button</p> : <p>*Insert Apply Button</p>}
 
-            { user.status_id &&
-                <h3>Application Status: user.data.status_id</h3>
+            { user.status &&
+                <h3>Application Status: {user.status}</h3>
             }
-            <h3>*Insert some edit functionality here*</h3>
 
             <h2>Resume Upload</h2>
-            <div className={"Resume-Upload-Textbox"}>
-                {resumeUpload && <p className={"Success"}>Resume Upload Success</p>}
-                {resumeUpload?.error === 0 && <p className={"Failure"}>Resume Upload Failure</p>}
+            <div>
+                {resumeUpload && <p>Resume Upload Success</p>}
+                {resumeUpload?.error === 0 && <p>Resume Upload Failure</p>}
             </div>
             <form>
-                <input type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
+                <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
             </form>
         </div>
     );
