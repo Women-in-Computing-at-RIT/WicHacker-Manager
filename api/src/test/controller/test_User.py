@@ -99,13 +99,14 @@ def test_post_user_successfully(mock_db_exec, mock_authenticate, client):
 
     # call endpoint
     response = client.post(User.PATH, json={'firstName': 'testFirstName',
-                                                'lastName': 'testLastName',
-                                                'pronouns': 'testPronouns',
-                                                'isVirtual': True})
+                                            'lastName': 'testLastName',
+                                            "email": "test@test.com",
+                                            "phoneNumber": "1111111111"})
 
     # Validate
     assert response.status_code == 200
     assert json.loads(response.data)["user_id"] == 1
+
 
 @patch('controller.user.authenticate')
 @patch('data.users.exec_commit_return_autoincremented_id')
@@ -116,12 +117,13 @@ def test_post_user_with_error(mock_db_exec, mock_authenticate, client):
 
     # call endpoint
     response = client.post(User.PATH, json={'firstName': 'testFirstName',
-                                                'lastName': 'testLastName',
-                                                'pronouns': 'testPronouns',
-                                                'isVirtual': True})
+                                            'lastName': 'testLastName',
+                                            "email": "test@test.com",
+                                            "phoneNumber": "1111111111"})
 
     # Validate
     assert response.status_code == 500
+
 
 @patch('controller.user.authenticate')
 @patch('data.users.exec_commit_return_autoincremented_id')
@@ -132,8 +134,24 @@ def test_post_user_with_missing_field(mock_db_exec, mock_authenticate, client):
 
     # call endpoint
     response = client.post(User.PATH, json={'firstName': 'testFirstName',
-                                                'pronouns': 'testPronouns',
-                                                'isVirtual': True})
+                                            'pronouns': 'testPronouns',
+                                            'email': "test@test.com"})
+
+    # Validate
+    assert response.status_code == 400
+
+@patch('controller.user.authenticate')
+@patch('data.users.exec_commit_return_autoincremented_id')
+def test_post_user_with_validation_error(mock_db_exec, mock_authenticate, client):
+    # mock object responses
+    mock_db_exec.return_value = 1
+    mock_authenticate.return_value = {"sub": "testAuth0ID"}
+
+    # call endpoint
+    response = client.post(User.PATH, json={'firstName': 'testFirstName',
+                                            'lastName': 'testLastName',
+                                            "email": "test@test.com",
+                                            "phoneNumber": "999-342-032"})
 
     # Validate
     assert response.status_code == 400
