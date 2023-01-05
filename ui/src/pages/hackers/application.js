@@ -49,7 +49,7 @@ export default function HackerApplication() {
 
     const submitUserCreation = async(e) => {
         e.preventDefault()
-        const affirmedAgreements = wichacksEventPolicies && mlhCodeOfConduct && mlhDataSharing && allInformationCorrect
+        const affirmedAgreements = wichacksEventPolicies && ritEventPolicies && mlhCodeOfConduct && mlhDataSharing && allInformationCorrect
         if (!affirmedAgreements){
             setSubmissionError(true)
             return
@@ -92,6 +92,7 @@ export default function HackerApplication() {
     const [hasSpecialAccommodations, setHasSpecialAccommodations] = useState();
     const [specialAccommodations, setSpecialAccommodations] = useState();
     const [wichacksEventPolicies, setWichacksEventPolicies] = useState();
+    const [ritEventPolicies, setRitEventPolicies] = useState();
     const [mlhCodeOfConduct, setMlhCodeOfConduct] = useState();
     const [mlhDataSharing, setMlhDataSharing] = useState();
     const [allInformationCorrect, setAllInformationCorrect] = useState();
@@ -274,6 +275,18 @@ export default function HackerApplication() {
                             }
                             else {
                                 setWichacksEventPolicies(false)
+                            }
+                        }}
+                        />
+                    </label><br />
+                    <label>
+                        I have read and agree to the <a href="https://www.rit.edu/academicaffairs/policiesmanual/c000" target="_blank">RIT Code of Ethical Conduct and Compliance</a>:
+                        <input type = "checkbox" onChange={(e) => {
+                            if(e.target.type === 'checkbox'){
+                                setRitEventPolicies(true)
+                            }
+                            else {
+                                setRitEventPolicies(false)
                             }
                         }}
                         />
