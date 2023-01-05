@@ -28,7 +28,7 @@ services:
             AUTH0_DOMAIN: 'wichacks.us.auth0.com'
             AUTH0_CLIENT_ID: 'oTpWdnroYxfqQrprklhfXTGxIK5Vn8Df'
         volumes:
-            -   $HOME/.aws/credentials:/home/app/.aws/credentials:ro
+            -   ~/.aws:/root/.aws:ro
     ui:
        image: wichacks-ui:latest
        restart: always

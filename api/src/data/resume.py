@@ -19,6 +19,6 @@ def uploadResume(userId, file, contentType) -> bool:
                             Key=WICHACKS_YEAR+'/'+str(userId),
                             ContentType=contentType)
     except Exception as e:
-        logger.info(e)
+        logger.info("Resume Upload Failure: %s", e)
         return False
     return True

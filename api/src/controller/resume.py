@@ -33,9 +33,12 @@ class Resume(Resource):
             return {"message": "Request Does Not Have Resume"}, 400
 
         resume = request.files['resume']
-        if resume and self.allowed_file(resume.filename):
-            uploadSuccessful = uploadResume(userID, resume, request.mimetype)
-            if uploadSuccessful:
-                return {"message": "Resume upload successful"}, 200
-            else:
-                return {"message": "Resume upload failure"}, 500
+        if not (resume and self.allowed_file(resume.filename)):
+            # resume doesn't exist or has wrong extension
+            return {"message": "Resume File Format Not Accepted"}, 400
+        uploadSuccessful = uploadResume(userID, resume, request.mimetype)
+        if uploadSuccessful:
+            return {"message": "Resume upload successful"}, 200
+        else:
+            return {"message": "Resume upload failure"}, 500
+
