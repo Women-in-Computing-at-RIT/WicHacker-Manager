@@ -1,0 +1,110 @@
+body{
+  background: lavender;
+  height: 100%;
+  width: 100%;
+}
+form{
+  margin-top: 40px;
+  margin-left: 15%;
+  margin-right: 15%;
+  padding-left: 3%;
+  padding-top: 5px;
+  /*padding-right: 15px;*/
+  /*padding-top: 15px;*/
+  /*padding-bottom: 150px;*/
+  /*padding-left: 50px;*/
+  background: white;
+  border: grey solid 3px;
+  border-radius: 25px;
+}
+
+h2{
+  color: black;
+  font-size: 40px;
+  font-weight: 450;
+}
+
+.pageTitle{
+  text-align: center;
+}
+
+label{
+  font-size: 20px;
+  color: black;
+  font-weight: 300;
+}
+
+.paragraphLabel{
+  width: 100%;
+}
+
+.selectDiv{
+  margin-bottom: 10px;
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.formSelect{
+  margin-left: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 14px;
+}
+
+.textInput{
+  margin-bottom: 10px;
+  margin-top: 5px;
+  padding-right: 30%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
+  background-color: rgba(220, 208, 255, 0.3);
+  border: grey solid 2px;
+  resize:both;
+}
+
+.dateInput{
+  margin-bottom: 10px;
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.secondaryInformation{
+  padding: 0;
+  margin: 0;
+  color: gray;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.radioInput{
+
+}
+
+.largeTextInput{
+  width: 80%;
+  border-radius: 7px;
+  background-color: rgba(220, 208, 255, 0.3);
+  border: grey solid 2px;
+  margin-bottom: 10px;
+}
+
+.submitButton{
+  margin-left: 70px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.sectionHeader{
+  color: black;
+  font-size: 40px;
+  font-weight: 450;
+}
+
+.hackerProfileFormFields{
+
+}

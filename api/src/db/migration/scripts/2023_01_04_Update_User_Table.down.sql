@@ -1,0 +1,2 @@
+ALTER TABLE Users DROP COLUMN email;
+ALTER TABLE Users DROP COLUMN phone_number;

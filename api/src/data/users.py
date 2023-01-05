@@ -1,23 +1,23 @@
 from db.db_utils import exec_get_one, exec_commit_return_autoincremented_id, exec_get_all
 
 
-def createUser(auth0_id, firstName, lastName) -> dict:
+def createUser(auth0_id, firstName, lastName, email, phoneNumber) -> dict:
     """
-    Creates a new user and attatches their auth0 id
+    Creates a new user and attaches their auth0 id
+    :param phoneNumber:
+    :param email:
     :param auth0_id:
     :param firstName:
     :param lastName:
-    :param pronouns:
-    :param is_virtual:
     :return: user id or None if unsuccessful
     """
-    sql = "INSERT INTO Users (auth0_id, first_name, last_name) " \
-          "VALUES (%(auth0_id)s, %(firstName)s, %(lastName)s);"
-    values = {"auth0_id": auth0_id, "firstName": firstName, "lastName": lastName}
-    userIdDict = exec_commit_return_autoincremented_id(sql, values)
-    if userIdDict is None:
+    sql = "INSERT INTO Users (auth0_id, first_name, last_name, email, phone_number) " \
+          "VALUES (%(auth0_id)s, %(firstName)s, %(lastName)s, %(email)s, %(phone_number)s);"
+    values = {"auth0_id": auth0_id, "firstName": firstName, "lastName": lastName, "email": email, "phone_number": phoneNumber}
+    userId = exec_commit_return_autoincremented_id(sql, values)
+    if userId is None:
         return None
-    return userIdDict
+    return userId
 
 
 def getUserQuery():

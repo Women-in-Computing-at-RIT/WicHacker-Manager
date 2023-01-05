@@ -3,12 +3,7 @@ import {Grommet} from "grommet";
 import {useState} from "react";
 import {localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
-
-function useInput({ type /*...*/ }) {
-    const [value, setValue] = useState("");
-    const input = <input value={value} onChange={e => setValue(e.target.value)} type={type} />
-    return [value, input];
-}
+import css from "./style/form.module.css"
 
 const createApplication = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage) => {
     const token = await getAccessTokenSilently({
@@ -80,16 +75,16 @@ export default function HackerApplication() {
         await createApplication(userData, getAccessTokenSilently, setSubmissionError, navigateToPage)
     }
 
-    const [major, majorInput] = useInput({ type: "text" });
+    const [major, setMajor] = useState();
     const [levelOfStudy, setLevelOfStudy] = useState();
     const [otherLevelOfStudy, setOtherLevelOfStudy] = useState();
-    const [birthday, birthdayInput] = useInput({ type: "date" });
+    const [birthday, setBirthday] = useState();
     const [shirtSize, setShirtSize] = useState();
     const [hasAttendedWiCHacks, setAttendedWiCHacksInput] = useState();
     const [hasAttendedHackathons, setAttendedHackathonsInput] = useState();
     const [university, setUniversity] = useState();
     const [otherUniversity, setOtherUniversity] = useState();
-    const [gender, genderInput] = useInput({ type: "text" });
+    const [gender, setGender] = useState();
     const [busRider, setBusRider] = useState();
     const [busStop, setBusStop] = useState();
     const [dietaryRestriction, setDietaryRestriction] = useState(null);
@@ -114,20 +109,20 @@ export default function HackerApplication() {
             }
             <div>
                 <form>
-                    <h2>General Information</h2>
+                    <h2 className={css.sectionHeader}>General Information</h2>
                     <label>
                         Gender:
-                        WiCHacks is a gender-minority only hackathon, as such, we collect information about how you identify
-                        and use this to determine your eligibility to participate
-                        {genderInput}
+                        <p className={css.secondaryInformation}>WiCHacks is a gender-minority only hackathon, as such, we collect information about how you identify
+                            and use this to determine your eligibility to participate</p>
+                        <input className={css.textInput} value={gender} onChange={e => setGender(e.target.value)} type={"text"} />
                     </label><br />
                     <label>
-                        Major:
-                        {majorInput}
+                        Major: <br />
+                        <input className={css.textInput} value={major} onChange={e => setMajor(e.target.value)} type={"text"} />
                     </label><br />
-                    <label>
+                    <div className={css.selectDiv}>
                         Current Level of Study:
-                        <select value={levelOfStudy} onChange={e => setLevelOfStudy(e.target.value)}>
+                        <select className={css.formSelect} value={levelOfStudy} onChange={e => setLevelOfStudy(e.target.value)}>
                             <option value="High School">High School</option>
                             <option value="First Year Undergraduate">First Year Undergraduate</option>
                             <option value="Second Year Undergraduate">Second Year Undergraduate</option>
@@ -137,24 +132,24 @@ export default function HackerApplication() {
                             <option value="Graduate Studies">Graduate Studies</option>
                             <option value="other">Other</option>
                         </select>
-                    </label><br />
+                    </div>
                     {levelOfStudy && isLevelOfStudyOther(levelOfStudy) &&
                     <>
                         <label>
                             Please enter your current level of study:
-                            <input value={otherLevelOfStudy} onChange={e => setOtherLevelOfStudy(e.target.value)} type={"text"} />
+                            <input className={css.textInput} value={otherLevelOfStudy} onChange={e => setOtherLevelOfStudy(e.target.value)} type={"text"} />
                         </label><br />
                     </>
                     }
                     <label>
                         Date of Birth:
-                        Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for
-                        information about ROCGirlHacks, WiC’s hackathon for minors!
-                        {birthdayInput}
+                        <p className={css.secondaryInformation}>Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for
+                            information about ROCGirlHacks, WiC’s hackathon for minors!</p>
+                        <input className={css.dateInput} value={birthday} onChange={e => setBirthday(e.target.value)} type={"date"} />
                     </label><br />
-                    <label>
+                    <div className={css.selectDiv}>
                         School:
-                        <select value={university} onChange={e => setUniversity(e.target.value)}>
+                        <select className={css.formSelect} value={university} onChange={e => setUniversity(e.target.value)}>
                             <option value="RIT">Rochester Institute of Technology</option>
                             <option value="Waterloo">University of Waterloo</option>
                             <option value="SUNY Oswego">SUNY Oswego</option>
@@ -163,18 +158,18 @@ export default function HackerApplication() {
                             <option value="Ithaca">Ithaca</option>
                             <option value="other">Other</option>
                         </select>
-                    </label><br />
+                    </div>
                     {university && isSchoolOther(university) &&
                         <>
                             <label>
                                 Please enter the name of your school:
-                                <input value={otherUniversity} onChange={e => setOtherUniversity(e.target.value)} type={"text"} />
+                                <input className={css.textInput} value={otherUniversity} onChange={e => setOtherUniversity(e.target.value)} type={"text"} />
                             </label><br />
                         </>
                     }
-                    <label>
+                    <div className={css.selectDiv}>
                         Shirt Size:
-                        <select value={shirtSize} onChange={e => setShirtSize(e.target.value)}>
+                        <select className={css.formSelect} value={shirtSize} onChange={e => setShirtSize(e.target.value)}>
                             <option value="X-Small">X-Small</option>
                             <option value="Small">Small</option>
                             <option value="Medium">Medium</option>
@@ -183,28 +178,28 @@ export default function HackerApplication() {
                             <option value="XX-Large">XX-Large</option>
                             <option value="XXX-Large">XXX-Large</option>
                         </select>
-                    </label><br />
+                    </div>
                     <label>
                         Have you participated in any hackathons before?:
                         <div onChange={e => setAttendedHackathonsInput(e.target.value)}>
-                            <input type="radio" value={"true"} name={"attendedHackathons"} />Yes
-                            <input type="radio" value={"false"} name={"attendedHackathons"} />No
+                            <input class={css.radioInput} type="radio" value={"true"} name={"attendedHackathons"} />Yes
+                            <input class={css.radioInput} type="radio" value={"false"} name={"attendedHackathons"} />No
                         </div>
                     </label><br />
                     <label>
                         Have you participated in WiCHacks before?:
                         <div onChange={e => setAttendedWiCHacksInput(e.target.value)}>
-                            <input type="radio" value={"true"} name={"attendedWiCHacks"} />Yes
-                            <input type="radio" value={"false"} name={"attendedWiCHacks"} />No
+                            <input class={css.radioInput} type="radio" value={"true"} name={"attendedWiCHacks"} />Yes
+                            <input class={css.radioInput} type="radio" value={"false"} name={"attendedWiCHacks"} />No
                         </div>
                     </label><br />
 
-                    <h2>Attendance and Travel</h2>
+                    <h2 className={css.sectionHeader}>Attendance and Travel</h2>
                     <label>
                         How will you be participating?:
                         <div onChange={e => setIsVirtual(e.target.value)}>
-                            <input type="radio" value={"true"} name={"isVirtual"} />In-Person
-                            <input type="radio" value={"false"} name={"isVirtual"} />Online Only
+                            <input class={css.radioInput} type="radio" value={"true"} name={"isVirtual"} />In-Person
+                            <input class={css.radioInput} type="radio" value={"false"} name={"isVirtual"} />Online Only
                         </div>
                     </label><br />
                     {eligibleForBusing &&
@@ -212,8 +207,8 @@ export default function HackerApplication() {
                             <label>
                                 Would you like to travel to RIT via one of the buses?:
                                 <div onChange={e => setBusRider(e.target.value)}>
-                                    <input type="radio" value={"true"} name={"busRider"} />Yes
-                                    <input type="radio" value={"false"} name={"busRider"} />No
+                                    <input class={css.radioInput} type="radio" value={"true"} name={"busRider"} />Yes
+                                    <input class={css.radioInput} type="radio" value={"false"} name={"busRider"} />No
                                 </div>
                             </label><br />
                             {(busRider && busRider === "true") &&
@@ -234,27 +229,27 @@ export default function HackerApplication() {
                     <label>
                         Do you have any dietary restrictions?:
                         <div onChange={e => setDietaryRestriction(e.target.value)}>
-                            <input type="radio" value={"true"} name={"dietRestriction"} />Yes
-                            <input type="radio" value={"false"} name={"dietRestriction"} />No
+                            <input class={css.radioInput} type="radio" value={"true"} name={"dietRestriction"} />Yes
+                            <input class={css.radioInput} type="radio" value={"false"} name={"dietRestriction"} />No
                         </div>
                     </label><br />
 
                     {(dietaryRestriction && dietaryRestriction !== "false") &&
                         <>
-                            <label>
+                            <label className={css.paragraphLabel}>
                                 Please list your dietary restrictions below so we can ensure to have food available for you:
-                                <input value={dietaryRestriction} onChange={e => setDietaryRestriction(e.target.value)} type={"text"} />
+                                <textarea className={css.largeTextInput} value={dietaryRestriction} onChange={e => setDietaryRestriction(e.target.value)} rows={5} />
                             </label><br />
                         </>
                     }
 
-                    <label>
-                        Will you require any special accommodations you feel may not be already planned?:
-                        Please note, we will have interpreting/captioning for opening and closing ceremonies, but if you need interpreting services for your team, this
-                        request will need to be made via RIT Department of Access Services. Regardless, please indicate a need for interpreting/captioning services below
+                    <label className={css.paragraphLabel}>
+                        Will you require any special accommodations you feel may not be already planned?
+                        <p className={css.secondaryInformation}>Please note, we will have interpreting/captioning for opening and closing ceremonies, but if you need interpreting services for your team, this
+                            request will need to be made via RIT Department of Access Services. Regardless, please indicate a need for interpreting/captioning services below</p>
                         <div onChange={e => setSpecialAccommodations(e.target.value)}>
-                            <input type="radio" value={"true"} name={"accommodations"} />Yes
-                            <input type="radio" value={"false"} name={"accommodations"} />No
+                            <input class={css.radioInput} type="radio" value={"true"} name={"accommodations"} />Yes
+                            <input class={css.radioInput} type="radio" value={"false"} name={"accommodations"} />No
                         </div>
                     </label><br />
 
@@ -262,7 +257,7 @@ export default function HackerApplication() {
                     <>
                         <label>
                             Please list and describe accommodations below :
-                            <input value={specialAccommodations} onChange={e => setSpecialAccommodations(e.target.value)} type={"text"} />
+                            <textarea className={css.largeTextInput} value={specialAccommodations} onChange={e => setSpecialAccommodations(e.target.value)} rows={5}/>
                         </label><br />
                     </>
                     }
@@ -320,7 +315,7 @@ export default function HackerApplication() {
                         }}
                         />
                     </label><br />
-                    <input type="submit" onClick={submitUserCreation}/>
+                    <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
                 </form>
             </div>
         </Grommet>

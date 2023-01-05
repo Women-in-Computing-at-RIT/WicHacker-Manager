@@ -3,6 +3,7 @@ import {Grommet, Button} from "grommet";
 import {useState} from "react";
 import {localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
+import css from "./style/form.module.css"
 
 
 export function NewHackerForm(){
@@ -17,9 +18,9 @@ export function NewAdminForm(){
     )
 }
 
-function useInput({ type /*...*/ }) {
+function useTextInput() {
     const [value, setValue] = useState("");
-    const input = <input value={value} onChange={e => setValue(e.target.value)} type={type} />;
+    const input = <input className={css.textInput} value={value} onChange={e => setValue(e.target.value)} type="text" />;
     return [value, input];
 }
 
@@ -54,18 +55,23 @@ export function NewUserForm({applicationRedirectRequired}) {
         e.preventDefault()
         let userData = {
             "firstName": firstName,
-            "lastName": lastName
+            "lastName": lastName,
+            "email": email,
+            "phoneNumber": phoneNumber
         }
         await createUser(userData, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired)
     }
 
-    const [firstName, firstNameInput] = useInput({ type: "text" });
-    const [lastName, lastNameInput] = useInput({ type: "text" });
+    const [firstName, firstNameInput] = useTextInput();
+    const [lastName, lastNameInput] = useTextInput();
+    const [email, emailInput] = useTextInput();
+    const [phoneNumber, phoneNumberInput] = useTextInput();
 
 
 
     return (
-        <Grommet>
+        <div>
+            <h2 className={css.pageTitle}>Hacker Profile Creation</h2>
             {submissionError &&
                 <div>
                     <h2>
@@ -75,17 +81,27 @@ export function NewUserForm({applicationRedirectRequired}) {
             }
             <div>
                 <form>
-                    <label>
-                        First Name:
-                        {firstNameInput}
-                    </label><br />
-                    <label>
-                        Last Name:
-                        {lastNameInput}
-                    </label><br />
-                    <input type="submit" onClick={submitUserCreation}/>
+                    <div className={css.hackerProfileFormFields}>
+                        <label>
+                            First Name: <br />
+                            {firstNameInput}
+                        </label><br />
+                        <label>
+                            Last Name: <br />
+                            {lastNameInput}
+                        </label><br />
+                        <label>
+                            Email: <br />
+                            {emailInput}
+                        </label><br />
+                        <label>
+                            Phone Number: <br />
+                            {phoneNumberInput}
+                        </label><br />
+                        <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
+                    </div>
                 </form>
             </div>
-        </Grommet>
+        </div>
     );
 }
