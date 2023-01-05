@@ -12,6 +12,7 @@
   background: white;
   border: grey solid 3px;
   border-radius: 25px;
+  margin-bottom: 20px;
 }
 
 h2{
@@ -49,6 +50,8 @@ label{
 }
 
 .textInput{
+  font-size: 12px;
+  padding-left: 5px;
   margin-bottom: 10px;
   margin-top: 5px;
   padding-right: 30%;
@@ -99,6 +102,9 @@ label{
   padding-right: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
+  background-color: rgba(220, 208, 255, 0.3);
+  border: grey solid 2px;
+  border-radius: 7px;
 }
 
 .sectionHeader{
@@ -109,4 +115,11 @@ label{
 
 .hackerProfileFormFields{
 
+}
+
+.applicationSubmitButton{
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 15px;
+  text-align: center;
 }

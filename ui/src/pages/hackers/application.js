@@ -227,9 +227,8 @@ export default function HackerApplication() {
                             }
                         </>
                     }
-
-                    <h2>Special Information and Accommodations</h2>
                     <hr className={css.sectionBreak}/>
+                    <h2>Special Information and Accommodations</h2>
                     <label>
                         Do you have any dietary restrictions?:
                         <div onChange={e => setHasDietaryRestriction(e.target.value)}>
@@ -319,7 +318,10 @@ export default function HackerApplication() {
                         }}
                         />
                     </label><br />
-                    <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
+                    <hr className={css.sectionBreak}/>
+                    <div className={css.applicationSubmitButton}>
+                        <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
+                    </div>
                 </form>
             </div>
         </div>
