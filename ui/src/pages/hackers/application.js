@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {Grommet} from "grommet";
 import {useState} from "react";
-import {localAxios} from "../../config/axios";
+import {apiDomain, localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
 
@@ -12,7 +12,7 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.post(`http://localhost:5002/user/apply`, userJson, config)
+    localAxios.post(apiDomain + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
         }).catch(async () => {

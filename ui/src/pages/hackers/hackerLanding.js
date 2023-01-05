@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
-import {localAxios} from "../../config/axios";
+import {apiDomain, localAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
 import css from "./style/hackerLanding.module.css"
 
@@ -11,7 +11,7 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) =
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(`http://localhost:5002/user`, config)
+    localAxios.get(apiDomain + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 setNewUser(true)
@@ -38,7 +38,7 @@ const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
         const config = {
             headers: { Authorization: `Bearer ${token}`}
         }
-        localAxios.post(`http://localhost:5002/user/resume`, data, config)
+        localAxios.post(apiDomain + `/user/resume`, data, config)
             .then(async (response) => {
                 setResumeUpload({"status": true, "error": null})
             }).catch(async () => {
