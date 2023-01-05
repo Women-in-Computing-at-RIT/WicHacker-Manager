@@ -1,6 +1,7 @@
-from enum import Enum
-from users import getUserByUserID
-from emailTemplates.applied import getAppliedEmail, getAppliedSubjectLine
+import os
+
+from data.users import getUserByUserID
+from data.emailTemplates.applied import getAppliedEmail, getAppliedSubjectLine
 import logging
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -86,4 +87,11 @@ def getSendGridClient():
     Return Send Grid Api Client
     :return:
     """
-    return SendGridAPIClient('SendGridApiKey')
+    return SendGridAPIClient(getSendGridApiKey())
+
+
+def getSendGridApiKey():
+    key = os.environ.get("SENDGRID_API_KEY")
+    if key is None:
+        logger.error("SENDGRID API Key Retrieval Failure")
+    return key

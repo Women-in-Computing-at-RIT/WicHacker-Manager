@@ -2,7 +2,8 @@ import logging
 
 from flask_restful import Resource, reqparse
 from flask import request
-from data.users import createUser, getUserByUserID, getUserByAuthID
+from data.users import getUserByUserID, getUserByAuthID
+from data.createUser import createUser
 from utils.authentication import authenticate
 from data.validation import validatePhoneNumberString, validateEmailAddress
 
