@@ -127,6 +127,7 @@ export default function HackerApplication() {
                     <div className={css.selectDiv}>
                         Current Level of Study:
                         <select className={css.formSelect} value={levelOfStudy} onChange={e => setLevelOfStudy(e.target.value)}>
+                            <option value="none" selected disabled hidden>Select your current level of study</option>
                             <option value="High School">High School</option>
                             <option value="First Year Undergraduate">First Year Undergraduate</option>
                             <option value="Second Year Undergraduate">Second Year Undergraduate</option>
@@ -154,6 +155,7 @@ export default function HackerApplication() {
                     <div className={css.selectDiv}>
                         School:
                         <select className={css.formSelect} value={university} onChange={e => setUniversity(e.target.value)}>
+                            <option value="none" selected disabled hidden>Select your School</option>
                             <option value="RIT">Rochester Institute of Technology</option>
                             <option value="Waterloo">University of Waterloo</option>
                             <option value="SUNY Oswego">SUNY Oswego</option>
@@ -174,6 +176,7 @@ export default function HackerApplication() {
                     <div className={css.selectDiv}>
                         Shirt Size:
                         <select className={css.formSelect} value={shirtSize} onChange={e => setShirtSize(e.target.value)}>
+                            <option value="none" selected disabled hidden>Select your shirt size</option>
                             <option value="X-Small">X-Small</option>
                             <option value="Small">Small</option>
                             <option value="Medium">Medium</option>

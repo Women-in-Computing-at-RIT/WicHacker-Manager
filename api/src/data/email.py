@@ -60,6 +60,7 @@ def sendRejectedEmail(userId) -> bool:
 def sendEmail(emailAddresses: Union[List[str], str], subject, content) -> bool:
     """
     Send emailType to user based on id
+    :param subject: subject line of the email
     :param emailAddresses:  single or list of string email addresses to send email to
     :param content: HTML to send
     :return:
