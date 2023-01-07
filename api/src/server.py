@@ -10,6 +10,7 @@ from controller.test import Test
 from controller.user import User
 from controller.users import Users
 from controller.resume import Resume
+from controller.recaptcha import Recaptcha
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
@@ -35,6 +36,7 @@ api.add_resource(User, User.PATH_WITH_ID, endpoint="user_with_id")
 api.add_resource(Users, Users.PATH)
 api.add_resource(Application, Application.PATH)
 api.add_resource(Resume, Resume.PATH)
+api.add_resource(Recaptcha, Recaptcha.PATH)
 
 if not migration.initializeMigrations():
     logger.error("Initialize Migration Failure")

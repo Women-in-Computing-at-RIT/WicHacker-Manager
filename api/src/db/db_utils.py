@@ -19,11 +19,11 @@ def connect() -> mysql.MySQLConnection:
     """
     try:
         return mysql.connect(database=os.environ.get('DBNAME'),
-                         user=os.environ.get('DB_USER'),
-                         password=os.environ.get('PASSWORD'),
-                         host=os.environ.get('HOST'),
-                         port=int(os.environ.get('PORT')),
-                         )
+                             user=os.environ.get('DB_USER'),
+                             password=os.environ.get('PASSWORD'),
+                             host=os.environ.get('HOST'),
+                             port=int(os.environ.get('PORT')),
+                             )
     except Exception as error:
         logger.error("Database Connection Error: %s", error)
         return None
@@ -76,7 +76,7 @@ def exec_get_one(sql, args={}) -> (dict, bool):
     conn = connect()
     if conn is None:
         return None, True
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True, buffered=True)
     try:
         cur.execute(sql, args)
         one = cur.fetchone()

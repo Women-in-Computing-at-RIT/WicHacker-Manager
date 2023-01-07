@@ -34,10 +34,8 @@ export default function HackathonManagerLandingPage() {
 
     let display;
     if (userResponse?.error){
-        console.log(userResponse.error)
         display = <p>Error</p>
     } else if (userResponse?.data){
-        console.log(userResponse.data);
         display=<div><pre>{JSON.stringify(userResponse.data, null, 2)}</pre></div>
     } else {
         display = <p>Loading....</p>

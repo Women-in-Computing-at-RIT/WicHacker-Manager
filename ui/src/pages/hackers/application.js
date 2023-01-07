@@ -1,9 +1,9 @@
 import {useNavigate} from "react-router-dom";
-import {Grommet} from "grommet";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {apiDomain, localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
+import ReCAPTCHA from "react-google-recaptcha";
 
 const createApplication = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage) => {
     const token = await getAccessTokenSilently({
@@ -20,13 +20,51 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
     })
 }
 
+const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
+    const token = await getAccessTokenSilently({
+        audience: 'wichacks.io',
+    });
+    const config = {
+        headers: { Authorization: `Bearer ${token}`}
+    }
+    localAxios.get(apiDomain + `/user`, config)
+        .then(async (response) => {
+            if (response.status === 204){
+                return
+            }
+            const userData = (await response.data);
+            if (userData?.status){
+                navigate("/user")
+            }
+        }).catch(async () => {
+
+    })
+}
+
 export default function HackerApplication() {
     let navigate = useNavigate()
     const [submissionError, setSubmissionError] = useState(null)
     const {getAccessTokenSilently} = useAuth0();
+    const [recaptchaStatus, setRecaptchaStatus] = useState();
+    // this is not a private key, do not place private keys anywhere within this react app
+    const RECAPTCHA_KEY = "6Le2GdkjAAAAAJ8xF_aJBjjHUAksuHIqGb-HKHkR"
 
     const navigateToPage = (path) => {
         navigate(path)
+    }
+
+    useEffect(() => {
+        redirectUsersIfApplied(getAccessTokenSilently, navigateToPage)
+    }, [])
+
+    const checkRecaptcha = async(value) => {
+        const requestData = {"captchaToken": value}
+        localAxios.post(apiDomain + '/recaptcha', requestData)
+            .then(async (response) => {
+                setRecaptchaStatus(true)
+            }).catch(async () => {
+            setRecaptchaStatus(false)
+        })
     }
 
     const isSchoolOther = (schoolName) => {
@@ -49,6 +87,11 @@ export default function HackerApplication() {
 
     const submitUserCreation = async(e) => {
         e.preventDefault()
+        if (!recaptchaStatus){
+            setSubmissionError(true)
+            return
+        }
+
         const affirmedAgreements = wichacksEventPolicies && ritEventPolicies && mlhCodeOfConduct && mlhDataSharing && allInformationCorrect
         if (!affirmedAgreements){
             setSubmissionError(true)
@@ -71,7 +114,6 @@ export default function HackerApplication() {
             "affirmedAgreements": affirmedAgreements,
             "isVirtual": (isVirtual && isVirtual === "true")
         }
-        console.log(userData)
         await createApplication(userData, getAccessTokenSilently, setSubmissionError, navigateToPage)
     }
 
@@ -127,6 +169,7 @@ export default function HackerApplication() {
                     <div className={css.selectDiv}>
                         Current Level of Study:
                         <select className={css.formSelect} value={levelOfStudy} onChange={e => setLevelOfStudy(e.target.value)}>
+                            <option value="none" selected disabled hidden>Select your current level of study</option>
                             <option value="High School">High School</option>
                             <option value="First Year Undergraduate">First Year Undergraduate</option>
                             <option value="Second Year Undergraduate">Second Year Undergraduate</option>
@@ -154,6 +197,7 @@ export default function HackerApplication() {
                     <div className={css.selectDiv}>
                         School:
                         <select className={css.formSelect} value={university} onChange={e => setUniversity(e.target.value)}>
+                            <option value="none" selected disabled hidden>Select your School</option>
                             <option value="RIT">Rochester Institute of Technology</option>
                             <option value="Waterloo">University of Waterloo</option>
                             <option value="SUNY Oswego">SUNY Oswego</option>
@@ -174,6 +218,7 @@ export default function HackerApplication() {
                     <div className={css.selectDiv}>
                         Shirt Size:
                         <select className={css.formSelect} value={shirtSize} onChange={e => setShirtSize(e.target.value)}>
+                            <option value="none" selected disabled hidden>Select your shirt size</option>
                             <option value="X-Small">X-Small</option>
                             <option value="Small">Small</option>
                             <option value="Medium">Medium</option>
@@ -332,6 +377,13 @@ export default function HackerApplication() {
                         />
                     </label><br />
                     <hr className={css.sectionBreak}/>
+                    <div>
+                        <ReCAPTCHA sitekey={RECAPTCHA_KEY}
+                                   onChange={checkRecaptcha}
+                                   render="explicit"
+                                   size="normal"
+                        />
+                    </div>
                     <div className={css.applicationSubmitButton}>
                         <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
                     </div>

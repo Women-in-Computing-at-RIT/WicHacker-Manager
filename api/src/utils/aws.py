@@ -5,7 +5,7 @@ import boto3
 session = boto3.Session()
 s3Client = None
 
-S3_RESUME_BUCKET_NAME = "wichacks-resumes"
+S3_RESUME_BUCKET_NAME = "wichacks-resumes2"
 
 logger = logging.getLogger("aws")
 

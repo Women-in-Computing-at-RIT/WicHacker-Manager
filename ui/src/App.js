@@ -8,7 +8,6 @@ function App() {
   const navigate = useNavigate();
 
   const onRedirectCallback = (appState) => {
-      console.log("On Rediret callback appstate: ", appState)
       // Use router history to replace url
       navigate(appState.returnTo || window.location.origin, {replace: true})
   };

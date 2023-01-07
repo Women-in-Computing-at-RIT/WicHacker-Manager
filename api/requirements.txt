@@ -8,3 +8,5 @@ python-jose
 six
 pytest
 boto3
+sendgrid
+requests
