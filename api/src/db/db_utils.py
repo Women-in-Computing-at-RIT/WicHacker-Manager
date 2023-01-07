@@ -76,7 +76,7 @@ def exec_get_one(sql, args={}) -> (dict, bool):
     conn = connect()
     if conn is None:
         return None, True
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True, buffered=True)
     try:
         cur.execute(sql, args)
         one = cur.fetchone()
