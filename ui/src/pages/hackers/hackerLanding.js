@@ -107,7 +107,8 @@ export default function UserHomepage() {
             <button onClick={() => logout({ returnTo: "https://wichacks.io"})}>
                 Logout
             </button>
-            {user.application_id ? <p>*Insert View Application Button</p> : <p>*Insert Apply Button</p>}
+
+            {user.application_id && <p><button onClick={() => navigate("/user/application")}>View Application</button></p>}
 
             { user.status &&
                 <h3>Application Status: {user.status}</h3>

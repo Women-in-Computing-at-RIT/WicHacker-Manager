@@ -10,4 +10,4 @@ export const localAxios = axios.create(
     }
 )
 
-export const apiDomain = "http://localhost:5001"
+export const apiDomain = "http://localhost:5002"
