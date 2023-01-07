@@ -22,9 +22,4 @@ def createUser(auth0_id, firstName, lastName, email, phoneNumber) -> int:
     userId = exec_commit_return_autoincremented_id(sql, values)
     if userId is None:
         return None
-
-    emailSuccess = sendAppliedEmail(userId)
-    if not emailSuccess:
-        # If email fails, log it out but don't cause user registration to fail
-        logger.error("Applied Email Not Successful")
     return userId

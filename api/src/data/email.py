@@ -1,6 +1,6 @@
 import os
 
-from data.users import getUserByUserID
+from data.users import getUserByAuthID
 from data.emailTemplates.applied import getAppliedEmail, getAppliedSubjectLine
 import logging
 from sendgrid import SendGridAPIClient
@@ -11,18 +11,18 @@ logger = logging.getLogger("email")
 WICHACKS_EMAIL = "organizers@wichacks.io"
 
 
-def sendAppliedEmail(userId) -> bool:
+def sendAppliedEmail(auth0ID) -> bool:
     """
     Wrapper of send email for applied email
-    :param userId:
+    :param auth0ID:
     :return: bool success
     """
-    userData = getUserByUserID(userId)
+    userData = getUserByAuthID(auth0ID)
     emailAddress = userData.get("email", None)
     firstName = userData.get("first_name", None)
     lastName = userData.get("last_name", None)
     if emailAddress is None or firstName is None or lastName is None:
-        logger.error("All User Data Not Found- UserId: %s, Email: %s, FirstName: %s, LastName: %s", userId,
+        logger.error("All User Data Not Found- UserId: %s, Email: %s, FirstName: %s, LastName: %s", auth0ID,
                      emailAddress, firstName, lastName)
         return False
     messageContent = getAppliedEmail(firstName, lastName)

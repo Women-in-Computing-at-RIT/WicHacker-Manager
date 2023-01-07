@@ -9,3 +9,4 @@ six
 pytest
 boto3
 sendgrid
+requests

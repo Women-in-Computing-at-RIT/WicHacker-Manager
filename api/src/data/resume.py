@@ -17,7 +17,8 @@ def uploadResume(userId, file, contentType) -> bool:
         s3Client.put_object(Body=file,
                             Bucket=getS3BucketName(),
                             Key=WICHACKS_YEAR+'/'+str(userId),
-                            ContentType=contentType)
+                            ContentType=contentType,
+                            ServerSideEncryption='aws:kms')
     except Exception as e:
         logger.info("Resume Upload Failure: %s", e)
         return False
