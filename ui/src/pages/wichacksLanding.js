@@ -24,7 +24,7 @@ export default function WiCHacksLanding() {
                         </Box>
                     </Button>
 
-                    <Button plain onClick={() => {onClickNavigate("/manage")}}>
+                    <Button plain onClick={() => {onClickNavigate("/user")}}>
                         <Box pad="small">
                             <Text style={{ textDecoration: "underline" }}>Already Applied? Check Your Application</Text>
                         </Box>
