@@ -42,7 +42,7 @@ const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, n
     })
 }
 
-const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
+const redirectUsersIfUserExists = async(getAccessTokenSilently, navigate) => {
     const token = await getAccessTokenSilently({
         audience: 'wichacks.io',
     });
@@ -57,6 +57,8 @@ const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
             const userData = (await response.data);
             if (userData?.status){
                 navigate("/user")
+            } else {
+                navigate("/user/apply")
             }
         }).catch(async () => {
 
@@ -69,7 +71,7 @@ export function NewUserForm({applicationRedirectRequired}) {
     const {getAccessTokenSilently} = useAuth0();
 
     useEffect(() => {
-        redirectUsersIfApplied(getAccessTokenSilently, navigateToPage)
+        redirectUsersIfUserExists(getAccessTokenSilently, navigateToPage)
     }, [])
 
     const navigateToPage = (path) => {
