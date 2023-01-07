@@ -7,6 +7,7 @@ import ApplicationList from "../pages/manage/applicationList";
 import UserHomepage from "../pages/hackers/hackerLanding";
 import {NewHackerForm, NewAdminForm} from "../pages/hackers/createNewUser";
 import HackerApplication from "../pages/hackers/application";
+import HackerApplicationView from "../pages/hackers/hackerApplicationView";
 
 export default function AppRoutes(){
     /*  Eventually add admin portal routes
@@ -20,6 +21,7 @@ export default function AppRoutes(){
             <Route path="/user" element={<ProtectedComponent component={UserHomepage} />} />
             <Route path="/user/create" element={<ProtectedComponent component={NewHackerForm} />} />
             <Route path="/user/apply" element={<ProtectedComponent component={HackerApplication} />} />
+            <Route path="/user/application" element={<ProtectedComponent component={HackerApplicationView} />} />
             <Route path="/notFound" element={<PageNotFound />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
