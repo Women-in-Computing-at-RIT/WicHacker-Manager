@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom";
-import {Grommet, Button, Box, Heading, Paragraph } from "grommet";
+import {Grommet, Button, Box, Heading, Paragraph, Image, Text } from "grommet";
 
 export default function WiCHacksLanding() {
     let navigate = useNavigate()
@@ -10,14 +10,25 @@ export default function WiCHacksLanding() {
 
     return (
         <Grommet>
-            <Box direction="column" justify="center" align="center">
-                <Heading color="#714ba0">WiCHacks</Heading>
-                <Heading level={2}>March 4th - 5th</Heading>
-                <Heading level={3}>Registrations Are Open!</Heading>
-                <Paragraph>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Paragraph>
-                <Box direction="row">
-                    <Button label="Hackers" onClick={() => {onClickNavigate("/user")}} />
-                    <Button label="Admins" onClick={() => {onClickNavigate("/manage")}} />
+            <Box direction="column" justify="center" align="center" flex="grow">
+                <Box pad={{left: "large", right: "large"}}>
+                    <Image src="/wichackslogo.svg" a11yTitle="WiCHacks Logo, beneath is RIT Women in Computing written out" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                </Box>
+                <Heading responsive margin="none" level={2}>March 4th - 5th, 2023</Heading>
+                <Heading fill responsive margin="small" textAlign="center" level={3}>MAGIC Spell Studios at RIT, or digitally from anywhere in the world</Heading>
+                <Paragraph fill responsive margin={{ left: "large", right: "large", top: "small"}} textAlign="center">💜 WiCHacks is coming up soon! Our annual hackathon will be happening this March, and registration is open now! You can participate in-person at RIT, or online from anywhere in the world. Click below to get started! 💜</Paragraph>
+                <Box direction="column">
+                    <Button onClick={() => {onClickNavigate("/user")}}>
+                        <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }}>
+                            <Text weight="bold" size="large">Apply Now!</Text>
+                        </Box>
+                    </Button>
+
+                    <Button plain onClick={() => {onClickNavigate("/manage")}}>
+                        <Box pad="small">
+                            <Text style={{ textDecoration: "underline" }}>Already Applied? Check Your Application</Text>
+                        </Box>
+                    </Button>
                 </Box>
             </Box>
         </Grommet>
