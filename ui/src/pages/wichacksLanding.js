@@ -1,5 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {Grommet, Button, Box, Heading, Paragraph, Image, Text } from "grommet";
+import { Home } from "grommet-icons";
 
 export default function WiCHacksLanding() {
     let navigate = useNavigate()
@@ -30,6 +31,13 @@ export default function WiCHacksLanding() {
                         </Box>
                     </Button>
                 </Box>
+
+                <Button plain href="https://wichacks.io">
+                    <Box direction="row" align="center" justify="center" background="#f0e1f4" pad="small" style={{ borderRadius: "20px" }}>
+                        <Home color="#4e1560" />
+                        <Text margin={{ left: "small" }} color="#4e1560" style={{ textDecoration: "underline" }} >Learn about WiCHacks</Text>
+                    </Box>
+                </Button>
             </Box>
         </Grommet>
     );
