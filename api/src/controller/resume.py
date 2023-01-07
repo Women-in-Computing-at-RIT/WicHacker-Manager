@@ -3,7 +3,7 @@ import logging
 from flask_restful import Resource
 from flask import request
 from utils.authentication import authenticate
-from data.resume import uploadResume
+from data.resume import uploadResume, checkIfUserHasResume
 from data.users import getUserIdFromAuthID
 
 logger = logging.getLogger("Application")
@@ -41,4 +41,17 @@ class Resume(Resource):
             return {"message": "Resume upload successful"}, 200
         else:
             return {"message": "Resume upload failure"}, 500
+
+    def get(self):
+        authenticationPayload = authenticate(request.headers)
+        if authenticationPayload is None:
+            return {"message": "Authorization Header Failure"}, 401
+        auth0_id = authenticationPayload['sub']
+        userID = getUserIdFromAuthID(auth0_id)
+        if userID is None:
+            return {"message": "User Error"}, 500
+
+        if checkIfUserHasResume(userID):
+            return {"message": "User has a resume uploaded"}, 200
+        return {"message": "User has no resume uploaded"}, 400
 

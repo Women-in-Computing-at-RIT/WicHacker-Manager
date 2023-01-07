@@ -10,3 +10,5 @@ pytest
 boto3
 sendgrid
 requests
+botocore
+DateTime
