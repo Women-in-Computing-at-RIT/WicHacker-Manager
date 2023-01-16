@@ -1,4 +1,5 @@
 import logging
+import os
 
 import boto3
 
@@ -6,16 +7,18 @@ session = boto3.Session()
 s3Client = None
 ssmClient = None
 
+environment = None
+
 S3_RESUME_BUCKET_NAME = "wichacks-resumes2"
 logger = logging.getLogger("aws")
 
 
 def initializeAWSClients():
-    global s3Client
-    global ssmClient
+    global s3Client, ssmClient, environment
     try:
         s3Client = session.client('s3')
         ssmClient = session.client('ssm')
+        environment = os.environ.get("ENV", None)
     except Exception as e:
         logger.error("AWS Client Creation Failure: %s", str(e))
         return False
@@ -38,7 +41,7 @@ def getDatabaseSecrets() -> dict:
     dbSecretsResponse = None
     try:
         dbSecretsResponse = ssmClient.get_parameters_by_path(
-            Path='/DEV/DB',
+            Path='/' + environment + '/DB',
             WithDecryption=True
         )
     except Exception as e:
