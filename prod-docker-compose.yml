@@ -1,0 +1,27 @@
+---
+version: '3.7'
+services:
+    api:
+        image: wichacks-api:latest
+        restart: always
+        ports:
+            - "5001:5000"
+        environment:
+            AUTH0_DOMAIN: 'wichacks.us.auth0.com'
+            DBNAME: 'wichacks'
+            AUTH0_CLIENT_ID: 'oTpWdnroYxfqQrprklhfXTGxIK5Vn8Df'
+            AWS_DEFAULT_REGION: 'us-east-1'
+        volumes:
+            -   ~/.aws:/root/.aws:ro
+    ui:
+       image: wichacks-ui:latest
+       restart: always
+       ports:
+            - "80:3000"
+# Comment out Load Balancer for now
+#    load-balancer:
+#        build: ./loadBalancer
+#        ports:
+#            - "80:80"
+#        restart: always
+
