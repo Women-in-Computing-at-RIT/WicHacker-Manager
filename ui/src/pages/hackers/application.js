@@ -12,6 +12,7 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
+    console.log(userJson);
     localAxios.post(apiDomain + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
@@ -107,7 +108,7 @@ export default function HackerApplication() {
             "hasAttendedHackathons": (hasAttendedHackathons && hasAttendedHackathons === "true"),
             "university": (university && !isSchoolOther(university)) ? university : otherUniversity,
             "gender": gender,
-            "busRider": (busRider && busRider === "true"),
+            "busRider": (eligibleForBusing && busRider === "true"),
             "busStop": busStop,
             "dietaryRestrictions": dietaryRestriction,
             "specialAccommodations": specialAccommodations,

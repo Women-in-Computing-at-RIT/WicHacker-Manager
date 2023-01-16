@@ -1,5 +1,6 @@
 import logging
 import os
+from utils.aws import getRecaptchaAPIKey
 
 import requests
 from json import loads
@@ -23,7 +24,7 @@ def getCaptchaResults(captchaToken) -> bool:
 
 
 def getCaptchaKey():
-    key = os.environ.get("RECAPTCHA_SECRET_KEY")
+    key = getRecaptchaAPIKey()
     if key is None:
         logger.error("RECAPTCHA SECRET Key Retrieval Failure")
     return key

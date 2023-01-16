@@ -6,6 +6,7 @@ import logging
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from typing import Union, List
+from utils.aws import getSendgridAPIKey
 
 logger = logging.getLogger("email")
 WICHACKS_EMAIL = "organizers@wichacks.io"
@@ -92,7 +93,7 @@ def getSendGridClient():
 
 
 def getSendGridApiKey():
-    key = os.environ.get("SENDGRID_API_KEY")
+    key = getSendgridAPIKey()
     if key is None:
         logger.error("SENDGRID API Key Retrieval Failure")
     return key
