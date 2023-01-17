@@ -1,8 +1,7 @@
-from typing import Union
-
 import mysql.connector as mysql
 import os
 import logging
+from utils.aws import getDatabaseSecrets
 
 """
     Thank you to the RIT SWEN department for the starter code for this module
@@ -10,6 +9,25 @@ import logging
     Please read the README in this directory before editing this file
 """
 logger = logging.getLogger("DB_Utils")
+DB_NAME = 'wichacks'
+USER = None
+PASSWORD = None
+HOST = None
+PORT = None
+
+
+def initializeDBSecrets() -> bool:
+    global USER, PASSWORD, HOST, PORT
+    dbSecrets = getDatabaseSecrets()
+    USER = dbSecrets['User']
+    PASSWORD = dbSecrets['Password']
+    HOST = dbSecrets['Host']
+    PORT = dbSecrets['Port']
+
+    if USER is None or PORT is None or HOST is None or PORT is None:
+        logger.error("Error Retrieving DB Connection Information")
+        return False
+    return True
 
 
 def connect() -> mysql.MySQLConnection:
@@ -18,11 +36,11 @@ def connect() -> mysql.MySQLConnection:
     :return: mysql connector connection
     """
     try:
-        return mysql.connect(database=os.environ.get('DBNAME'),
-                             user=os.environ.get('DB_USER'),
-                             password=os.environ.get('PASSWORD'),
-                             host=os.environ.get('HOST'),
-                             port=int(os.environ.get('PORT')),
+        return mysql.connect(database=DB_NAME,
+                             user=USER,
+                             password=PASSWORD,
+                             host=HOST,
+                             port=int(PORT),
                              )
     except Exception as error:
         logger.error("Database Connection Error: %s", error)
@@ -76,7 +94,7 @@ def exec_get_one(sql, args={}) -> (dict, bool):
     conn = connect()
     if conn is None:
         return None, True
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True, buffered=True)
     try:
         cur.execute(sql, args)
         one = cur.fetchone()

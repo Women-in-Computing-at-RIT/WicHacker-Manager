@@ -1,22 +1,31 @@
 import json
 from six.moves.urllib.request import urlopen
-from functools import wraps
 from .authErrorHandler import AuthError
 
 from flask import _request_ctx_stack
 from jose import jwt, JWTError
 from auth0.v3.authentication.token_verifier import TokenVerifier, AsymmetricSignatureVerifier, TokenValidationError
 import os
+from utils.aws import getAuth0ClientID
 
-domain = os.environ.get("AUTH0_DOMAIN", None)
-client_id = os.environ.get("AUTH0_CLIENT_ID", None)
-audience = os.environ.get("AUTH0_AUDIENCE", None)
+domain = None
+client_id = None
+audience = None
 
 jwks_url = 'https://{}/.well-known/jwks.json'.format(domain)
 issuer = 'https://{}/'.format(domain)
 sv = AsymmetricSignatureVerifier(jwks_url)  # Reusable instance
 
 ALGORITHMS = ["RS256"]
+
+def initializeAuthentication() -> bool:
+    global domain, client_id, audience
+    domain = os.environ.get("AUTH0_DOMAIN", None)
+    client_id = getAuth0ClientID()
+    audience = os.environ.get("AUTH0_AUDIENCE", None)
+    if domain is None or client_id is None or audience is None:
+        return False
+    return True
 
 
 def getAuthToken(headers):

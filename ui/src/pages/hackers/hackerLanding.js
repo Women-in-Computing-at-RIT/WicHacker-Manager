@@ -25,12 +25,15 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) =
 
 const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     e.preventDefault()
-    console.log("happenings beginning")
     if (e.target.files?.length === 1){
         const file = e.target.files[0];
+
+        if (file.size > 10000000){
+            setResumeUpload({"status": false, "error": "File Too Large"})
+        }
+
         const data = new FormData();
         data.append("resume", file)
-        console.log("happenings")
 
         const token = await getAccessTokenSilently({
             audience: 'wichacks.io',
@@ -42,24 +45,46 @@ const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
             .then(async (response) => {
                 setResumeUpload({"status": true, "error": null})
             }).catch(async () => {
-            setResumeUpload({"status": false, "error": true})
+            setResumeUpload({"status": false, "error": "Resume Upload Failed"})
         })
 
     } else {
         //prompt that they need to upload a file
-        setResumeUpload({"status": false, "error": 0})
+        setResumeUpload({"status": false, "error": "Please only upload one file"})
     }
 }
+
+const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUploadedResume) => {
+    const token = await getAccessTokenSilently({
+        audience: 'wichacks.io',
+    });
+    const config = {
+        headers: { Authorization: `Bearer ${token}`}
+    }
+    localAxios.get(apiDomain + `/user/resume`, config)
+        .then(async (response) => {
+            setHasUploadedResume(true)
+        }).catch(async () => {
+            setHasUploadedResume(false)
+    })
+}
+
 
 export default function UserHomepage() {
     const [userData, setUserData] = useState(null);
     const [newUser, setNewUser] = useState(false);
     const [resumeUpload, setResumeUpload] = useState(null);
-    const {getAccessTokenSilently} = useAuth0();
+    const {getAccessTokenSilently, logout} = useAuth0();
+    const [hasUploadedResume, setHasUploadedResume] = useState();
 
     useEffect(() => {
         getUserData(getAccessTokenSilently, setUserData, setNewUser)
     }, [])
+
+    // On initial render and when resume upload is attempted, reload if user has already uploaded resume
+    useEffect(() => {
+        checkIfUserHasUploadedResume(getAccessTokenSilently, setHasUploadedResume)
+    }, [resumeUpload, userData])
 
     let navigate = useNavigate()
     if (newUser){
@@ -67,9 +92,7 @@ export default function UserHomepage() {
     }
 
     if (userData?.error){
-        return (
-            <p>Error</p>
-        );
+        navigate("/notFound")
     } else if (!userData?.data){
         return (
             <p>Loading....</p>
@@ -81,20 +104,26 @@ export default function UserHomepage() {
     return (
         <div>
             <h1>Welcome {user.first_name} {user.last_name}!</h1>
-            {user.application_id ? <p>*Insert View Application Button</p> : <p>*Insert Apply Button</p>}
+            <button onClick={() => logout({ returnTo: "https://wichacks.io"})}>
+                Logout
+            </button>
+
+            {user.application_id && <p><button onClick={() => navigate("/user/application")}>View Application</button></p>}
 
             { user.status &&
                 <h3>Application Status: {user.status}</h3>
             }
 
-            <h2>Resume Upload</h2>
             <div>
-                {resumeUpload && <p>Resume Upload Success</p>}
-                {resumeUpload?.error === 0 && <p>Resume Upload Failure</p>}
+                {hasUploadedResume ? <h3>Overwrite Existing Resume</h3> : <h2>Resume Upload</h2>}
+                <div>
+                    {resumeUpload?.status && <p>Resume Upload Success</p>}
+                    {resumeUpload?.error && <p>{resumeUpload.error}</p>}
+                </div>
+                <form>
+                    <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
+                </form>
             </div>
-            <form>
-                <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
-            </form>
         </div>
     );
 }

@@ -1,8 +1,10 @@
 from utils.aws import getS3Client, getS3BucketName
 import logging
+from botocore.errorfactory import ClientError
 
 logger = logging.getLogger("ResumeUpload")
 WICHACKS_YEAR = "2023"
+
 
 def uploadResume(userId, file, contentType) -> bool:
     """
@@ -16,9 +18,38 @@ def uploadResume(userId, file, contentType) -> bool:
     try:
         s3Client.put_object(Body=file,
                             Bucket=getS3BucketName(),
-                            Key=WICHACKS_YEAR+'/'+str(userId),
-                            ContentType=contentType)
+                            Key=WICHACKS_YEAR + '/' + str(userId),
+                            ContentType=contentType,
+                            ServerSideEncryption='aws:kms')
     except Exception as e:
         logger.info("Resume Upload Failure: %s", e)
         return False
+    return True
+
+
+def checkIfUserHasResume(userId) -> bool:
+    """
+    Return bool if user with userId has a resume already uploaded
+    :param userId:
+    :return:
+    """
+    s3Client = getS3Client()
+    try:
+        s3Client.head_object(Bucket=getS3BucketName(),
+                             Key=WICHACKS_YEAR + '/' + str(userId))
+    except ClientError as e:
+        s3ErrorObject = e.response['Error']
+        if s3ErrorObject is None:
+            # don't know how we get here, adding to prevent accessing None
+            logger.error("head_object for resumes unexpected response")
+            return False
+        if s3ErrorObject['Code'] == "404":
+            # user does not have a resume uploaded
+            return False
+    except Exception as e:
+        # generic error checking S3 Bucket
+        logger.info("Resume Verification Failure: %s", e)
+        return False
+
+    # Getting resume metadata didn't error, therefore resume exists
     return True

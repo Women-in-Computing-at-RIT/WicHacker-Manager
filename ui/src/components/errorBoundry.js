@@ -11,7 +11,6 @@ class ErrorBoundry extends React.Component {
             error: error,
             errorInfo: errorInfo,
         });
-        console.log("caught error ", error)
     }
 
     render(){
@@ -28,7 +27,6 @@ class ErrorBoundry extends React.Component {
                 </div>
             );
         }
-        console.log("error boundry in place")
         return this.props.children;
     }
 }

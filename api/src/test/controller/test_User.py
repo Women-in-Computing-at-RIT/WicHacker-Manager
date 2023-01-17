@@ -91,7 +91,7 @@ def test_get_user_with_exception(mock_db_exec, mock_authenticate, client):
 
 
 @patch('controller.user.authenticate')
-@patch('data.users.exec_commit_return_autoincremented_id')
+@patch('data.createUser.exec_commit_return_autoincremented_id')
 def test_post_user_successfully(mock_db_exec, mock_authenticate, client):
     # mock object responses
     mock_db_exec.return_value = 1
@@ -109,7 +109,7 @@ def test_post_user_successfully(mock_db_exec, mock_authenticate, client):
 
 
 @patch('controller.user.authenticate')
-@patch('data.users.exec_commit_return_autoincremented_id')
+@patch('data.createUser.exec_commit_return_autoincremented_id')
 def test_post_user_with_error(mock_db_exec, mock_authenticate, client):
     # mock object responses
     mock_db_exec.return_value = None
@@ -126,7 +126,7 @@ def test_post_user_with_error(mock_db_exec, mock_authenticate, client):
 
 
 @patch('controller.user.authenticate')
-@patch('data.users.exec_commit_return_autoincremented_id')
+@patch('data.createUser.exec_commit_return_autoincremented_id')
 def test_post_user_with_missing_field(mock_db_exec, mock_authenticate, client):
     # mock object responses
     mock_db_exec.return_value = 1
@@ -141,7 +141,7 @@ def test_post_user_with_missing_field(mock_db_exec, mock_authenticate, client):
     assert response.status_code == 400
 
 @patch('controller.user.authenticate')
-@patch('data.users.exec_commit_return_autoincremented_id')
+@patch('data.createUser.exec_commit_return_autoincremented_id')
 def test_post_user_with_validation_error(mock_db_exec, mock_authenticate, client):
     # mock object responses
     mock_db_exec.return_value = 1

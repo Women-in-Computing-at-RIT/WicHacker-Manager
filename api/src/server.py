@@ -10,12 +10,15 @@ from controller.test import Test
 from controller.user import User
 from controller.users import Users
 from controller.resume import Resume
+from controller.recaptcha import Recaptcha
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
 from utils.authErrorHandler import handle_auth_error, AuthError
 from utils.genericErrorHandler import handle_error
 from utils.aws import initializeAWSClients
+from db.db_utils import initializeDBSecrets
+from utils.authentication import initializeAuthentication
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("server")
@@ -35,15 +38,22 @@ api.add_resource(User, User.PATH_WITH_ID, endpoint="user_with_id")
 api.add_resource(Users, Users.PATH)
 api.add_resource(Application, Application.PATH)
 api.add_resource(Resume, Resume.PATH)
+api.add_resource(Recaptcha, Recaptcha.PATH)
 
+if not initializeAWSClients():
+    logger.error("AWS Client Initialization Failure")
+    sys.exit(1)
+if not initializeDBSecrets():
+    logger.error("Initializing DB Secrets Failure")
+    sys.exit(1)
 if not migration.initializeMigrations():
     logger.error("Initialize Migration Failure")
     sys.exit(1)
 if not migration.up():
     logger.error("Migration Failure")
     sys.exit(1)
-if not initializeAWSClients():
-    logger.error("AWS Client Initialization Failure")
+if not initializeAuthentication():
+    logger.error("Authentication Initialization Failure")
     sys.exit(1)
 logger.info("Starting Server")
 

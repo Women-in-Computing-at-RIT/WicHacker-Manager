@@ -5,7 +5,6 @@ from flask import request
 from data.application import createApplication
 from utils.authentication import authenticate
 from utils.convertDatetime import convertDatetimeToString
-from datetime import datetime
 
 logger = logging.getLogger("Application")
 
@@ -52,7 +51,7 @@ class Application(Resource):
                                                isVirtual=args["isVirtual"]
                                                )
         if applicationCreated is None:
-            return {"message": "Internal Server Error"}, 500
+            return {"message": "Experienced Internal Server Error"}, 500
         elif not applicationCreated:
             # creating application and linking to user failed
             return {"message": "Internal Server Error"}, 500

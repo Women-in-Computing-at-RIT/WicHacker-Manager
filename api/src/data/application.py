@@ -1,7 +1,10 @@
 # @TODO: Consider adding support for update in place
+import logging
 
+from data.email import sendAppliedEmail
 from db.db_utils import exec_commit_link, exec_commit, exec_get_one
 
+logger = logging.getLogger("Application")
 
 def createApplication(auth0_id, major, levelOfStudy, birthday, shirtSize, hasAttendedWiCHacks, hasAttendedHackathons,
                       university, gender, busRider, busStop, dietaryRestrictions, specialAccommodations,
@@ -46,6 +49,10 @@ def createApplication(auth0_id, major, levelOfStudy, birthday, shirtSize, hasAtt
         return None
     elif rowsAffected == 1:
         # created application and linked to one account - successful
+        emailSuccess = sendAppliedEmail(auth0_id)
+        if not emailSuccess:
+            # If email fails, log it out but don't cause user registration to fail
+            logger.error("Applied Email Not Successful")
         return True
     return False
 
