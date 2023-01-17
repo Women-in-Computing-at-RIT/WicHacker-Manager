@@ -3,11 +3,11 @@ import axios from 'axios'
 export const localAxios = axios.create(
     {
         proxy: {
-            protocol: 'http',
-            host: 'localhost',
-            port: 5001
+            protocol: 'https',
+            host: 'api.wichacks.io',
+            port: 433
         }
     }
 )
 
-export const apiDomain = "http://localhost:5002"
+export const apiDomain = "https://api.wichacks.io"
