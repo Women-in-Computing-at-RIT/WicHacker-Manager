@@ -1,11 +1,9 @@
-import {Routes, Route } from "react-router-dom";
-import HackathonManagerLandingPage from "../pages/manage/hmLanding";
+import { Routes, Route } from "react-router-dom";
 import PageNotFound from "../pages/404Page";
 import WiCHacksLanding from "../pages/wichacksLanding";
 import { ProtectedComponent } from "../hocs/protectedRoute";
-import ApplicationList from "../pages/manage/applicationList";
 import UserHomepage from "../pages/hackers/hackerLanding";
-import {NewHackerForm, NewAdminForm} from "../pages/hackers/createNewUser";
+import { NewHackerForm } from "../pages/hackers/createNewUser";
 import HackerApplication from "../pages/hackers/application";
 import HackerApplicationView from "../pages/hackers/hackerApplicationView";
 

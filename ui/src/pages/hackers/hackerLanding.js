@@ -3,6 +3,9 @@ import {useAuth0} from "@auth0/auth0-react";
 import {apiDomain, localAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
 import css from "./style/hackerLanding.module.css"
+import LoadingView from "../LoadingView";
+import { Grommet, Box, Heading, Text, Button, Paragraph } from 'grommet';
+import NavBar from "../../components/navBar";
 
 const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) => {
     const token = await getAccessTokenSilently({
@@ -95,35 +98,74 @@ export default function UserHomepage() {
         navigate("/notFound")
     } else if (!userData?.data){
         return (
-            <p>Loading....</p>
+            <LoadingView />
         );
     }
 
     let user = userData.data
+    console.log(user);
 
     return (
-        <div>
-            <h1>Welcome {user.first_name} {user.last_name}!</h1>
-            <button onClick={() => logout({ returnTo: "https://wichacks.io"})}>
-                Logout
-            </button>
+        <Grommet>
+            <Box>
+                <NavBar title="WiCHacks User Home">
+                    <Button plain onClick={ () => logout({ returnTo: "/" }) }>
+                        <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
+                            <Text weight="bold" color="#714ba0">Logout</Text>
+                        </Box>
+                    </Button>
+                </NavBar>
+                <Box margin="small"> { /* Page content */}
+                    <Heading>Welcome { user.first_name }!</Heading>
+                    { user.application_id ?
+                        <Box> {/** ALREADY APPLIED */ }
+                            <Button plain onClick={ () => navigate("/user/application") }>
+                                <Box background="blue">
+                                    <Text>View Application</Text>
+                                </Box>
+                            </Button>
 
-            {user.application_id && <p><button onClick={() => navigate("/user/application")}>View Application</button></p>}
+                            <Text>Application Status: {user.status ?? "You Haven't Applied Yet"}</Text>
 
-            { user.status &&
-                <h3>Application Status: {user.status}</h3>
-            }
+                            { hasUploadedResume ?
+                                <Box>
+                                    <Text>Good job uploading resume</Text>
+                                </Box> : 
+                                <Box>
+                                    <Text>Plz upload your resume, we will get you a job /s</Text>
+                                </Box>
+                            }
 
-            <div>
-                {hasUploadedResume ? <h3>Overwrite Existing Resume</h3> : <h2>Resume Upload</h2>}
-                <div>
-                    {resumeUpload?.status && <p>Resume Upload Success</p>}
-                    {resumeUpload?.error && <p>{resumeUpload.error}</p>}
-                </div>
-                <form>
-                    <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
-                </form>
-            </div>
-        </div>
+                            <Box>
+                                {resumeUpload?.status && 
+                                    <Box background="green">
+                                        <Text>Resume Upload Success</Text>
+                                    </Box>
+                                }
+
+                                {resumeUpload?.error && 
+                                    <Box background="red">
+                                        <Text>Resume Upload Error: {resumeUpload.error}</Text>
+                                    </Box>
+                                }
+                            </Box>
+                            <form>
+                                <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
+                            </form>
+                        </Box> :
+                        <Box background="#00000010" round="medium" pad="medium"> { /** NEEDS TO APPLY */ }
+                            <Heading level={3} margin="none">You Haven't Applied Yet! 😞</Heading>
+                            <Paragraph fill>WiCHacks is still accepting applications! Apply now, it's super easy!</Paragraph>
+                            <Button onClick={() => {navigate("/user")}}>
+                                <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                    <Text weight="bold" size="large">Apply Now!</Text>
+                                </Box>
+                            </Button>
+                        </Box>
+                    }
+                    
+                </Box>
+            </Box>
+        </Grommet>
     );
 }

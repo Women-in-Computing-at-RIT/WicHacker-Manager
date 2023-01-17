@@ -4,11 +4,6 @@ import { Home } from "grommet-icons";
 
 export default function WiCHacksLanding() {
     let navigate = useNavigate()
-
-    const onClickNavigate = (path) => {
-        navigate(path)
-    }
-
     return (
         <Grommet>
             <Box direction="column" justify="center" align="center" flex="grow">
@@ -19,13 +14,13 @@ export default function WiCHacksLanding() {
                 <Heading fill responsive margin="small" textAlign="center" level={3}>MAGIC Spell Studios at RIT, or digitally from anywhere in the world</Heading>
                 <Paragraph fill responsive margin={{ left: "large", right: "large", top: "small"}} textAlign="center">💜 WiCHacks is coming up soon! Our annual hackathon will be happening this March, and registration is open now! You can participate in-person at RIT, or online from anywhere in the world. Click below to get started! 💜</Paragraph>
                 <Box direction="column">
-                    <Button onClick={() => {onClickNavigate("/user")}}>
+                    <Button onClick={() => {navigate("/user")}}>
                         <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }}>
                             <Text weight="bold" size="large">Apply Now!</Text>
                         </Box>
                     </Button>
 
-                    <Button plain onClick={() => {onClickNavigate("/user")}}>
+                    <Button plain onClick={() => {navigate("/user")}}>
                         <Box pad="small">
                             <Text style={{ textDecoration: "underline" }}>Already Applied? Check Your Application</Text>
                         </Box>
