@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
-import {apiDomain, localAxios} from "../../config/axios";
+import {apiDomain, getAxios} from "../../config/axios";
 
 const getApplicantsFromApi = async(getAccessTokenSilently, setApplications) => {
     const token = await getAccessTokenSilently({
@@ -9,7 +9,7 @@ const getApplicantsFromApi = async(getAccessTokenSilently, setApplications) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(apiDomain + `/users`, config)
+    getAxios().get(apiDomain + `/users`, config)
         .then(async (response) => {
             setApplications({data: await response.data, error: null})
         }).catch((response, error) => {

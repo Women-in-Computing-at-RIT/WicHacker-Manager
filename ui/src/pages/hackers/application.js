@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {apiDomain, localAxios} from "../../config/axios";
+import {apiDomain, getAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
 import ReCAPTCHA from "react-google-recaptcha";
@@ -13,7 +13,7 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
         headers: { Authorization: `Bearer ${token}`}
     }
     console.log(userJson);
-    localAxios.post(apiDomain + `/user/apply`, userJson, config)
+    getAxios.post(apiDomain + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
         }).catch(async () => {
@@ -28,7 +28,7 @@ const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(apiDomain + `/user`, config)
+    getAxios().get(apiDomain + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 return
@@ -60,7 +60,7 @@ export default function HackerApplication() {
 
     const checkRecaptcha = async(value) => {
         const requestData = {"captchaToken": value}
-        localAxios.post(apiDomain + '/recaptcha', requestData)
+        getAxios.post(apiDomain + '/recaptcha', requestData)
             .then(async (response) => {
                 setRecaptchaStatus(true)
             }).catch(async () => {
