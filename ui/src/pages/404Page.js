@@ -21,7 +21,7 @@ export default function PageNotFound() {
                         </Box>
                     </Button>
 
-                    <Box direction="row" align="center" justify="left" width="medium" margin={{ top: "medium" }}>
+                    <Box direction="row" align="center" justify="center" width="medium" margin={{ top: "medium" }}>
                         <Button plain href="https://twitter.com/wichacks?lang=en">
                             <Twitter />
                         </Button>

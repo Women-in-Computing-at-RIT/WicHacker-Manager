@@ -9,7 +9,7 @@ const getApplicantsFromApi = async(getAccessTokenSilently, setApplications) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios().get(apiDomain + `/users`, config)
+    getAxios().get(apiDomain() + `/users`, config)
         .then(async (response) => {
             setApplications({data: await response.data, error: null})
         }).catch((response, error) => {

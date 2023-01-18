@@ -11,7 +11,7 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, navigateTo) =
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios().get(apiDomain + `/user`, config)
+    getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 navigateTo("/user/apply")

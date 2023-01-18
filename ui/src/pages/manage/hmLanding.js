@@ -11,7 +11,7 @@ const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios().get(apiDomain + `/userTest/${userId}`, config)
+    getAxios().get(apiDomain() + `/userTest/${userId}`, config)
         .then(async (response) => {
             setUserResponse({data: await response.data, error: null})
         }).catch((response, error) => {

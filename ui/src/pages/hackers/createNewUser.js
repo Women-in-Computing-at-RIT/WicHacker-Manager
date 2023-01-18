@@ -31,7 +31,7 @@ const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, n
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios.post(apiDomain + `/user`, userJson, config)
+    getAxios().post(apiDomain() + `/user`, userJson, config)
         .then(async (response) => {
             if (!applicationRedirectRequired){
                 navigateToPage("/user")
@@ -49,7 +49,7 @@ const redirectUsersIfUserExists = async(getAccessTokenSilently, navigate) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios().get(apiDomain + `/user`, config)
+    getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 return
@@ -80,7 +80,7 @@ export function NewUserForm({applicationRedirectRequired}) {
 
     const checkRecaptcha = async(value) => {
         const requestData = {"captchaToken": value}
-        getAxios.post(apiDomain + '/recaptcha', requestData)
+        getAxios().post(apiDomain() + '/recaptcha', requestData)
             .then(async (response) => {
                 setRecaptchaStatus(true)
             }).catch(async () => {

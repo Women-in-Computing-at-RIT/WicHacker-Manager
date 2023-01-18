@@ -13,7 +13,7 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
         headers: { Authorization: `Bearer ${token}`}
     }
     console.log(userJson);
-    getAxios.post(apiDomain + `/user/apply`, userJson, config)
+    getAxios().post(apiDomain() + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
         }).catch(async () => {
@@ -28,7 +28,7 @@ const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios().get(apiDomain + `/user`, config)
+    getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 return
@@ -60,7 +60,7 @@ export default function HackerApplication() {
 
     const checkRecaptcha = async(value) => {
         const requestData = {"captchaToken": value}
-        getAxios.post(apiDomain + '/recaptcha', requestData)
+        getAxios().post(apiDomain() + '/recaptcha', requestData)
             .then(async (response) => {
                 setRecaptchaStatus(true)
             }).catch(async () => {

@@ -11,7 +11,7 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) =
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios().get(apiDomain + `/user`, config)
+    getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 setNewUser(true)
@@ -41,7 +41,7 @@ const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
         const config = {
             headers: { Authorization: `Bearer ${token}`}
         }
-        getAxios.post(apiDomain + `/user/resume`, data, config)
+        getAxios().post(apiDomain() + `/user/resume`, data, config)
             .then(async (response) => {
                 setResumeUpload({"status": true, "error": null})
             }).catch(async () => {
@@ -61,8 +61,9 @@ const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUpload
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    getAxios().get(apiDomain + `/user/resume`, config)
+    getAxios().get(apiDomain() + `/user/resume`, config)
         .then(async (response) => {
+            console.log(await response.data)
             setHasUploadedResume(true)
         }).catch(async () => {
             setHasUploadedResume(false)
