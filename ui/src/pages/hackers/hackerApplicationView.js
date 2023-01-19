@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
-import {apiDomain, localAxios} from "../../config/axios";
+import {apiDomain, getAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
 import {ApplicationView} from "../../components/applicationView";
 
@@ -11,7 +11,7 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, navigateTo) =
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(apiDomain + `/user`, config)
+    getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 navigateTo("/user/apply")
