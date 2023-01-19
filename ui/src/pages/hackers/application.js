@@ -4,8 +4,9 @@ import {apiDomain, localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
 import ReCAPTCHA from "react-google-recaptcha";
-import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select } from 'grommet';
+import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea, DateInput } from 'grommet';
 import { Close } from "grommet-icons";
+import wichacksGrommetTheme from "../../wichacksGrommetTheme";
 
 const createApplication = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage) => {
     const token = await getAccessTokenSilently({
@@ -18,8 +19,9 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
     localAxios.post(apiDomain + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
-        }).catch(async () => {
-        setSubmissionError(true)
+        }).catch(async (error) => {
+        if (error?.response?.status == "400")
+        setSubmissionError({"error": true, "description": "Server error"});
         window.scrollTo(0, 0)
     })
 }
@@ -92,14 +94,14 @@ export default function HackerApplication() {
     const submitUserCreation = async(e) => {
         e.preventDefault()
         if (!recaptchaStatus){
-            setSubmissionError(true)
+            setSubmissionError({"error": true, "description": "Failed to verify reCaptcha"});
             window.scrollTo(0, 0)
             return
         }
 
-        const affirmedAgreements = wichacksEventPolicies && ritEventPolicies && mlhCodeOfConduct && mlhDataSharing && allInformationCorrect
+        const affirmedAgreements = ritEventPolicies && mlhCodeOfConduct && mlhDataSharing && allInformationCorrect
         if (!affirmedAgreements){
-            setSubmissionError(true)
+            setSubmissionError({"error": true, "description": "Must agree to all policies and agreements"});
             window.scrollTo(0, 0)
             return
         }
@@ -139,7 +141,6 @@ export default function HackerApplication() {
     const [dietaryRestriction, setDietaryRestriction] = useState();
     const [hasSpecialAccommodations, setHasSpecialAccommodations] = useState();
     const [specialAccommodations, setSpecialAccommodations] = useState();
-    const [wichacksEventPolicies, setWichacksEventPolicies] = useState();
     const [ritEventPolicies, setRitEventPolicies] = useState();
     const [mlhCodeOfConduct, setMlhCodeOfConduct] = useState();
     const [mlhDataSharing, setMlhDataSharing] = useState();
@@ -150,13 +151,13 @@ export default function HackerApplication() {
 
     // form based on Registration Form Guideline https://docs.google.com/document/d/1FxLkwcFK-W513G10m53Jxulou0wpJNiXDZmEYvfpW8o/edit#
     return (
-        <Grommet>
+        <Grommet theme={wichacksGrommetTheme}>
             <Box pad="small">
                 <Heading>WiCHacks Application</Heading>
-                {submissionError && /** Ruh roh scooby doo */
-                    <Box background="#c94254" round="small" align="center" justify="between" pad="medium" direction="row">
-                        <Heading margin="none" level={3}>Error Submitting Application</Heading>
-                        <Button plain onClick={ () => { setSubmissionError(false) } }>
+                {submissionError?.error && /** Ruh roh scooby doo */
+                    <Box background="#c94254" round="small" align="center" justify="between" pad="medium" margin={{ bottom: "medium" }} direction="row">
+                        <Text><Text weight="bold">Error Submitting Application:</Text> {submissionError?.description}</Text>
+                        <Button plain onClick={ () => { setSubmissionError({"error": false, "description": "" }) } }>
                             <Close size="medium" />
                         </Button>
                     </Box>
@@ -166,32 +167,27 @@ export default function HackerApplication() {
                         <Box>
                             <Heading level={2} margin="none">General Information</Heading>
                             <Paragraph fill>This section will gather information about you to help us keep in touch, determine elligibility, and plan for WiCHacks!</Paragraph>
-                            <Box background="#714ba0" height="4px" round="2px"/>
+                            <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
                             
-                            <FormField label={
-                                <Box>
-                                    Gender:
-                                    <p className={css.secondaryInformation}>WiCHacks is a gender-minority only hackathon, as such, we collect information about how you identify and use this to determine your eligibility to participate</p>
-                                </Box>
-                            }>
+                            <Box>
+                                <Heading margin="none" level={4}>Gender</Heading>
                                 <TextInput placeholder="How you identify" value={gender} onChange={ e => setGender(e.target.value) } />
-                            </FormField>
+                            </Box>
                             
-                            <FormField label={
-                                <Box>
-                                    <Heading margin="none" level={4}>Major(If Applicable):</Heading>
-                                </Box>
-                            }>
+                            <Box margin={{ vertical: "medium" }}>
+                                <Heading margin="none" level={4}>Major(If Applicable)</Heading>
                                 <TextInput placeholder="What you study" value={major} onChange={ e => setMajor(e.target.value) } />
-                            </FormField>
+                            </Box>
 
-                            <FormField label={
-                                <Box>
-                                    <Heading level={4} margin="none">Current Level of Study:</Heading>
-                                </Box>
-                            }>
-                                <Select placeholder="How Long You've Studied" value={levelOfStudy} onChange={ e => setLevelOfStudy(e.target.value) } options={["High School", "First Year Undergraduate", "Second Year Undergraduate", "Third Year Undergraduate", "Fourth Year Undergraduate", "Fifth Year Undergraduate", "Graduate Studies", "Other"]} />
-                            </FormField>
+                            <Box>
+                                <Heading level={4} margin="none">Current Level of Study</Heading>
+                                <Select 
+                                    placeholder="How Long You've Studied" 
+                                    value={levelOfStudy}
+                                    onChange={ e => setLevelOfStudy(e.target.value) } 
+                                    options={["High School", "First Year Undergraduate", "Second Year Undergraduate", "Third Year Undergraduate", "Fourth Year Undergraduate", "Fifth Year Undergraduate", "Graduate Studies", "Other"]} 
+                                />
+                            </Box>
 
                             {levelOfStudy && isLevelOfStudyOther(levelOfStudy) &&
                                 <FormField label={
@@ -203,20 +199,16 @@ export default function HackerApplication() {
                                 </FormField>
                             }
                             
+                            <Box margin={{ vertical: "medium" }}>
+                                <Heading level={4} margin="none">Date of Birth</Heading>
+                                <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for
+                                    information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
+                                    <DateInput 
+                                        format="yyyy-mm-dd"
+                                        onChange={ (e) => setBirthday(e.target.value) }
+                                    />
+                            </Box>
 
-                            {/* <FormField label={
-                                <Box>
-                                    
-                                </Box>
-                            }> */}
-
-                            {/* </FormField> */}
-                            <label>
-                                Date of Birth:
-                                <p className={css.secondaryInformation}>Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for
-                                    information about ROCGirlHacks, WiC’s hackathon for minors!</p>
-                                <input className={css.dateInput} value={birthday} onChange={e => setBirthday(e.target.value)} type={"date"} />
-                            </label><br />
                             <div className={css.selectDiv}>
                                 School:
                                 <select className={css.formSelect} value={university} onChange={e => setUniversity(e.target.value)}>
@@ -230,7 +222,8 @@ export default function HackerApplication() {
                                     <option value="other">Other</option>
                                 </select>
                             </div>
-                            {university && isSchoolOther(university) &&
+
+                            {university && isSchoolOther(university) && // Alex please fix me
                                 <>
                                     <label>
                                         Please enter the name of your school:
@@ -238,68 +231,71 @@ export default function HackerApplication() {
                                     </label><br />
                                 </>
                             }
-                            <div className={css.selectDiv}>
-                                Shirt Size:
-                                <select className={css.formSelect} value={shirtSize} onChange={e => setShirtSize(e.target.value)}>
-                                    <option value="none" selected disabled hidden>Select your shirt size</option>
-                                    <option value="X-Small">X-Small</option>
-                                    <option value="Small">Small</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Large">Large</option>
-                                    <option value="X-Large">X-Large</option>
-                                    <option value="XX-Large">XX-Large</option>
-                                    <option value="XXX-Large">XXX-Large</option>
-                                </select>
-                            </div>
-                            <label>
-                                Have you participated in any hackathons before?:
-                                <div onChange={e => setAttendedHackathonsInput(e.target.value)}>
-                                    <input className={css.radioInput} type="radio" value={"true"} name={"attendedHackathons"} />Yes
-                                    <input className={css.radioInput} type="radio" value={"false"} name={"attendedHackathons"} />No
-                                </div>
-                            </label><br />
-                            <label>
-                                Have you participated in WiCHacks before?:
-                                <div onChange={e => setAttendedWiCHacksInput(e.target.value)}>
-                                    <input className={css.radioInput} type="radio" value={"true"} name={"attendedWiCHacks"} />Yes
-                                    <input className={css.radioInput} type="radio" value={"false"} name={"attendedWiCHacks"} />No
-                                </div>
-                            </label><br />
-                            <hr className={css.sectionBreak}/>
+
+                            <Box>
+                                <Heading level={4} margin="none">Shirt Size</Heading>
+                                <Select 
+                                    placeholder="My shirt size is..." 
+                                    value={shirtSize}
+                                    onChange={ e => setShirtSize(e.target.value) }
+                                    options={ [ "X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large", "XXX-Large" ] }
+                                />
+                            </Box>
+
+                            <Box margin={{ top: "medium" }}>
+                                <Text margin={{ bottom: "small" }}>Have you participated in any hackathons before?</Text>
+                                <RadioButtonGroup
+                                    options={ ["Yes    ", "No    "] }
+                                    name="wantBus"
+                                    onChange={ (e) => { setAttendedHackathonsInput(e.target.value === "Yes    " ? "true" : "false" ) } }
+                                />
+                            </Box>
+
+                            <Box margin={{ top: "medium" }}>
+                                <Text margin={{ bottom: "small" }}>Have you participated in WiCHacks before?</Text>
+                                <RadioButtonGroup
+                                    options={ ["Yes   ", "No   "] }
+                                    name="wantBus"
+                                    onChange={ (e) => { setAttendedWiCHacksInput(e.target.value === "Yes   " ? "true" : "false" ) } }
+                                />
+                            </Box>
                         </Box>
                         {/** MARK: Section Two */}
                         <Box>
-                            <Heading level={2} margin="none">Attendance and Travel</Heading>
+                            <Heading level={2} margin={{ bottom: "none", top: "medium" }}>Attendance and Travel</Heading>
                             <Paragraph fill>This section will gather information about how you'll be participating this weekend!</Paragraph>
-                            <Box background="#714ba0" height="4px" round="2px"/>
-                            <label>
-                                How will you be participating?:
-                                <div onChange={e => setIsVirtual(e.target.value)}>
-                                    <input className={css.radioInput} type="radio" value={"true"} name={"isVirtual"} />In-Person
-                                    <input className={css.radioInput} type="radio" value={"false"} name={"isVirtual"} />Online Only
-                                </div>
-                            </label><br />
+                            <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
+
+                            <Text margin={{ bottom: "small" }}>How will you be participating?</Text>
+                            
+                            <RadioButtonGroup 
+                                options={ ["In-Person", "Online Only"] }
+                                name="isVirtual"
+                                onChange={ (e) => { setIsVirtual(e.target.value === "In-Person" ? "true" : "false" ) } }
+                            />
+
                             {eligibleForBusing &&
-                                <>
-                                    <label>
-                                        Would you like to travel to RIT via one of the buses?:
-                                        <div onChange={e => setBusRider(e.target.value)}>
-                                            <input className={css.radioInput} type="radio" value={"true"} name={"busRider"} />Yes
-                                            <input className={css.radioInput} type="radio" value={"false"} name={"busRider"} />No
-                                        </div>
-                                    </label><br />
+                                <Box>
+                                    <Box margin={{ top: "medium" }}>
+                                        <Text margin={{ bottom: "small" }}>Would you like to travel to RIT via one of the buses?</Text>
+                                        <RadioButtonGroup 
+                                            options={ ["Yes  ", "No  "] }
+                                            name="wantBus"
+                                            onChange={ (e) => { setBusRider(e.target.value === "Yes  " ? "true" : "false" ) } }
+                                        />
+                                    </Box>
                                     {(busRider && busRider === "true") &&
-                                        <>
-                                            <label>
-                                                At which stop would you like to board the bus?:
-                                                <select value={busStop} onChange={e => setBusStop(e.target.value)}>
-                                                    <option value={"Syracuse"}>Syracuse</option>
-                                                    <option value={"Toronto"}>Toronto</option>
-                                                </select>
-                                            </label><br />
-                                        </>
+                                        <Box margin={{ top: "medium" }}>
+                                            <Text margin={{ bottom: "small" }}>At which stop would you like to board the bus?</Text>
+                                            <Select 
+                                                placeholder="I will board..." 
+                                                value={busStop}
+                                                onChange={ e => setBusStop(e.target.value) } 
+                                                options={[ "University of Toronto", "University of Waterloo", "SUNY Buffalo", "Skidmore College", "RPI", "Siena College", "SUNY Albany", "Union College" ]} 
+                                            />
+                                        </Box>
                                     }
-                                </>
+                                </Box>
                             }
                             <hr className={css.sectionBreak}/>
                         </Box>
@@ -307,123 +303,105 @@ export default function HackerApplication() {
                         <Box>
                             <Heading level={2} margin="none">Accommodations and Information</Heading>
                             <Paragraph fill>This section will gather information about how you'll be participating this weekend!</Paragraph>
-                            <Box background="#714ba0" height="4px" round="2px"/>
-                            <label>
-                                Do you have any dietary restrictions?:
-                                <div onChange={e => setHasDietaryRestriction(e.target.value)}>
-                                    <input className={css.radioInput} type="radio" value={"true"} name={"dietRestriction"} />Yes
-                                    <input className={css.radioInput} type="radio" value={"false"} name={"dietRestriction"} />No
-                                </div>
-                            </label><br />
+                            <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
 
-                            {(hasDietaryRestriction && hasDietaryRestriction === "true") &&
-                                <>
-                                    <label className={css.paragraphLabel}>
-                                        Please list your dietary restrictions below so we can ensure to have food available for you:
-                                        <textarea className={css.largeTextInput} value={dietaryRestriction} onChange={e => setDietaryRestriction(e.target.value)} rows={5} />
-                                    </label><br />
-                                </>
+                            <Text margin={{ bottom: "small" }}>Do you have any dietary restrictions?</Text>
+                            
+                            <RadioButtonGroup 
+                                options={ ["Yes", "No"] }
+                                name="dietary"
+                                onChange={ (e) => { setHasDietaryRestriction(e.target.value === "Yes" ? "true" : "false") } }
+                            />
+
+                            {(hasDietaryRestriction === "true") &&
+                                <Box margin={{ top: "medium", bottom: "medium" }}>
+                                    <Text>Please list your dietary restrictions below so we can ensure to have food available for you:</Text>
+                                    <TextArea 
+                                        placeholder="My dietary restrictions are..."
+                                        value={dietaryRestriction}
+                                        onChange={ (e) => { setDietaryRestriction(e.target.value) } }
+                                    />
+                                </Box>
                             }
 
-                            <label className={css.paragraphLabel}>
-                                Will you require any special accommodations you feel may not be already planned?
-                                <p className={css.secondaryInformation}>Please note, we will have interpreting/captioning for opening and closing ceremonies, but if you need interpreting services for your team, this
-                                    request will need to be made via RIT Department of Access Services. Regardless, please indicate a need for interpreting/captioning services below</p>
-                                <div onChange={e => setHasSpecialAccommodations(e.target.value)}>
-                                    <input className={css.radioInput} type="radio" value={"true"} name={"accommodations"} />Yes
-                                    <input className={css.radioInput} type="radio" value={"false"} name={"accommodations"} />No
-                                </div>
-                            </label><br />
-
-                            {(hasSpecialAccommodations && hasSpecialAccommodations === "true") &&
-                            <>
-                                <label>
-                                    Please list and describe accommodations below :
-                                    <textarea className={css.largeTextInput} value={specialAccommodations} onChange={e => setSpecialAccommodations(e.target.value)} rows={5}/>
-                                </label><br />
-                            </>
+                            <Text margin={{ top: "medium" }}>Will you require any special accommodations you feel may not be already planned?</Text>
+                            <Text color="gray" size="small" margin={{ bottom: "small" }}>Please note, this includes a need for interpreting/captioning services. WiCHacks plans to provide these services during opening and closing ceremonies but needs to identify those requiring these services to RIT. Additionally, please report this request to RIT Department of Access Services.</Text>
+                            
+                            <RadioButtonGroup 
+                                options={ ["Yes ", "No "] }
+                                name="specialAccomodations"
+                                onChange={ (f) => { setHasSpecialAccommodations(f.target.value === "Yes " ? "true" : "false") } }
+                            />
+                            
+                            {(hasSpecialAccommodations === "true") &&
+                                <Box margin={{ top: "medium", bottom: "medium" }}>
+                                    <Text>Please elaborate below</Text>
+                                    <TextArea 
+                                        placeholder="My dietary restrictions are..."
+                                        value={specialAccommodations}
+                                        onChange={ (e) => { setSpecialAccommodations(e.target.value) } }
+                                    />
+                                </Box>
                             }
-                            <hr className={css.sectionBreak}/>
                         </Box>
                         <Box>
-                            <Heading level={2} margin="none">Agreements</Heading>
+                            <Heading level={2} margin={{ top: "medium", bottom: "none" }}>Agreements</Heading>
                             <Paragraph fill>This section will gather information about how you'll be participating this weekend!</Paragraph>
-                            <Box background="#714ba0" height="4px" round="2px"/>
-                            <label>
-                                I have read and agree to the WiCHacks Event Policies:
-                                <input type = "checkbox" onChange={(e) => {
-                                    if(e.target.type === 'checkbox'){
-                                        setWichacksEventPolicies(true)
-                                    }
-                                    else {
-                                        setWichacksEventPolicies(false)
-                                    }
-                                }}
-                                />
-                            </label><br />
-                            <label>
-                                I have read and agree to the <a href="https://www.rit.edu/academicaffairs/policiesmanual/c000" target="_blank">RIT Code of Ethical Conduct and Compliance</a>:
-                                <input type = "checkbox" onChange={(e) => {
-                                    if(e.target.type === 'checkbox'){
+                            <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
+                            <Box gap="small">
+                                <CheckBox label={ 
+                                    <Text>I have read and agree to the <a href="https://www.rit.edu/academicaffairs/policiesmanual/c000" target="_blank" rel="noreferrer">RIT Code of Ethical Conduct and Compliance</a> </Text> 
+                                } onChange={(e) => {
+                                    if (e.target.type === 'checkbox') {
                                         setRitEventPolicies(true)
-                                    }
-                                    else {
+                                    } else {
                                         setRitEventPolicies(false)
                                     }
-                                }}
-                                />
-                            </label><br />
-                            <label>
-                                I have read and agree to the <a href={"https://static.mlh.io/mlh-code-of-conduct.pdf"}>MLH Code of Conduct</a>:
-                                <input type = "checkbox" onChange={(e) => {
-                                    if(e.target.type === 'checkbox'){
+                                }}/>
+                                <CheckBox label={ 
+                                    <Text>I have read and agree to the <a href="https://static.mlh.io/mlh-code-of-conduct.pdf" target="_blank" rel="noreferrer">MLH Code of Conduct</a></Text> 
+                                } onChange={(e) => {
+                                    if (e.target.type === 'checkbox') {
                                         setMlhCodeOfConduct(true)
-                                    }
-                                    else {
+                                    } else {
                                         setMlhCodeOfConduct(false)
                                     }
-                                }}
-                                />
-                            </label><br />
-                            <label>
-                                I authorize WiCHacks to share my application/registration information with Major League Hacking for event administration,
-                                ranking, and MLH administration in-line with the MLH Privacy Policy (https://mlh.io/privacy). I further agree to the
-                                terms of both the <a href={"https://github.com/MLH/mlh-policies/blob/main/contest-terms.md"}>MLH Contest Terms and Conditions</a> and the
-                                <a href={"https://mlh.io/privacy"} >MLH Privacy Policy</a>. :
-                                <input type = "checkbox" onChange={(e) => {
-                                    if(e.target.type === 'checkbox'){
+                                }}/>
+                                <CheckBox label={ 
+                                    <Text>I authorize WiCHacks to share my application/registration information with Major League Hacking for event administration,
+                                    ranking, and MLH administration in-line with the <a href="https://mlh.io/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>. I further agree to the
+                                    terms of both the <a href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md" >MLH Contest Terms and Conditions</a> and the <a href="https://mlh.io/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>.</Text> 
+                                } onChange={(e) => {
+                                    if (e.target.type === 'checkbox') {
                                         setMlhDataSharing(true)
-                                    }
-                                    else {
+                                    } else {
                                         setMlhDataSharing(false)
                                     }
-                                }}
-                                />
-                            </label><br />
-                            <label>
-                                By submitting my application to WiCHacks I confirm all provided information is accurate and I will inform the WiCHacks
-                                hackathon organizers should any information change :
-                                <input type = "checkbox" onChange={(e) => {
-                                    if(e.target.type === 'checkbox'){
+                                }}/>
+                                <CheckBox label={ 
+                                    <Text>By submitting my application to WiCHacks I confirm all provided information is accurate and I will inform the WiCHackshackathon organizers should any information change</Text> 
+                                } onChange={(e) => {
+                                    if (e.target.type === 'checkbox') {
                                         setAllInformationCorrect(true)
-                                    }
-                                    else {
+                                    } else {
                                         setAllInformationCorrect(false)
                                     }
-                                }}
-                                />
-                            </label><br />
-                            <hr className={css.sectionBreak}/>
+                                }}/>
+                            </Box>
                         </Box>
-                        <div>
+                        <Box>
                             <ReCAPTCHA sitekey={RECAPTCHA_KEY}
                                     onChange={checkRecaptcha}
                                     render="explicit"
                                     size="normal"
                             />
-                        </div>
+                        </Box>
                         <Box className={css.applicationSubmitButton}>
-                            <input className={css.submitButton} type="submit" onClick={submitUserCreation}/>
+                            <Button type="submit" onClick={submitUserCreation}>
+                                <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                    <Text weight="bold" size="large">Submit Application</Text>
+                                </Box>
+                            </Button>
                         </Box>
                     </Form>
                 </Box>

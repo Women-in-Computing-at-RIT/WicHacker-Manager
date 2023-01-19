@@ -156,7 +156,7 @@ export default function UserHomepage() {
                         <Box background="#00000010" round="medium" pad="medium"> { /** NEEDS TO APPLY */ }
                             <Heading level={3} margin="none">You Haven't Applied Yet! 😞</Heading>
                             <Paragraph fill>WiCHacks is still accepting applications! Apply now, it's super easy!</Paragraph>
-                            <Button onClick={() => {navigate("/user")}}>
+                            <Button onClick={() => {navigate("/user/apply")}}>
                                 <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
                                     <Text weight="bold" size="large">Apply Now!</Text>
                                 </Box>
