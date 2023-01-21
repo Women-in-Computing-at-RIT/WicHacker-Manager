@@ -4,7 +4,10 @@ import {apiDomain, localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
 import ReCAPTCHA from "react-google-recaptcha";
-
+import { Grommet, Box, Heading, Text, TextInput, Form, Button } from 'grommet';
+import wichacksGrommetTheme from "../../wichacksGrommetTheme";
+import NavBar from "../../components/navBar";
+import { Close } from "grommet-icons";
 
 export function NewHackerForm(){
     return(
@@ -16,12 +19,6 @@ export function NewAdminForm(){
     return(
         <NewUserForm applicationRedirectRequired={false}/>
     )
-}
-
-function useTextInput() {
-    const [value, setValue] = useState("");
-    const input = <input className={css.textInput} value={value} onChange={e => setValue(e.target.value)} type="text" />;
-    return [value, input];
 }
 
 const createUser = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired) => {
@@ -109,10 +106,10 @@ export function NewUserForm({applicationRedirectRequired}) {
         await createUser(userData, getAccessTokenSilently, setSubmissionError, navigateToPage, applicationRedirectRequired)
     }
 
-    const [firstName, firstNameInput] = useTextInput();
-    const [lastName, lastNameInput] = useTextInput();
-    const [email, emailInput] = useTextInput();
-    const [phoneNumber, phoneNumberInput] = useTextInput();
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
+    const [email, setEmail] = useState();
+    const [phoneNumber, setPhoneNumber] = useState();
 
     const [recaptchaStatus, setRecaptchaStatus] = useState();
     // this is not a private key, do not place private keys anywhere within this react app
@@ -120,45 +117,77 @@ export function NewUserForm({applicationRedirectRequired}) {
 
 
     return (
-        <div>
-            <h2 className={css.pageTitle}>Hacker Profile Creation</h2>
-            {submissionError &&
-                <div>
-                    <h2>
-                        Error Creating User Account
-                    </h2>
-                </div>
-            }
-            <div>
-                <form className={css.applicationForm}>
-                    <div className={css.hackerProfileFormFields}>
-                        <label>
-                            First Name: <br />
-                            {firstNameInput}
-                        </label><br />
-                        <label>
-                            Last Name: <br />
-                            {lastNameInput}
-                        </label><br />
-                        <label>
-                            Email: <br />
-                            {emailInput}
-                        </label><br />
-                        <label>
-                            Phone Number: <br />
-                            {phoneNumberInput}
-                        </label><br />
-                        <div>
-                            <ReCAPTCHA sitekey={RECAPTCHA_KEY}
-                                       onChange={checkRecaptcha}
-                                       render="explicit"
-                                       size="normal"
-                            />
-                        </div>
-                        <input className={css.submitButton} type="submit" onClick={submitUserCreation} value={(applicationRedirectRequired ? "continue" : "submit")}/>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <Grommet theme={wichacksGrommetTheme}>
+            <NavBar title="WiCHacks" />
+            <Box margin="small">
+                <Heading>Create a WiCHacks User</Heading>
+                <Text>This is just some basic information so that we can keep in touch with you! Next you'll be able to apply for WiCHacks and check your application status.</Text>
+                <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium", top: "medium" }}/>
+                {submissionError &&
+                    <Box background="#c94254" round="small" align="center" justify="between" pad="medium" margin={{ bottom: "medium" }} direction="row">
+                        <Text><Text weight="bold">Error Submitting Application:</Text> Make sure to fill out all fields and verify with the reCaptcha</Text>
+                        <Button plain onClick={ () => { setSubmissionError(false) } }>
+                            <Close size="medium" />
+                        </Button>
+                    </Box>
+                }
+                <Box>
+                    <Form>
+                        <Box gap="medium">
+                            <Box>
+                                <Heading margin="none" level={4}>Preferred First Name</Heading>
+                                <Text size="small" color="gray">What you'd like to be called</Text>
+                                <TextInput
+                                    placeholder="ex. Name"
+                                    // value={firstName}
+                                    onChange={ (e) => { setFirstName(e.target.value) } }
+                                />
+                            </Box>
+
+                            <Box>
+                                <Heading margin="none" level={4}>Last Name</Heading>
+                                <TextInput
+                                    placeholder="ex. LastName"
+                                    // value={lastName}
+                                    onChange={ (e) => { setLastName(e.target.value) } }
+                                />
+                            </Box>
+
+                            <Box>
+                                <Heading margin="none" level={4}>Email</Heading>
+                                <TextInput
+                                    placeholder="ex. myname@mymail.com"
+                                    // value={email}
+                                    onChange={ (e) => { setEmail(e.target.value) } }
+                                />
+                            </Box>
+
+                            <Box>
+                                <Heading margin="none" level={4}>Phone Number</Heading>
+                                <TextInput
+                                    placeholder="ex. 207-555-5500"
+                                    // value={phoneNumber}
+                                    onChange={ (e) => { setPhoneNumber(e.target.value) } }
+                                />
+                            </Box>
+
+                            <Box>
+                                <ReCAPTCHA sitekey={RECAPTCHA_KEY}
+                                        onChange={checkRecaptcha}
+                                        render="explicit"
+                                        size="normal"
+                                />
+                            </Box>
+
+                            <Button type="submit" onClick={submitUserCreation}>
+                                <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                    <Text weight="bold" size="large">{( applicationRedirectRequired ? "Continue" : "Submit")}</Text>
+                                </Box>
+                            </Button>
+                        </Box>
+                    </Form>
+                </Box>
+            </Box>
+        </Grommet>
     );
 }
