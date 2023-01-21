@@ -1,3 +1,20 @@
-.resumeInput{
+.resumeUploadPadding{
+    margin-top: 20px;
+}
 
+.viewApplication{
+    width: 150px;
+    background-color: #714ba0;
+    color: white;
+    text-align: center;
+    margin-top: 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-radius: 5px;
+}
+
+.viewApplication:hover{
+    background-color: mediumpurple;
 }

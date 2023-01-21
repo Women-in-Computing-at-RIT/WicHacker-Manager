@@ -20,8 +20,11 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
         .then(async (response) => {
             navigateToPage("/user")
         }).catch(async (error) => {
-        if (error?.response?.status == "400")
-        setSubmissionError({"error": true, "description": "Server error"});
+        if (error?.response?.status === "400"){
+            setSubmissionError({"error": true, "description": "Please make sure all fields are filled in and try again"});
+        } else {
+            setSubmissionError({"error": true, "description": "Server error"});
+        }
         window.scrollTo(0, 0)
     })
 }
@@ -51,9 +54,6 @@ export default function HackerApplication() {
     let navigate = useNavigate()
     const [submissionError, setSubmissionError] = useState(null)
     const {getAccessTokenSilently} = useAuth0();
-    const [recaptchaStatus, setRecaptchaStatus] = useState();
-    // this is not a private key, do not place private keys anywhere within this react app
-    const RECAPTCHA_KEY = "6Le2GdkjAAAAAJ8xF_aJBjjHUAksuHIqGb-HKHkR"
 
     const navigateToPage = (path) => {
         navigate(path)
@@ -62,16 +62,6 @@ export default function HackerApplication() {
     useEffect(() => {
         redirectUsersIfApplied(getAccessTokenSilently, navigateToPage)
     }, [])
-
-    const checkRecaptcha = async(value) => {
-        const requestData = {"captchaToken": value}
-        localAxios.post(apiDomain + '/recaptcha', requestData)
-            .then(async (response) => {
-                setRecaptchaStatus(true)
-            }).catch(async () => {
-            setRecaptchaStatus(false)
-        })
-    }
 
     const isSchoolOther = (schoolName) => {
         const selectOptionSchoolNames = {"RIT": true, "Waterloo": true, "SUNY Oswego": true, "Syracuse": true, "Cornell": true, "Ithaca": true}
@@ -93,11 +83,6 @@ export default function HackerApplication() {
 
     const submitUserCreation = async(e) => {
         e.preventDefault()
-        if (!recaptchaStatus){
-            setSubmissionError({"error": true, "description": "Failed to verify reCaptcha"});
-            window.scrollTo(0, 0)
-            return
-        }
 
         const affirmedAgreements = ritEventPolicies && mlhCodeOfConduct && mlhDataSharing && allInformationCorrect
         if (!affirmedAgreements){
@@ -203,7 +188,8 @@ export default function HackerApplication() {
                                 <Heading level={4} margin="none">Date of Birth</Heading>
                                 <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for
                                     information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
-                                    <DateInput 
+                                    <DateInput
+                                        defaultValue={(new Date()).toISOString()}
                                         format="yyyy-mm-dd"
                                         onChange={ (e) => setBirthday(e.target.value) }
                                     />
@@ -388,13 +374,6 @@ export default function HackerApplication() {
                                     }
                                 }}/>
                             </Box>
-                        </Box>
-                        <Box>
-                            <ReCAPTCHA sitekey={RECAPTCHA_KEY}
-                                    onChange={checkRecaptcha}
-                                    render="explicit"
-                                    size="normal"
-                            />
                         </Box>
                         <Box className={css.applicationSubmitButton}>
                             <Button type="submit" onClick={submitUserCreation}>

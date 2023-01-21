@@ -119,21 +119,26 @@ export default function UserHomepage() {
                     <Heading>Welcome { user.first_name }!</Heading>
                     { user.application_id ?
                         <Box> {/** ALREADY APPLIED */ }
-                            <Button plain onClick={ () => navigate("/user/application") }>
-                                <Box background="blue">
-                                    <Text>View Application</Text>
-                                </Box>
-                            </Button>
-
                             <Text>Application Status: {user.status ?? "You Haven't Applied Yet"}</Text>
 
+                            <Button className={css.viewApplication} plain onClick={ () => navigate("/user/application") }>
+                                    <Text>View Application</Text>
+                            </Button>
+
+
+
                             { hasUploadedResume ?
-                                <Box>
-                                    <Text>Good job uploading resume</Text>
-                                </Box> : 
-                                <Box>
-                                    <Text>Plz upload your resume, we will get you a job /s</Text>
-                                </Box>
+                                <div className={css.resumeUploadPadding}>
+                                    <Box>
+                                        <Text>Resume Uploaded <br />Overwrite existing resume</Text>
+                                    </Box>
+                                </div>
+                                 :
+                                <div className={css.resumeUploadPadding}>
+                                    <Box>
+                                        <Text>Plz upload your resume, we will get you a job /s</Text>
+                                    </Box>
+                                </div>
                             }
 
                             <Box>

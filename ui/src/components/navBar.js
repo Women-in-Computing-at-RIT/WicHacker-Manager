@@ -13,10 +13,8 @@ class NavBar extends Component {
                 <Box background="#714ba0" pad="medium" direction="row" align="center" justify="between">
                     <Text weight="bold">{this.props.title}</Text>
                     <Box>
-                        {this.props.children ?? 
-                            <Box>
-                                <Text>RightSide</Text>
-                            </Box>
+                        {this.props.children ? this.props.children :
+                            <></> // add countdown to wichacks
                         }
                     </Box>
                 </Box>

@@ -1,12 +1,20 @@
-import { Grommet, Box } from "grommet";
+import {Grommet, Box, Button, Text} from "grommet";
 import NavBar from "./navBar";
+import {useNavigate} from "react-router-dom";
 
 export function ApplicationView({userData}) {
+    let navigate = useNavigate();
     console.log(userData)
     return(
         <Grommet>
             <Box>
-                <NavBar title="Hacker Application" />
+                <NavBar title="Hacker Application">
+                    <Button plain onClick={ () => navigate("/user") }>
+                        <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
+                            <Text weight="bold" color="#714ba0">Home</Text>
+                        </Box>
+                    </Button>
+                </NavBar>
             </Box>
         </Grommet>
     //   <div className={css.applicationView}>
