@@ -3,12 +3,12 @@ import {useEffect, useState} from "react";
 import {apiDomain, localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
-import ReCAPTCHA from "react-google-recaptcha";
 import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea, DateInput } from 'grommet';
 import { Close } from "grommet-icons";
 import wichacksGrommetTheme from "../../wichacksGrommetTheme";
 import Autocomplete from "../../components/autocompleteTextbox";
 import {mlhSchoolList} from "../../data/mlh";
+import NavBar from "../../components/navBar";
 
 const createApplication = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage) => {
     const token = await getAccessTokenSilently({
@@ -120,7 +120,6 @@ export default function HackerApplication() {
     const [hasAttendedWiCHacks, setAttendedWiCHacksInput] = useState();
     const [hasAttendedHackathons, setAttendedHackathonsInput] = useState();
     const [university, setUniversity] = useState();
-    const [otherUniversity, setOtherUniversity] = useState();
     const [gender, setGender] = useState();
     const [busRider, setBusRider] = useState();
     const [busStop, setBusStop] = useState();
@@ -134,11 +133,24 @@ export default function HackerApplication() {
     const [allInformationCorrect, setAllInformationCorrect] = useState();
     const [isVirtual, setIsVirtual] = useState();
 
-    let eligibleForBusing = (university !== "RIT") && (isVirtual && isVirtual === "true")
+    const [mlhSchoolSuggestions, setMLHSchoolSugggestions] = useState();
+
+    const matchesSchoolFilter = (e) => {
+        const re = new RegExp('.*' + university + '.*', 'i')
+        return re.test(e);
+    };
+
+    const updateUniversity = (e) => {
+        setUniversity(e.target.value);
+        setMLHSchoolSugggestions(mlhSchoolList.filter( (sugg) => { return matchesSchoolFilter(sugg) } ))
+    }
+
+    let eligibleForBusing = (university !== "Rochester Institute of Technology (RIT)") && (isVirtual && isVirtual === "true")
 
     // form based on Registration Form Guideline https://docs.google.com/document/d/1FxLkwcFK-W513G10m53Jxulou0wpJNiXDZmEYvfpW8o/edit#
     return (
         <Grommet theme={wichacksGrommetTheme}>
+            <NavBar title="WiCHacks" />
             <Box pad="small">
                 <Heading>WiCHacks Application</Heading>
                 {submissionError?.error && /** Ruh roh scooby doo */
@@ -197,34 +209,19 @@ export default function HackerApplication() {
                                     />
                             </Box>
 
-                            {false && <div className={css.selectDiv}>
-                                School:
-                                <select className={css.formSelect} value={university} onChange={e => setUniversity(e.target.value)}>
-                                    <option value="none" selected disabled hidden>Select your School</option>
-                                    <option value="RIT">Rochester Institute of Technology</option>
-                                    <option value="Waterloo">University of Waterloo</option>
-                                    <option value="SUNY Oswego">SUNY Oswego</option>
-                                    <option value="Syracuse">Syracuse University</option>
-                                    <option value="Cornell">Cornell</option>
-                                    <option value="Ithaca">Ithaca</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>}
-
-                            <Autocomplete suggestions={mlhSchoolList} value={university} setValue={setUniversity} />
-
-
-                            {/*university && isSchoolOther(university) && // Alex please fix me
-                                <>
-                                    <label>
-                                        Please enter the name of your school:
-                                        <input className={css.textInput} value={otherUniversity} onChange={e => setOtherUniversity(e.target.value)} type={"text"} />
-                                    </label><br />
-                                </>
-                            */}
+                            <Box>
+                                <Heading level={4} margin="none">School or University Name</Heading>
+                                <TextInput
+                                    placeholder="University..."
+                                    onChange={updateUniversity}
+                                    value={university}
+                                    onSuggestionSelect={setUniversity}
+                                    suggestions={mlhSchoolSuggestions}
+                                />
+                            </Box>
 
                             <Box>
-                                <Heading level={4} margin="none">Shirt Size</Heading>
+                                <Heading level={4} margin={{ top: "medium", bottom: "none" }}>Shirt Size</Heading>
                                 <Select 
                                     placeholder="My shirt size is..." 
                                     value={shirtSize}
@@ -234,7 +231,7 @@ export default function HackerApplication() {
                             </Box>
 
                             <Box margin={{ top: "medium" }}>
-                                <Text margin={{ bottom: "small" }}>Have you participated in any hackathons before?</Text>
+                                <Heading level={4} margin={{ bottom: "small", top: "none" }}>Have you participated in any hackathons before?</Heading>
                                 <RadioButtonGroup
                                     options={ ["Yes    ", "No    "] }
                                     name="wantBus"
@@ -243,7 +240,7 @@ export default function HackerApplication() {
                             </Box>
 
                             <Box margin={{ top: "medium" }}>
-                                <Text margin={{ bottom: "small" }}>Have you participated in WiCHacks before?</Text>
+                                <Heading level={4} margin={{ bottom: "small", top: "none" }}>Have you participated in WiCHacks before?</Heading>
                                 <RadioButtonGroup
                                     options={ ["Yes   ", "No   "] }
                                     name="wantBus"
@@ -255,9 +252,9 @@ export default function HackerApplication() {
                         <Box>
                             <Heading level={2} margin={{ bottom: "none", top: "medium" }}>Attendance and Travel</Heading>
                             <Paragraph fill>This section will gather information about how you'll be participating this weekend!</Paragraph>
-                            <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
+                            <Box background="#714ba0" height="4px" round="2px"/>
 
-                            <Text margin={{ bottom: "small" }}>How will you be participating?</Text>
+                            <Heading level={4} margin={{ top: "medium", bottom: "small" }}>How will you be participating?</Heading>
                             
                             <RadioButtonGroup 
                                 options={ ["In-Person", "Online Only"] }
@@ -267,8 +264,8 @@ export default function HackerApplication() {
 
                             {eligibleForBusing &&
                                 <Box>
-                                    <Box margin={{ top: "medium" }}>
-                                        <Text margin={{ bottom: "small" }}>Would you like to travel to RIT via one of the buses?</Text>
+                                    <Box>
+                                        <Heading level={4} margin={{ top: "medium", bottom: "small" }}>Would you like to travel to RIT via one of the buses?</Heading>
                                         <RadioButtonGroup 
                                             options={ ["Yes  ", "No  "] }
                                             name="wantBus"
@@ -277,7 +274,7 @@ export default function HackerApplication() {
                                     </Box>
                                     {(busRider && busRider === "true") &&
                                         <Box margin={{ top: "medium" }}>
-                                            <Text margin={{ bottom: "small" }}>At which stop would you like to board the bus?</Text>
+                                            <Heading level={4} margin={{ bottom: "small", top: "none" }}>At which stop would you like to board the bus?</Heading>
                                             <Select 
                                                 placeholder="I will board..." 
                                                 value={busStop}
@@ -293,7 +290,7 @@ export default function HackerApplication() {
                         {/** MARK: Section Three */}
                         <Box>
                             <Heading level={2} margin="none">Accommodations and Information</Heading>
-                            <Paragraph fill>This section will gather information about how you'll be participating this weekend!</Paragraph>
+                            <Paragraph fill>This section helps us figure out how to best ensure you have a great weekend!</Paragraph>
                             <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
 
                             <Text margin={{ bottom: "small" }}>Do you have any dietary restrictions?</Text>
@@ -337,7 +334,7 @@ export default function HackerApplication() {
                         </Box>
                         <Box>
                             <Heading level={2} margin={{ top: "medium", bottom: "none" }}>Agreements</Heading>
-                            <Paragraph fill>This section will gather information about how you'll be participating this weekend!</Paragraph>
+                            <Paragraph fill>We have to make sure everyone at WiCHacks is safe and has a good time! Take a moment to read the agreements below</Paragraph>
                             <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
                             <Box gap="small">
                                 <CheckBox label={ 

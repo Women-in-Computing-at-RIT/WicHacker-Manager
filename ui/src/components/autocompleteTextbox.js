@@ -1,5 +1,6 @@
 // Thank you to EasyWebsify from Medium for the autocomplete component
 import React, { useState } from "react";
+import { Box, List, Text, TextInput } from 'grommet';
 import css from "./style/autocompleteTextbox.module.css"
 
 
@@ -43,34 +44,36 @@ const Autocomplete = ({suggestions, value, setValue}) => {
         if (isShow && value) {
             if (filtered.length) {
                 return (
-                    <ul className={css.autocomplete}>
-                        {filtered.map((suggestion, index) => {
-                            let className;
-                            if (index === active) {
-                                className = "active";
-                            }
-                            return (
-                                <li className={className} key={suggestion} onClick={onClick}>
-                                    {suggestion}
-                                </li>
-                            );
+                    <List
+                        data={filtered.map((suggestion, index) => {
+                            return suggestion;
                         })}
-                    </ul>
+                    />
+                        // {filtered.map((suggestion, index) => {
+                        //     let className;
+                        //     if (index === active) {
+                        //         className = "active";
+                        //     }
+                        //     return (
+                        //         <li className={className} key={suggestion} onClick={onClick}>
+                        //             {suggestion}
+                        //         </li>
+                        //     );
+                        // })}
                 );
             }
         }
         return <></>;
     }
     return (
-        <>
-            <input
-                type="text"
+        <Box>
+            <TextInput 
                 onChange={onChange}
                 onKeyDown={onKeyDown}
                 value={value}
             />
             {renderAutocomplete()}
-        </>
+        </Box>
     );
 }
 export default Autocomplete;
