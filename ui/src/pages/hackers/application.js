@@ -7,6 +7,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea, DateInput } from 'grommet';
 import { Close } from "grommet-icons";
 import wichacksGrommetTheme from "../../wichacksGrommetTheme";
+import Autocomplete from "../../components/autocompleteTextbox";
+import {mlhSchoolList} from "../../data/mlh";
 
 const createApplication = async(userJson, getAccessTokenSilently, setSubmissionError, navigateToPage) => {
     const token = await getAccessTokenSilently({
@@ -98,7 +100,7 @@ export default function HackerApplication() {
             "shirtSize": shirtSize,
             "hasAttendedWiCHacks": (hasAttendedWiCHacks && hasAttendedWiCHacks === "true"),
             "hasAttendedHackathons": (hasAttendedHackathons && hasAttendedHackathons === "true"),
-            "university": (university && !isSchoolOther(university)) ? university : otherUniversity,
+            "university": university,
             "gender": gender,
             "busRider": (eligibleForBusing && busRider === "true"),
             "busStop": busStop,
@@ -195,7 +197,7 @@ export default function HackerApplication() {
                                     />
                             </Box>
 
-                            <div className={css.selectDiv}>
+                            {false && <div className={css.selectDiv}>
                                 School:
                                 <select className={css.formSelect} value={university} onChange={e => setUniversity(e.target.value)}>
                                     <option value="none" selected disabled hidden>Select your School</option>
@@ -207,16 +209,19 @@ export default function HackerApplication() {
                                     <option value="Ithaca">Ithaca</option>
                                     <option value="other">Other</option>
                                 </select>
-                            </div>
+                            </div>}
 
-                            {university && isSchoolOther(university) && // Alex please fix me
+                            <Autocomplete suggestions={mlhSchoolList} value={university} setValue={setUniversity} />
+
+
+                            {/*university && isSchoolOther(university) && // Alex please fix me
                                 <>
                                     <label>
                                         Please enter the name of your school:
                                         <input className={css.textInput} value={otherUniversity} onChange={e => setOtherUniversity(e.target.value)} type={"text"} />
                                     </label><br />
                                 </>
-                            }
+                            */}
 
                             <Box>
                                 <Heading level={4} margin="none">Shirt Size</Heading>
