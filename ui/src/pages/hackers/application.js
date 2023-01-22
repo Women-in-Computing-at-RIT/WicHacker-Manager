@@ -219,7 +219,7 @@ export default function HackerApplication() {
                                     placeholder="University..."
                                     onChange={updateUniversity}
                                     value={university}
-                                    onSuggestionSelect={setUniversity}
+                                    onSuggestionSelect={(e) => { setUniversity(e.suggestion); }}
                                     suggestions={mlhSchoolSuggestions}
                                 />
                             </Box>
