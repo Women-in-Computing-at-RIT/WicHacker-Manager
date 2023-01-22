@@ -6,6 +6,7 @@ import css from "./style/hackerLanding.module.css"
 import LoadingView from "../LoadingView";
 import { Grommet, Box, Heading, Text, Button, Paragraph } from 'grommet';
 import NavBar from "../../components/navBar";
+import { Help } from "grommet-icons";
 
 const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) => {
     const token = await getAccessTokenSilently({
@@ -105,6 +106,11 @@ export default function UserHomepage() {
     let user = userData.data
     console.log(user);
 
+    let displayStatus = "You haven't applied yet";
+    if (user.status == "APPLIED") {
+        displayStatus = "Your Application Has Been Received 👍"
+    } // Switch out the different statuses we have once has been implemented
+
     return (
         <Grommet>
             <Box>
@@ -119,10 +125,16 @@ export default function UserHomepage() {
                     <Heading>Welcome { user.first_name }!</Heading>
                     { user.application_id ?
                         <Box> {/** ALREADY APPLIED */ }
-                            <Text>Application Status: {user.status ?? "You Haven't Applied Yet"}</Text>
+                            <Text size="large" margin={{ bottom: "medium" }}><Text weight="bold" size="large">Application Status:</Text> {displayStatus}</Text>
+                            { user.status === "APPLIED" && <Box margin={{ bottom: "medium" }} direction="row" gap="small" color="gray">
+                                <Help />
+                                <Text>Your application will be reviewed by WiCHacks organizers and you will receive an email when a decision is made</Text>    
+                            </Box>}
 
-                            <Button className={css.viewApplication} plain onClick={ () => navigate("/user/application") }>
-                                    <Text>View Application</Text>
+                            <Button plain onClick={ () => navigate("/user/application") }>
+                                <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                    <Text weight="bold" size="large">View Your Application</Text>
+                                </Box>
                             </Button>
 
 
