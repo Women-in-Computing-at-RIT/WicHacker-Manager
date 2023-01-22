@@ -51,18 +51,5 @@ export function ApplicationView({userData}) {
                 </Box>
             </Box>
         </Grommet>
-    //       <div className={css.dataPointWrapper}>
-    //           <p className={css.dataLabel}>Attending Online Only</p>
-    //           <p className={css.data}>{userData.is_virtual ? "Yes" : "No"}</p>
-    //       </div>
-    //       <div className={css.dataPointWrapper}>
-    //           <p className={css.dataLabel}>Dietary Restrictions</p>
-    //           <p className={css.data}>{userData.dietary_restrictions ? userData.dietary_restrictions : "None"}</p>
-    //       </div>
-    //       <div className={css.dataPointWrapper}>
-    //           <p className={css.dataLabel}>Dietary Restrictions</p>
-    //           <p className={css.data}>{userData.special_accommodations ? userData.special_accommodations : "None"}</p>
-    //       </div>
-    //   </div>
     );
 }

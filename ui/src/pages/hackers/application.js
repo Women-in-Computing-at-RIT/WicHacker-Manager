@@ -7,6 +7,7 @@ import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, T
 import { Close } from "grommet-icons";
 import wichacksGrommetTheme from "../../wichacksGrommetTheme";
 import Autocomplete from "../../components/autocompleteTextbox";
+import { NumberInput } from 'grommet-controls';
 import { Alert } from 'grommet-icons';
 import {mlhSchoolList} from "../../data/mlh";
 import NavBar from "../../components/navBar";
@@ -76,12 +77,7 @@ export default function HackerApplication() {
     }
 
     const isLevelOfStudyOther = (levelOfStudy) => {
-        const selectOptionLevelOfStudy = {"High School": true, "First Year Undergraduate": true, "Second Year Undergraduate": true, "Third Year Undergraduate": true, "Fourth Year Undergraduate": true, "Fifth Year Undergraduate": true, "Graduate Studies": true}
-        if (selectOptionLevelOfStudy.hasOwnProperty(levelOfStudy)){
-            // level of study in select list
-            return false
-        }
-        return true
+        return levelOfStudy === "Other";
     }
 
     const submitUserCreation = async(e) => {
@@ -97,7 +93,7 @@ export default function HackerApplication() {
         let userData = {
             "major": major,
             "levelOfStudy": levelOfStudy,
-            "birthday": birthday,
+            "age": age,
             "shirtSize": shirtSize,
             "hasAttendedWiCHacks": (hasAttendedWiCHacks && hasAttendedWiCHacks === "true"),
             "hasAttendedHackathons": (hasAttendedHackathons && hasAttendedHackathons === "true"),
@@ -108,6 +104,7 @@ export default function HackerApplication() {
             "dietaryRestrictions": dietaryRestriction,
             "specialAccommodations": specialAccommodations,
             "affirmedAgreements": affirmedAgreements,
+            "mlhEmailsAllowed": mlhEmails,
             "isVirtual": (isVirtual && isVirtual === "true")
         }
         await createApplication(userData, getAccessTokenSilently, setSubmissionError, navigateToPage)
@@ -116,7 +113,7 @@ export default function HackerApplication() {
     const [major, setMajor] = useState();
     const [levelOfStudy, setLevelOfStudy] = useState();
     const [otherLevelOfStudy, setOtherLevelOfStudy] = useState();
-    const [birthday, setBirthday] = useState();
+    const [age, setAge] = useState();
     const [shirtSize, setShirtSize] = useState();
     const [hasAttendedWiCHacks, setAttendedWiCHacksInput] = useState();
     const [hasAttendedHackathons, setAttendedHackathonsInput] = useState();
@@ -131,6 +128,7 @@ export default function HackerApplication() {
     const [ritEventPolicies, setRitEventPolicies] = useState();
     const [mlhCodeOfConduct, setMlhCodeOfConduct] = useState();
     const [mlhDataSharing, setMlhDataSharing] = useState();
+    const [mlhEmails, setMLHEmails] = useState();
     const [allInformationCorrect, setAllInformationCorrect] = useState();
     const [isVirtual, setIsVirtual] = useState();
 
@@ -189,7 +187,7 @@ export default function HackerApplication() {
                                     placeholder="How Long You've Studied" 
                                     value={levelOfStudy}
                                     onChange={ e => setLevelOfStudy(e.target.value) } 
-                                    options={["High School", "First Year Undergraduate", "Second Year Undergraduate", "Third Year Undergraduate", "Fourth Year Undergraduate", "Fifth Year Undergraduate", "Graduate Studies", "Other"]} 
+                                    options={["Less than Secondary / High School", "Secondary / High School", "Undergraduate University (2 year - community college or similar)", "Undergraduate University (3+ year)", "Graduate University (Masters, Professional, Doctoral, etc)", "Code School / Bootcamp", "Other Vocational / Trade Program or Apprenticeship", "Other", "I'm not currently a student", "Prefer not to answer"]} 
                                 />
                             </Box>
 
@@ -204,12 +202,11 @@ export default function HackerApplication() {
                             }
                             
                             <Box margin={{ vertical: "medium" }}>
-                                <Heading level={4} margin="none">Date of Birth</Heading>
+                                <Heading level={4} margin="none">Age</Heading>
                                 <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
-                                <DateInput
-                                    defaultValue={(new Date()).toISOString()}
-                                    format="yyyy-mm-dd"
-                                    onChange={ (e) => setBirthday(e.target.value) }
+                                <NumberInput 
+                                    onChange={setAge}
+                                    placeholder="I am... "
                                 />
                             </Box>
 
@@ -235,7 +232,8 @@ export default function HackerApplication() {
                             </Box>
 
                             <Box margin={{ top: "medium" }}>
-                                <Heading level={4} margin={{ bottom: "small", top: "none" }}>Have you participated in any hackathons before?</Heading>
+                                <Heading level={4} margin={{ bottom: "none", top: "none" }}>Have you participated in any hackathons before?</Heading>
+                                <Text size="small" color="gray" margin={{ bottom: "small" }}>This will not affect your elligibility for WiCHacks</Text>
                                 <RadioButtonGroup
                                     options={ ["Yes    ", "No    "] }
                                     name="wantBus"
@@ -244,7 +242,8 @@ export default function HackerApplication() {
                             </Box>
 
                             <Box margin={{ top: "medium" }}>
-                                <Heading level={4} margin={{ bottom: "small", top: "none" }}>Have you participated in WiCHacks before?</Heading>
+                                <Heading level={4} margin={{ bottom: "none", top: "none" }}>Have you participated in WiCHacks before?</Heading>
+                                <Text size="small" color="gray" margin={{ bottom: "small" }}>This will not affect your elligibility for WiCHacks</Text>
                                 <RadioButtonGroup
                                     options={ ["Yes   ", "No   "] }
                                     name="wantBus"
@@ -384,6 +383,15 @@ export default function HackerApplication() {
                                         setMlhDataSharing(true)
                                     } else {
                                         setMlhDataSharing(false)
+                                    }
+                                }}/>
+                                <CheckBox label={ 
+                                    <Text>[OPTIONAL] I authorize MLH to send me an email where I can further opt into the MLH Hacker, Events, or Organizer Newsletters and other communications from MLH.</Text> 
+                                } onChange={(e) => {
+                                    if (e.target.type === 'checkbox') {
+                                        setMLHEmails(true)
+                                    } else {
+                                        setMLHEmails(false)
                                     }
                                 }}/>
                                 <CheckBox label={ 
