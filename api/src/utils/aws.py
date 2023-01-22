@@ -9,7 +9,7 @@ ssmClient = None
 
 environment = None
 
-S3_RESUME_BUCKET_NAME = "wichacks-resumes2"
+S3_RESUME_BUCKET_NAME = "wichacks-rit-resumes"
 logger = logging.getLogger("aws")
 
 

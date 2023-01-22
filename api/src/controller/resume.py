@@ -11,7 +11,7 @@ logger = logging.getLogger("Application")
 
 class Resume(Resource):
 
-    ALLOWED_EXTENSIONS = {'txt', 'pdf', '.doc', '.docx'}
+    ALLOWED_EXTENSIONS = {'txt', 'pdf', 'doc', 'docx', 'jpg', 'png'}
 
     def allowed_file(self, filename):
         return '.' in filename and \
@@ -26,6 +26,7 @@ class Resume(Resource):
         auth0_id = authenticationPayload['sub']
         userID = getUserIdFromAuthID(auth0_id)
         if userID is None:
+            logger.error("Could not get user ID from auth ID")
             return {"message": "User Error"}, 500
 
         # Have to verify filename exists, if filename is empty file upload didn't work

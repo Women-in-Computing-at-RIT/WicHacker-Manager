@@ -21,7 +21,7 @@ class Application(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('major', type=str, required=True)
         parser.add_argument('levelOfStudy', type=str, required=True)
-        parser.add_argument('birthday', type=convertDatetimeToString, required=True)
+        parser.add_argument('age', type=int, required=True)
         parser.add_argument('shirtSize', type=str, required=True)
         parser.add_argument('hasAttendedWiCHacks', type=bool, required=True)
         parser.add_argument('hasAttendedHackathons', type=bool, required=True)
@@ -37,7 +37,7 @@ class Application(Resource):
 
         applicationCreated = createApplication(auth0_id=auth0_id, major=args['major'],
                                                levelOfStudy=args['levelOfStudy'],
-                                               birthday=args['birthday'],
+                                               age=args['age'],
                                                shirtSize=args['shirtSize'],
                                                hasAttendedWiCHacks=args['hasAttendedWiCHacks'],
                                                hasAttendedHackathons=args['hasAttendedHackathons'],

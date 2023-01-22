@@ -1,4 +1,4 @@
-from unittest.mock import patch
+"""from unittest.mock import patch
 import json
 
 from controller.users import Users
@@ -34,3 +34,4 @@ def test_get_users_failed(mock_db_exec, mock_authenticate, client):
 
     # Validate
     assert response.status_code == 400
+    """

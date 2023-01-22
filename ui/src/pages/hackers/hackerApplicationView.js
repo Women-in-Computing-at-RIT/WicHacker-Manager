@@ -2,7 +2,8 @@ import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
 import {apiDomain, getAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
-import {ApplicationView} from "../../components/applicationView";
+import LoadingView from "../LoadingView";
+import { ApplicationView } from "../../components/applicationView";
 
 const getUserData = async(getAccessTokenSilently, setUserResponse, navigateTo) => {
     const token = await getAccessTokenSilently({
@@ -18,7 +19,8 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, navigateTo) =
             }
             setUserResponse({data: await response.data, error: null})
         }).catch(async () => {
-        setUserResponse({data: null, error: true})
+            navigateTo("/user")
+            setUserResponse({data: null, error: true})
     })
 }
 
@@ -34,8 +36,8 @@ export default function HackerApplicationView(){
 
     return(
         <>
-            {userData ? <ApplicationView userData={userData.data}/> : <p>Loading...</p>}
-            <button onClick={() => {navigate("/user")}}>Back</button>
+            {userData ? <ApplicationView userData={userData.data}/> : <LoadingView />}
+            {/* <button onClick={() => {navigate("/user")}}>Back</button> */}
         </>
     )
 }

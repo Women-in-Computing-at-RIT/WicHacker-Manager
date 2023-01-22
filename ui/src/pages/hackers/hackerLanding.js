@@ -3,6 +3,10 @@ import {useAuth0} from "@auth0/auth0-react";
 import {apiDomain, getAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
 import css from "./style/hackerLanding.module.css"
+import LoadingView from "../LoadingView";
+import { Grommet, Box, Heading, Text, Button, Paragraph } from 'grommet';
+import NavBar from "../../components/navBar";
+import { Help } from "grommet-icons";
 
 const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) => {
     const token = await getAccessTokenSilently({
@@ -45,7 +49,7 @@ const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
             .then(async (response) => {
                 setResumeUpload({"status": true, "error": null})
             }).catch(async () => {
-            setResumeUpload({"status": false, "error": "Resume Upload Failed"})
+                setResumeUpload({"status": false, "error": "Resume Upload Failed"})
         })
 
     } else {
@@ -54,7 +58,13 @@ const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     }
 }
 
-const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUploadedResume) => {
+const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUploadedResume, userData, newUser) => {
+    if ((!userData?.data) || newUser){
+        // don't check resume if we don't have user data or will get redirected
+        return
+    }
+    console.log(userData)
+    console.log(newUser)
     const token = await getAccessTokenSilently({
         audience: 'wichacks.io',
     });
@@ -84,7 +94,7 @@ export default function UserHomepage() {
 
     // On initial render and when resume upload is attempted, reload if user has already uploaded resume
     useEffect(() => {
-        checkIfUserHasUploadedResume(getAccessTokenSilently, setHasUploadedResume)
+        checkIfUserHasUploadedResume(getAccessTokenSilently, setHasUploadedResume, userData, newUser)
     }, [resumeUpload, userData])
 
     let navigate = useNavigate()
@@ -96,35 +106,90 @@ export default function UserHomepage() {
         navigate("/notFound")
     } else if (!userData?.data){
         return (
-            <p>Loading....</p>
+            <LoadingView />
         );
     }
 
     let user = userData.data
+    console.log(user);
+
+    let displayStatus = "You haven't applied yet";
+    if (user?.status === "APPLIED") {
+        displayStatus = "Your Application Has Been Received 👍"
+    } // Switch out the different statuses we have once has been implemented
 
     return (
-        <div>
-            <h1>Welcome {user.first_name} {user.last_name}!</h1>
-            <button onClick={() => logout({ returnTo: "https://wichacks.io"})}>
-                Logout
-            </button>
+        <Grommet>
+            <Box>
+                <NavBar title="WiCHacks User Home">
+                    <Button plain onClick={ () => logout({ returnTo: "/" }) }>
+                        <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
+                            <Text weight="bold" color="#714ba0">Logout</Text>
+                        </Box>
+                    </Button>
+                </NavBar>
+                <Box margin="small"> { /* Page content */}
+                    <Heading>Welcome { user.first_name }!</Heading>
+                    { user.application_id ?
+                        <Box> {/** ALREADY APPLIED */ }
+                            <Text size="large" margin={{ bottom: "medium" }}><Text weight="bold" size="large">Application Status:</Text> {displayStatus}</Text>
+                            { user.status === "APPLIED" && <Box margin={{ bottom: "medium" }} direction="row" gap="small" color="gray">
+                                <Help />
+                                <Text>Your application will be reviewed by WiCHacks organizers and you will receive an email when a decision is made</Text>    
+                            </Box>}
 
-            {user.application_id && <p><button onClick={() => navigate("/user/application")}>View Application</button></p>}
+                            <Button plain onClick={ () => navigate("/user/application") }>
+                                <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                    <Text weight="bold" size="large">View Your Application</Text>
+                                </Box>
+                            </Button>
 
-            { user.status &&
-                <h3>Application Status: {user.status}</h3>
-            }
 
-            <div>
-                {hasUploadedResume ? <h3>Overwrite Existing Resume</h3> : <h2>Resume Upload</h2>}
-                <div>
-                    {resumeUpload?.status && <p>Resume Upload Success</p>}
-                    {resumeUpload?.error && <p>{resumeUpload.error}</p>}
-                </div>
-                <form>
-                    <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
-                </form>
-            </div>
-        </div>
+
+                            { hasUploadedResume ?
+                                <div className={css.resumeUploadPadding}>
+                                    <Box>
+                                        <Text>Resume Uploaded <br />Overwrite existing resume</Text>
+                                    </Box>
+                                </div>
+                                 :
+                                <div className={css.resumeUploadPadding}>
+                                    <Box>
+                                        <Text>Please upload your resume, we will share your resume with sponsors for job opportunities</Text>
+                                    </Box>
+                                </div>
+                            }
+
+                            <Box>
+                                {resumeUpload?.status && 
+                                    <Box background="green">
+                                        <Text>Resume Upload Success</Text>
+                                    </Box>
+                                }
+
+                                {resumeUpload?.error && 
+                                    <Box background="red">
+                                        <Text>Resume Upload Error: {resumeUpload.error}</Text>
+                                    </Box>
+                                }
+                            </Box>
+                            <form>
+                                <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
+                            </form>
+                        </Box> :
+                        <Box background="#00000010" round="medium" pad="medium"> { /** NEEDS TO APPLY */ }
+                            <Heading level={3} margin="none">You Haven't Applied Yet! 😞</Heading>
+                            <Paragraph fill>WiCHacks is still accepting applications! Apply now, it's super easy!</Paragraph>
+                            <Button onClick={() => {navigate("/user/apply")}}>
+                                <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                    <Text weight="bold" size="large">Apply Now!</Text>
+                                </Box>
+                            </Button>
+                        </Box>
+                    }
+                    
+                </Box>
+            </Box>
+        </Grommet>
     );
 }

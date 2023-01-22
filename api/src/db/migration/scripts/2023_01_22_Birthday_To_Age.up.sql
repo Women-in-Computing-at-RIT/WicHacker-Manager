@@ -1,0 +1,2 @@
+ALTER TABLE Applications DROP COLUMN birthday;
+ALTER TABLE Applications ADD COLUMN age INT NOT NULL;
