@@ -3,11 +3,21 @@ import axios from 'axios'
 export const localAxios = axios.create(
     {
         proxy: {
-            protocol: 'https',
-            host: 'api.wichacks.io',
-            port: 433
+            protocol: 'http',
+            host: 'localhost',
+            port: 5002
         }
     }
 )
+const prodAxios = axios.create()
 
-export const apiDomain = "https://api.wichacks.io"
+export const localApiDomain = "http://localhost:5002"
+export const prodApiDomain = "https://api.wichacks.io"
+
+export const apiDomain = () => {
+    return prodApiDomain
+}
+
+export const getAxios = () => {
+    return prodAxios
+}

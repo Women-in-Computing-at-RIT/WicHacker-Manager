@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {apiDomain, localAxios} from "../../config/axios";
+import {apiDomain, getAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
 import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea, DateInput, Image } from 'grommet';
@@ -20,7 +20,7 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
         headers: { Authorization: `Bearer ${token}`}
     }
     console.log(userJson);
-    localAxios.post(apiDomain + `/user/apply`, userJson, config)
+    getAxios().post(apiDomain() + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
         }).catch(async (error) => {
@@ -40,7 +40,7 @@ const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    localAxios.get(apiDomain + `/user`, config)
+    getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
                 return
@@ -176,13 +176,13 @@ export default function HackerApplication() {
                             <Heading level={2} margin="none">General Information</Heading>
                             <Paragraph fill>This section will gather information about you to help us keep in touch, determine elligibility, and plan for WiCHacks!</Paragraph>
                             <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
-                            
+
                             <Box>
                                 <Heading margin="none" level={4}>Gender</Heading>
                                 <Text size="small" color="gray">Due to the proven systematic oppression of people identifying as gender minority in computing fields, WICHacks is a gender-minority only hackathon. Gender minority is being defined as cisgendered women, nonbinary individuals, transgender people, and all other people who have been systematically oppressed on the basis of gender identity. As such, we are collecting information about how you identify to determine your eligibility to participate. Others, including cisgender men, will be denied participation for this event</Text>
                                 <TextInput placeholder="How you identify" value={gender} onChange={ e => setGender(e.target.value) } />
                             </Box>
-                            
+
                             <Box margin={{ vertical: "medium" }}>
                                 <Heading margin="none" level={4}>Major(If Applicable)</Heading>
                                 <TextInput placeholder="What you study" value={major} onChange={ e => setMajor(e.target.value) } />
@@ -190,11 +190,11 @@ export default function HackerApplication() {
 
                             <Box>
                                 <Heading level={4} margin="none">Current Level of Study</Heading>
-                                <Select 
-                                    placeholder="How Long You've Studied" 
+                                <Select
+                                    placeholder="How Long You've Studied"
                                     value={levelOfStudy}
-                                    onChange={ e => setLevelOfStudy(e.target.value) } 
-                                    options={["Less than Secondary / High School", "Secondary / High School", "Undergraduate University (2 year - community college or similar)", "Undergraduate University (3+ year)", "Graduate University (Masters, Professional, Doctoral, etc)", "Code School / Bootcamp", "Other Vocational / Trade Program or Apprenticeship", "Other", "I'm not currently a student", "Prefer not to answer"]} 
+                                    onChange={ e => setLevelOfStudy(e.target.value) }
+                                    options={["Less than Secondary / High School", "Secondary / High School", "Undergraduate University (2 year - community college or similar)", "Undergraduate University (3+ year)", "Graduate University (Masters, Professional, Doctoral, etc)", "Code School / Bootcamp", "Other Vocational / Trade Program or Apprenticeship", "Other", "I'm not currently a student", "Prefer not to answer"]}
                                 />
                             </Box>
 
@@ -207,11 +207,11 @@ export default function HackerApplication() {
                                     <TextInput value={otherLevelOfStudy} onChange={ e => setOtherLevelOfStudy(e.target.value) } />
                                 </FormField>
                             }
-                            
+
                             <Box margin={{ vertical: "medium" }}>
                                 <Heading level={4} margin="none">Age</Heading>
                                 <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
-                                <NumberInput 
+                                <NumberInput
                                     onChange={ (e) => { setAge(e.target.value) }}
                                     placeholder="I am... "
                                 />
@@ -230,8 +230,8 @@ export default function HackerApplication() {
 
                             <Box>
                                 <Heading level={4} margin={{ top: "medium", bottom: "none" }}>Shirt Size</Heading>
-                                <Select 
-                                    placeholder="My shirt size is..." 
+                                <Select
+                                    placeholder="My shirt size is..."
                                     value={shirtSize}
                                     onChange={ e => setShirtSize(e.target.value) }
                                     options={ [ "X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large", "XXX-Large" ] }
@@ -292,7 +292,7 @@ export default function HackerApplication() {
                                     </Box>
                                     <Box>
                                         <Heading level={4} margin={{ top: "none", bottom: "small" }}>Would you like to travel to RIT via one of the buses?</Heading>
-                                        <RadioButtonGroup 
+                                        <RadioButtonGroup
                                             options={ ["Yes  ", "No  "] }
                                             name="wantBus"
                                             onChange={ (e) => { setBusRider(e.target.value === "Yes  " ? "true" : "false" ) } }
@@ -301,11 +301,11 @@ export default function HackerApplication() {
                                     {(busRider && busRider === "true") &&
                                         <Box margin={{ top: "medium" }}>
                                             <Heading level={4} margin={{ bottom: "small", top: "none" }}>At which stop would you like to board the bus?</Heading>
-                                            <Select 
-                                                placeholder="I will board..." 
+                                            <Select
+                                                placeholder="I will board..."
                                                 value={busStop}
-                                                onChange={ e => setBusStop(e.target.value) } 
-                                                options={[ "University of Toronto", "University of Waterloo", "SUNY Buffalo", "Skidmore College", "Rensselaer Polytechnic Institute", "Siena College", "SUNY Albany", "Union College" ]} 
+                                                onChange={ e => setBusStop(e.target.value) }
+                                                options={[ "University of Toronto", "University of Waterloo", "SUNY Buffalo", "Skidmore College", "Rensselaer Polytechnic Institute", "Siena College", "SUNY Albany", "Union College" ]}
                                             />
                                         </Box>
                                     }
@@ -320,8 +320,8 @@ export default function HackerApplication() {
                             <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
 
                             <Text margin={{ bottom: "small" }}>Do you have any dietary restrictions?</Text>
-                            
-                            <RadioButtonGroup 
+
+                            <RadioButtonGroup
                                 options={ ["Yes", "No"] }
                                 name="dietary"
                                 onChange={ (e) => { setHasDietaryRestriction(e.target.value === "Yes" ? "true" : "false") } }
@@ -330,7 +330,7 @@ export default function HackerApplication() {
                             {(hasDietaryRestriction === "true") &&
                                 <Box margin={{ top: "medium", bottom: "medium" }}>
                                     <Text>Please list your dietary restrictions below so we can ensure to have food available for you:</Text>
-                                    <TextArea 
+                                    <TextArea
                                         placeholder="My dietary restrictions are..."
                                         value={dietaryRestriction}
                                         onChange={ (e) => { setDietaryRestriction(e.target.value) } }
@@ -340,17 +340,17 @@ export default function HackerApplication() {
 
                             <Text margin={{ top: "medium" }}>Will you require any special accommodations you feel may not be already planned?</Text>
                             <Text color="gray" size="small" margin={{ bottom: "small" }}>Please note, this includes a need for interpreting/captioning services. WiCHacks plans to provide these services during opening and closing ceremonies but needs to identify those requiring these services to RIT. Additionally, please report this request to RIT Department of Access Services.</Text>
-                            
-                            <RadioButtonGroup 
+
+                            <RadioButtonGroup
                                 options={ ["Yes ", "No "] }
                                 name="specialAccomodations"
                                 onChange={ (f) => { setHasSpecialAccommodations(f.target.value === "Yes " ? "true" : "false") } }
                             />
-                            
+
                             {(hasSpecialAccommodations === "true") &&
                                 <Box margin={{ top: "medium", bottom: "medium" }}>
                                     <Text>Please elaborate below</Text>
-                                    <TextArea 
+                                    <TextArea
                                         placeholder="My dietary restrictions are..."
                                         value={specialAccommodations}
                                         onChange={ (e) => { setSpecialAccommodations(e.target.value) } }
@@ -363,8 +363,8 @@ export default function HackerApplication() {
                             <Paragraph fill>We have to make sure everyone at WiCHacks is safe and has a good time! Take a moment to read the agreements below</Paragraph>
                             <Box background="#714ba0" height="4px" round="2px" margin={{ bottom: "medium" }}/>
                             <Box gap="small">
-                                <CheckBox label={ 
-                                    <Text>I have read and agree to the <a href="https://www.rit.edu/academicaffairs/policiesmanual/c000" target="_blank" rel="noreferrer">RIT Code of Ethical Conduct and Compliance</a> </Text> 
+                                <CheckBox label={
+                                    <Text>I have read and agree to the <a href="https://www.rit.edu/academicaffairs/policiesmanual/c000" target="_blank" rel="noreferrer">RIT Code of Ethical Conduct and Compliance</a> </Text>
                                 } onChange={(e) => {
                                     if (e.target.type === 'checkbox') {
                                         setRitEventPolicies(true)
@@ -372,8 +372,8 @@ export default function HackerApplication() {
                                         setRitEventPolicies(false)
                                     }
                                 }}/>
-                                <CheckBox label={ 
-                                    <Text>I have read and agree to the <a href="https://static.mlh.io/mlh-code-of-conduct.pdf" target="_blank" rel="noreferrer">MLH Code of Conduct</a></Text> 
+                                <CheckBox label={
+                                    <Text>I have read and agree to the <a href="https://static.mlh.io/mlh-code-of-conduct.pdf" target="_blank" rel="noreferrer">MLH Code of Conduct</a></Text>
                                 } onChange={(e) => {
                                     if (e.target.type === 'checkbox') {
                                         setMlhCodeOfConduct(true)
@@ -381,10 +381,10 @@ export default function HackerApplication() {
                                         setMlhCodeOfConduct(false)
                                     }
                                 }}/>
-                                <CheckBox label={ 
+                                <CheckBox label={
                                     <Text>I authorize WiCHacks to share my application/registration information with Major League Hacking for event administration,
                                     ranking, and MLH administration in-line with the <a href="https://mlh.io/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>. I further agree to the
-                                    terms of both the <a href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md" >MLH Contest Terms and Conditions</a> and the <a href="https://mlh.io/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>.</Text> 
+                                    terms of both the <a href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md" >MLH Contest Terms and Conditions</a> and the <a href="https://mlh.io/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>.</Text>
                                 } onChange={(e) => {
                                     if (e.target.type === 'checkbox') {
                                         setMlhDataSharing(true)
@@ -392,8 +392,8 @@ export default function HackerApplication() {
                                         setMlhDataSharing(false)
                                     }
                                 }}/>
-                                <CheckBox label={ 
-                                    <Text>[OPTIONAL] I authorize MLH to send me an email where I can further opt into the MLH Hacker, Events, or Organizer Newsletters and other communications from MLH.</Text> 
+                                <CheckBox label={
+                                    <Text>[OPTIONAL] I authorize MLH to send me an email where I can further opt into the MLH Hacker, Events, or Organizer Newsletters and other communications from MLH.</Text>
                                 } onChange={(e) => {
                                     if (e.target.type === 'checkbox') {
                                         setMLHEmails(true)
@@ -401,8 +401,8 @@ export default function HackerApplication() {
                                         setMLHEmails(false)
                                     }
                                 }}/>
-                                <CheckBox label={ 
-                                    <Text>By submitting my application to WiCHacks I confirm all provided information is accurate and I will inform the WiCHackshackathon organizers should any information change</Text> 
+                                <CheckBox label={
+                                    <Text>By submitting my application to WiCHacks I confirm all provided information is accurate and I will inform the WiCHackshackathon organizers should any information change</Text>
                                 } onChange={(e) => {
                                     if (e.target.type === 'checkbox') {
                                         setAllInformationCorrect(true)
