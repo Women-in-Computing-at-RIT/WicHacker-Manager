@@ -65,6 +65,7 @@ const redirectUsersIfUserExists = async(getAccessTokenSilently, navigate) => {
 export function NewUserForm({applicationRedirectRequired}) {
     let navigate = useNavigate()
     const [submissionError, setSubmissionError] = useState(null)
+    const [captchaToken, setCaptchaToken] = useState();
     const {getAccessTokenSilently} = useAuth0();
 
     useEffect(() => {
@@ -75,27 +76,25 @@ export function NewUserForm({applicationRedirectRequired}) {
         navigate(path)
     }
 
-    const checkRecaptcha = async(value) => {
-        const requestData = {"captchaToken": value}
-        getAxios().post(apiDomain() + '/recaptcha', requestData)
-            .then(async (response) => {
-                setRecaptchaStatus(true)
-            }).catch(async () => {
-            setRecaptchaStatus(false)
-        })
+    const setRecaptchaToken = (token) => {
+        setCaptchaToken(token);
     }
 
     const submitUserCreation = async(e) => {
         e.preventDefault()
-
-        // check recaptcha
-        if (!recaptchaStatus){
+        console.log('create')
+        // first check captcha value
+        const requestData = {"captchaToken": captchaToken}
+        getAxios().post(apiDomain() + '/recaptcha', requestData)
+            .then(async (response) => {
+                // continue
+            }).catch(async () => {
             setSubmissionError(true);
             return
-        }
+        })
 
         // clear out the recaptcha for every submission
-        setRecaptchaStatus(false)
+        setRecaptchaToken(null);
 
         let userData = {
             "firstName": firstName,
@@ -173,7 +172,7 @@ export function NewUserForm({applicationRedirectRequired}) {
 
                             <Box>
                                 <ReCAPTCHA sitekey={RECAPTCHA_KEY}
-                                        onChange={checkRecaptcha}
+                                        onChange={setRecaptchaToken}
                                         render="explicit"
                                         size="normal"
                                 />
