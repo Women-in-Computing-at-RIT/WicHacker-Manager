@@ -4,7 +4,7 @@ import {apiDomain, getAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
 import css from "./style/hackerLanding.module.css"
 import LoadingView from "../LoadingView";
-import { Grommet, Box, Heading, Text, Button, Paragraph } from 'grommet';
+import { Grommet, Box, Heading, Text, Button, Paragraph, Form, FileInput } from 'grommet';
 import NavBar from "../../components/navBar";
 import { Help } from "grommet-icons";
 
@@ -144,38 +144,48 @@ export default function UserHomepage() {
                                 </Box>
                             </Button>
 
-
-
+                            <Heading level={3} margin={{ bottom: "none" }}>Get Ready For WiCHacks</Heading>
+                            <Heading level={4} margin={{ bottom: "none" }}>Share your resume</Heading>
+                            <Text>Please upload your resume, we will share your resume with qualifying sponsors for job opportunities! Lots of hackers connect with companies in unique ways during hackathons, and it can be a great way to show potential employers your skills.</Text>
                             { hasUploadedResume ?
                                 <div className={css.resumeUploadPadding}>
                                     <Box>
-                                        <Text>Resume Uploaded <br />Overwrite existing resume</Text>
+                                        <Text weight="bold">You already have a resume uploaded. You may overwrite it with a new one below</Text>
                                     </Box>
                                 </div>
                                  :
-                                <div className={css.resumeUploadPadding}>
-                                    <Box>
-                                        <Text>Please upload your resume, we will share your resume with sponsors for job opportunities</Text>
-                                    </Box>
-                                </div>
+                                <Box margin={{ vertical: "small" }}>
+                                    <Text weight="bold">You haven't uploaded a resume yet</Text>
+                                </Box>
                             }
 
                             <Box>
                                 {resumeUpload?.status && 
-                                    <Box background="green">
+                                    <Box background="#a5dea4" pad="small" round="small" margin={{ vertical: "small" }}>
                                         <Text>Resume Upload Success</Text>
                                     </Box>
                                 }
 
                                 {resumeUpload?.error && 
-                                    <Box background="red">
+                                    <Box background="#c94254" pad="small" round="small" margin={{ vertical: "small" }}>
                                         <Text>Resume Upload Error: {resumeUpload.error}</Text>
                                     </Box>
                                 }
                             </Box>
-                            <form>
-                                <input className={css.resumeInput} type="file" onChange={(e) => uploadResume(e, getAccessTokenSilently, setResumeUpload)}/>
-                            </form>
+                            <Form>
+                                <FileInput
+                                    maxSize={10000000}
+                                    multiple={false}
+                                    onChange={(e) => {
+                                        const fileList = e.target.files;
+                                        if (fileList.length > 0) {
+                                            uploadResume(e, getAccessTokenSilently, setResumeUpload)
+                                        } else {
+                                            setResumeUpload({ "status": false, "error": "Failed to select files"})
+                                        }
+                                    }} 
+                                />
+                            </Form>
                         </Box> :
                         <Box background="#00000010" round="medium" pad="medium"> { /** NEEDS TO APPLY */ }
                             <Heading level={3} margin="none">You Haven't Applied Yet! 😞</Heading>
