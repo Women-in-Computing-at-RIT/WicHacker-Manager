@@ -3,10 +3,11 @@ import {useEffect, useState} from "react";
 import {apiDomain, localAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
-import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea, DateInput } from 'grommet';
+import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea, DateInput, Image } from 'grommet';
 import { Close } from "grommet-icons";
 import wichacksGrommetTheme from "../../wichacksGrommetTheme";
 import Autocomplete from "../../components/autocompleteTextbox";
+import { Alert } from 'grommet-icons';
 import {mlhSchoolList} from "../../data/mlh";
 import NavBar from "../../components/navBar";
 
@@ -153,6 +154,9 @@ export default function HackerApplication() {
             <NavBar title="WiCHacks" />
             <Box pad="small">
                 <Heading>WiCHacks Application</Heading>
+                <Box background="#ded492" round="small" align="center" justify="between" pad="medium" margin={{ bottom: "medium" }} direction="row">
+                    <Text>We're excited you want to apply to attend WiCHacks 2023! This form will collect information about you, and how you'd like to attend. If you have any questions or concerns about this form, please email <a href="mailto:wichacks@rit.edu" target="_blank" rel="noreferrer">wichacks@rit.edu</a> and our team will work with you.</Text>
+                </Box>
                 {submissionError?.error && /** Ruh roh scooby doo */
                     <Box background="#c94254" round="small" align="center" justify="between" pad="medium" margin={{ bottom: "medium" }} direction="row">
                         <Text><Text weight="bold">Error Submitting Application:</Text> {submissionError?.description}</Text>
@@ -170,6 +174,7 @@ export default function HackerApplication() {
                             
                             <Box>
                                 <Heading margin="none" level={4}>Gender</Heading>
+                                <Text size="small" color="gray">Due to the proven systematic oppression of people identifying as gender minority in computing fields, WICHacks is a gender-minority only hackathon. Gender minority is being defined as cisgendered women, nonbinary individuals, transgender people, and all other people who have been systematically oppressed on the basis of gender identity. As such, we are collecting information about how you identify to determine your eligibility to participate. Others, including cisgender men, will be denied participation for this event</Text>
                                 <TextInput placeholder="How you identify" value={gender} onChange={ e => setGender(e.target.value) } />
                             </Box>
                             
@@ -200,13 +205,12 @@ export default function HackerApplication() {
                             
                             <Box margin={{ vertical: "medium" }}>
                                 <Heading level={4} margin="none">Date of Birth</Heading>
-                                <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for
-                                    information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
-                                    <DateInput
-                                        defaultValue={(new Date()).toISOString()}
-                                        format="yyyy-mm-dd"
-                                        onChange={ (e) => setBirthday(e.target.value) }
-                                    />
+                                <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
+                                <DateInput
+                                    defaultValue={(new Date()).toISOString()}
+                                    format="yyyy-mm-dd"
+                                    onChange={ (e) => setBirthday(e.target.value) }
+                                />
                             </Box>
 
                             <Box>
@@ -255,17 +259,33 @@ export default function HackerApplication() {
                             <Box background="#714ba0" height="4px" round="2px"/>
 
                             <Heading level={4} margin={{ top: "medium", bottom: "small" }}>How will you be participating?</Heading>
-                            
-                            <RadioButtonGroup 
+                            <Text>This year, WiCHacks is inviting all individuals to participate in person at RIT, or online through our Discord platform. If in-person, you can take one of the provided buses or your own transportation to RIT. Parking will be provided.</Text>
+                            <RadioButtonGroup
                                 options={ ["In-Person", "Online Only"] }
                                 name="isVirtual"
                                 onChange={ (e) => { setIsVirtual(e.target.value === "In-Person" ? "true" : "false" ) } }
+                                margin={{ bottom: "medium", top: "small" }}
                             />
 
                             {eligibleForBusing &&
-                                <Box>
+                                <Box pad="small" background="#ded492" round="small">
+                                    <Box> {/** Information on bussing */}
+                                        <Heading level={3} margin={{ vertical: "small" }}>WiCHacks has buses this year!</Heading>
+                                        <Text>To help more of our participants enjoy WiCHacks in person this year, we'll be sending out two buses to provide you transportation to and from the event. Buses will pick up participants early Saturday 3/4/23 morning, and return you to your respective stops Sunday 3/5/23 evening. One bus will be traveling from Toronto, and the other from Albany area.</Text>
+                                        <Text weight="bold">See Image Below For Bus Route Information</Text>
+                                        <Box pad="small" background="#fff" border={{ color: "#000", size: "medium" }} round="small">
+                                            <Image
+                                                round="small"
+                                                src="/REPLACEME_busroutes.jpg"
+                                            />
+                                        </Box>
+                                        <Box direction="row" background="#c94254" round="small" align="center" margin={{ vertical: "small" }} pad="small" gap="small">
+                                            <Alert />
+                                            <Text weight="bold">Please note, filling out the below does not guarantee you a spot on buses. WiCHacks organizers will reach out with more information.</Text>
+                                        </Box>
+                                    </Box>
                                     <Box>
-                                        <Heading level={4} margin={{ top: "medium", bottom: "small" }}>Would you like to travel to RIT via one of the buses?</Heading>
+                                        <Heading level={4} margin={{ top: "none", bottom: "small" }}>Would you like to travel to RIT via one of the buses?</Heading>
                                         <RadioButtonGroup 
                                             options={ ["Yes  ", "No  "] }
                                             name="wantBus"
@@ -279,7 +299,7 @@ export default function HackerApplication() {
                                                 placeholder="I will board..." 
                                                 value={busStop}
                                                 onChange={ e => setBusStop(e.target.value) } 
-                                                options={[ "University of Toronto", "University of Waterloo", "SUNY Buffalo", "Skidmore College", "RPI", "Siena College", "SUNY Albany", "Union College" ]} 
+                                                options={[ "University of Toronto", "University of Waterloo", "SUNY Buffalo", "Skidmore College", "Rensselaer Polytechnic Institute", "Siena College", "SUNY Albany", "Union College" ]} 
                                             />
                                         </Box>
                                     }
@@ -377,12 +397,16 @@ export default function HackerApplication() {
                                 }}/>
                             </Box>
                         </Box>
-                        <Box className={css.applicationSubmitButton}>
+                        <Box margin={{ vertical: "medium" }}>
                             <Button type="submit" onClick={submitUserCreation}>
                                 <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
                                     <Text weight="bold" size="large">Submit Application</Text>
                                 </Box>
                             </Button>
+                        </Box>
+                        <Box color="gray" align="center" direction="row">
+                            <Alert size="medium" />
+                            <Text size="small">Submitting your application does not guarantee participation. You will receive emails with more information within 3-5 business days</Text>
                         </Box>
                     </Form>
                 </Box>
