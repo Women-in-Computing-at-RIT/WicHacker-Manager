@@ -90,6 +90,13 @@ export default function HackerApplication() {
             return
         }
 
+        if (!(major && levelOfStudy && age && shirtSize && hasAttendedHackathons && hasAttendedWiCHacks && university && gender && hasDietaryRestriction && hasSpecialAccommodations && affirmedAgreements && mlhEmails && isVirtual)) {
+            // User didn't fill everything out
+            setSubmissionError({ "error": true, "description": "Please fill out all fields" })
+            window.scrollTo(0,0);
+            return
+        }
+
         let userData = {
             "major": major,
             "levelOfStudy": levelOfStudy,
@@ -205,7 +212,7 @@ export default function HackerApplication() {
                                 <Heading level={4} margin="none">Age</Heading>
                                 <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
                                 <NumberInput 
-                                    onChange={setAge}
+                                    onChange={ (e) => { setAge(e.target.value) }}
                                     placeholder="I am... "
                                 />
                             </Box>
