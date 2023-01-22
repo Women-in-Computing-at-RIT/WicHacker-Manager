@@ -19,7 +19,8 @@ const getUserData = async(getAccessTokenSilently, setUserResponse, navigateTo) =
             }
             setUserResponse({data: await response.data, error: null})
         }).catch(async () => {
-        setUserResponse({data: null, error: true})
+            navigateTo("/user")
+            setUserResponse({data: null, error: true})
     })
 }
 

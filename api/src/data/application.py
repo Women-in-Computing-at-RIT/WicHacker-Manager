@@ -6,11 +6,13 @@ from db.db_utils import exec_commit_link, exec_commit, exec_get_one
 
 logger = logging.getLogger("Application")
 
-def createApplication(auth0_id, major, levelOfStudy, birthday, shirtSize, hasAttendedWiCHacks, hasAttendedHackathons,
+
+def createApplication(auth0_id, major, levelOfStudy, age, shirtSize, hasAttendedWiCHacks, hasAttendedHackathons,
                       university, gender, busRider, busStop, dietaryRestrictions, specialAccommodations,
                       affirmedAgreements, isVirtual) -> int:
     """
     Create application, add application_id to user
+    :param age:
     :param specialAccommodations:
     :param isVirtual:
     :param affirmedAgreements:
@@ -23,17 +25,16 @@ def createApplication(auth0_id, major, levelOfStudy, birthday, shirtSize, hasAtt
     :param auth0_id:
     :param major:
     :param levelOfStudy:
-    :param birthday:
     :param shirtSize:
     :param university:
     :return: bool True if successful, False if failed, or None if error
     """
-    createApplicationSQL = "INSERT INTO Applications (major, level_of_study, birthday, shirt_size, has_attended_wichacks, has_attended_hackathons, " \
+    createApplicationSQL = "INSERT INTO Applications (major, level_of_study, age, shirt_size, has_attended_wichacks, has_attended_hackathons, " \
                            "university, gender, bus_rider, bus_stop, dietary_restrictions, special_accommodations, affirmed_agreements, status, is_virtual) " \
-                           "VALUES (%(major)s, %(level_of_study)s, %(birthday)s, %(shirtSize)s, %(has_attended_wichacks)s, %(has_attended_hackathons)s, " \
+                           "VALUES (%(major)s, %(level_of_study)s, %(age)s, %(shirtSize)s, %(has_attended_wichacks)s, %(has_attended_hackathons)s, " \
                            "%(university)s, %(gender)s, %(bus_rider)s, %(bus_stop)s, %(dietary_restrictions)s, %(special_accommodations)s, %(affirmed_agreements)s," \
                            "%(status)s, %(is_virtual)s)"
-    applicationArgs = {"major": major, "level_of_study": levelOfStudy, "birthday": birthday,
+    applicationArgs = {"major": major, "level_of_study": levelOfStudy, "age": age,
                        "shirtSize": shirtSize, "has_attended_wichacks": hasAttendedWiCHacks,
                        "has_attended_hackathons": hasAttendedHackathons, "university": university,
                        "gender": gender, "bus_rider": busRider, "bus_stop": busStop,
@@ -90,7 +91,8 @@ def updateApplication(applicationId, major, levelOfStudy, birthday, shirtSize, h
                        "has_attended_hackathons": hasAttendedHackathons, "university": university,
                        "gender": gender, "bus_rider": busRider, "bus_stop": busStop,
                        "dietary_restrictions": dietaryRestrictions, "special_accommodations": specialAccommodations,
-                       "affirmed_agreements": affirmedAgreements, "status": status, "is_virtual":isVirtual, "applicationId": applicationId}
+                       "affirmed_agreements": affirmedAgreements, "status": status, "is_virtual": isVirtual,
+                       "applicationId": applicationId}
 
     return exec_commit(createApplicationSQL, applicationArgs)
 

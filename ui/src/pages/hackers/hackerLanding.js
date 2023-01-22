@@ -49,7 +49,7 @@ const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
             .then(async (response) => {
                 setResumeUpload({"status": true, "error": null})
             }).catch(async () => {
-            setResumeUpload({"status": false, "error": "Resume Upload Failed"})
+                setResumeUpload({"status": false, "error": "Resume Upload Failed"})
         })
 
     } else {
@@ -58,7 +58,13 @@ const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     }
 }
 
-const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUploadedResume) => {
+const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUploadedResume, userData, newUser) => {
+    if ((!userData?.data) || newUser){
+        // don't check resume if we don't have user data or will get redirected
+        return
+    }
+    console.log(userData)
+    console.log(newUser)
     const token = await getAccessTokenSilently({
         audience: 'wichacks.io',
     });
@@ -87,7 +93,7 @@ export default function UserHomepage() {
 
     // On initial render and when resume upload is attempted, reload if user has already uploaded resume
     useEffect(() => {
-        checkIfUserHasUploadedResume(getAccessTokenSilently, setHasUploadedResume)
+        checkIfUserHasUploadedResume(getAccessTokenSilently, setHasUploadedResume, userData, newUser)
     }, [resumeUpload, userData])
 
     let navigate = useNavigate()
@@ -107,7 +113,7 @@ export default function UserHomepage() {
     console.log(user);
 
     let displayStatus = "You haven't applied yet";
-    if (user.status == "APPLIED") {
+    if (user?.status === "APPLIED") {
         displayStatus = "Your Application Has Been Received 👍"
     } // Switch out the different statuses we have once has been implemented
 
@@ -148,7 +154,7 @@ export default function UserHomepage() {
                                  :
                                 <div className={css.resumeUploadPadding}>
                                     <Box>
-                                        <Text>Plz upload your resume, we will get you a job /s</Text>
+                                        <Text>Please upload your resume, we will share your resume with sponsors for job opportunities</Text>
                                     </Box>
                                 </div>
                             }

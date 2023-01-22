@@ -90,7 +90,7 @@ export default function HackerApplication() {
             return
         }
 
-        if (!(major && levelOfStudy && age && shirtSize && hasAttendedHackathons && hasAttendedWiCHacks && university && gender && hasDietaryRestriction && hasSpecialAccommodations && affirmedAgreements && mlhEmails && isVirtual)) {
+        if (!(major && levelOfStudy && age && shirtSize && hasAttendedHackathons && hasAttendedWiCHacks && university && gender && hasDietaryRestriction && hasSpecialAccommodations && affirmedAgreements && isVirtual)) {
             // User didn't fill everything out
             setSubmissionError({ "error": true, "description": "Please fill out all fields" })
             window.scrollTo(0,0);
@@ -111,7 +111,7 @@ export default function HackerApplication() {
             "dietaryRestrictions": dietaryRestriction,
             "specialAccommodations": specialAccommodations,
             "affirmedAgreements": affirmedAgreements,
-            "mlhEmailsAllowed": mlhEmails,
+            "mlhEmailsAllowed": (mlhEmails ? true : false), // please dont simplify to !!mlhEmails b/c I will get confused
             "isVirtual": (isVirtual && isVirtual === "true")
         }
         await createApplication(userData, getAccessTokenSilently, setSubmissionError, navigateToPage)
