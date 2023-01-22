@@ -4,7 +4,7 @@ from .authErrorHandler import AuthError
 
 from flask import _request_ctx_stack
 from jose import jwt, JWTError
-from auth0.v3.authentication.token_verifier import TokenVerifier, AsymmetricSignatureVerifier, TokenValidationError
+from auth0.v3.authentication.token_verifier import AsymmetricSignatureVerifier
 import os
 from utils.aws import getAuth0ClientID
 
