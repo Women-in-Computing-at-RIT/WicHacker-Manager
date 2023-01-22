@@ -351,7 +351,7 @@ export default function HackerApplication() {
                                 <Box margin={{ top: "medium", bottom: "medium" }}>
                                     <Text>Please elaborate below</Text>
                                     <TextArea
-                                        placeholder="My dietary restrictions are..."
+                                        placeholder="My special accomodations are..."
                                         value={specialAccommodations}
                                         onChange={ (e) => { setSpecialAccommodations(e.target.value) } }
                                     />
