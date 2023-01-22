@@ -211,6 +211,7 @@ export default function HackerApplication() {
                             <Box margin={{ vertical: "medium" }}>
                                 <Heading level={4} margin="none">Age</Heading>
                                 <Text size="small" color="gray">Only those over the age of 18 can participate in this hackathon. Under 18? Reach out to us for information about ROCGirlHacks, WiC’s hackathon for minors!</Text>
+                                <Text size="small" color="gray">Please enter your age as of the date of WiCHacks (3/4/23)</Text>
                                 <NumberInput
                                     onChange={ (e) => { setAge(e.target.value) }}
                                     placeholder="I am... "
@@ -351,7 +352,7 @@ export default function HackerApplication() {
                                 <Box margin={{ top: "medium", bottom: "medium" }}>
                                     <Text>Please elaborate below</Text>
                                     <TextArea
-                                        placeholder="My dietary restrictions are..."
+                                        placeholder="My special accomodations are..."
                                         value={specialAccommodations}
                                         onChange={ (e) => { setSpecialAccommodations(e.target.value) } }
                                     />

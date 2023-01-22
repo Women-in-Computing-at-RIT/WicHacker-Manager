@@ -37,7 +37,6 @@ export default function HackerApplicationView(){
     return(
         <>
             {userData ? <ApplicationView userData={userData.data}/> : <LoadingView />}
-            {/* <button onClick={() => {navigate("/user")}}>Back</button> */}
         </>
     )
 }
