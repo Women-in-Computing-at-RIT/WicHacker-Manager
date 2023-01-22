@@ -77,7 +77,6 @@ def sendEmail(emailAddresses: Union[List[str], str], subject, content) -> bool:
     client = getSendGridClient()
     try:
         response = client.send(message)
-        logger.info("Email Sent - Response status: %s, body: %s", str(response.status_code), response.body)
     except Exception as e:
         logger.error("Send Email Error: %s", e)
         return False

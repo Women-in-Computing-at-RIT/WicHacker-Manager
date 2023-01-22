@@ -1,0 +1,1 @@
+ALTER TABLE Applications ADD COLUMN allowMlhEmails BOOLEAN NOT NULL;

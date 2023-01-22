@@ -4,7 +4,6 @@ from flask_restful import Resource, reqparse
 from flask import request
 from data.application import createApplication
 from utils.authentication import authenticate
-from utils.convertDatetime import convertDatetimeToString
 
 logger = logging.getLogger("Application")
 
@@ -33,6 +32,7 @@ class Application(Resource):
         parser.add_argument('specialAccommodations', type=str, required=False, default=None)
         parser.add_argument('affirmedAgreements', type=bool, required=True)
         parser.add_argument('isVirtual', type=bool, required=True)
+        parser.add_argument('mlhEmailsAllowed', type=bool, required=False)
         args = parser.parse_args()
 
         applicationCreated = createApplication(auth0_id=auth0_id, major=args['major'],
@@ -48,7 +48,8 @@ class Application(Resource):
                                                dietaryRestrictions=args['dietaryRestrictions'],
                                                specialAccommodations=args['specialAccommodations'],
                                                affirmedAgreements=args['affirmedAgreements'],
-                                               isVirtual=args["isVirtual"]
+                                               isVirtual=args["isVirtual"],
+                                               mlhEmailsAllowed=args.get("mlhEmailsAllowed", False)
                                                )
         if applicationCreated is None:
             return {"message": "Experienced Internal Server Error"}, 500
