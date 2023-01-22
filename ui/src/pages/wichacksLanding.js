@@ -1,11 +1,13 @@
 import {useNavigate} from "react-router-dom";
 import {Grommet, Button, Box, Heading, Paragraph, Image, Text } from "grommet";
 import { Home } from "grommet-icons";
+import NavBar from "../components/navBar";
 
 export default function WiCHacksLanding() {
     let navigate = useNavigate()
     return (
         <Grommet>
+            <NavBar title="WiCHacks" />
             <Box direction="column" justify="center" align="center" flex="grow">
                 <Box pad={{left: "large", right: "large"}}>
                     <Image src="/wichackslogo.svg" a11yTitle="WiCHacks Logo, beneath is RIT Women in Computing written out" style={{ maxWidth: "100%", maxHeight: "100%" }} />

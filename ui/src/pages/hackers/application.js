@@ -404,7 +404,7 @@ export default function HackerApplication() {
                                 </Box>
                             </Button>
                         </Box>
-                        <Box color="gray" align="center" direction="row">
+                        <Box color="gray" align="center" gap="small" direction="row">
                             <Alert size="medium" />
                             <Text size="small">Submitting your application does not guarantee participation. You will receive emails with more information within 3-5 business days</Text>
                         </Box>

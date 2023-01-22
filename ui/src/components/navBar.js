@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Grommet, Box, Text, Button } from "grommet";
+import { Grommet, Box, Text, Button, Clock } from "grommet";
+import WHCountdown from './countdown';
 
 /** Documentation because I'm a little lazy: any children will replace the view on the right of this bar, otherwise will display a countdown to WiCHacks */
 class NavBar extends Component {
@@ -14,7 +15,9 @@ class NavBar extends Component {
                     <Text weight="bold">{this.props.title}</Text>
                     <Box>
                         {this.props.children ? this.props.children :
-                            <></> // add countdown to wichacks
+                            <Box>
+                                <WHCountdown />
+                            </Box> 
                         }
                     </Box>
                 </Box>
