@@ -63,8 +63,6 @@ const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUpload
         // don't check resume if we don't have user data or will get redirected
         return
     }
-    console.log(userData)
-    console.log(newUser)
     const token = await getAccessTokenSilently({
         audience: 'wichacks.io',
     });
@@ -73,7 +71,6 @@ const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUpload
     }
     getAxios().get(apiDomain() + `/user/resume`, config)
         .then(async (response) => {
-            console.log(await response.data)
             setHasUploadedResume(true)
         }).catch(async () => {
             setHasUploadedResume(false)
@@ -111,7 +108,6 @@ export default function UserHomepage() {
     }
 
     let user = userData.data
-    console.log(user);
 
     let displayStatus = "You haven't applied yet";
     if (user?.status === "APPLIED") {
@@ -173,6 +169,7 @@ export default function UserHomepage() {
                                 }
                             </Box>
                             <Form>
+                                <Text size="small" color='gray'>Accepted file types: .txt, .pdf, .doc, .docx, .jpg, .png</Text>
                                 <FileInput
                                     maxSize={10000000}
                                     multiple={false}

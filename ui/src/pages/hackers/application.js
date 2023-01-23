@@ -19,7 +19,6 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    console.log(userJson);
     getAxios().post(apiDomain() + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
@@ -43,7 +42,7 @@ const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
     getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
-                return
+                navigate("/user/create")
             }
             const userData = (await response.data);
             if (userData?.status){

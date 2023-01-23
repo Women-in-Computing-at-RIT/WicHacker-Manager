@@ -82,7 +82,6 @@ export function NewUserForm({applicationRedirectRequired}) {
 
     const submitUserCreation = async(e) => {
         e.preventDefault()
-        console.log('create')
         // first check captcha value
         const requestData = {"captchaToken": captchaToken}
         getAxios().post(apiDomain() + '/recaptcha', requestData)
