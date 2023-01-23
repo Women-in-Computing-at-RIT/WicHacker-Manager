@@ -5,7 +5,6 @@ import { LinkPrevious } from "grommet-icons";
 
 export function ApplicationView({userData}) {
     let navigate = useNavigate();
-    console.log(userData)
     return(
         <Grommet>
             <Box>

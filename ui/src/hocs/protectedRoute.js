@@ -5,7 +5,6 @@ import LoadingView from "../pages/LoadingView";
 export const ProtectedComponent = ({component, ...args}) => {
     const { loginWithRedirect } = useAuth0();
     const location = useLocation().pathname;
-    console.log(location);
     const Comp = withAuthenticationRequired(component,{
         onRedirecting: () => <LoadingView />,
         loginOptions: () => loginWithRedirect(),
