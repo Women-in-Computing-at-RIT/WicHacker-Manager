@@ -173,6 +173,7 @@ export default function UserHomepage() {
                                 }
                             </Box>
                             <Form>
+                                <Text size="small" color='gray'>Accepted file types: .txt, .pdf, .doc, .docx, .jpg, .png</Text>
                                 <FileInput
                                     maxSize={10000000}
                                     multiple={false}

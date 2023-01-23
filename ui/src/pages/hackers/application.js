@@ -43,7 +43,7 @@ const redirectUsersIfApplied = async(getAccessTokenSilently, navigate) => {
     getAxios().get(apiDomain() + `/user`, config)
         .then(async (response) => {
             if (response.status === 204){
-                return
+                navigate("/user/create")
             }
             const userData = (await response.data);
             if (userData?.status){
