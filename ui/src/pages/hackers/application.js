@@ -19,7 +19,6 @@ const createApplication = async(userJson, getAccessTokenSilently, setSubmissionE
     const config = {
         headers: { Authorization: `Bearer ${token}`}
     }
-    console.log(userJson);
     getAxios().post(apiDomain() + `/user/apply`, userJson, config)
         .then(async (response) => {
             navigateToPage("/user")
