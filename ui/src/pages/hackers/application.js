@@ -151,7 +151,7 @@ export default function HackerApplication() {
         setMLHSchoolSugggestions(mlhSchoolList.filter( (sugg) => { return matchesSchoolFilter(sugg) } ))
     }
 
-    let eligibleForBusing = (university !== "Rochester Institute of Technology (RIT)") && (isVirtual && isVirtual === "true")
+    let eligibleForBusing = (university !== "Rochester Institute of Technology (RIT)") && (isVirtual && isVirtual === "false")
 
     // form based on Registration Form Guideline https://docs.google.com/document/d/1FxLkwcFK-W513G10m53Jxulou0wpJNiXDZmEYvfpW8o/edit#
     return (
@@ -270,7 +270,7 @@ export default function HackerApplication() {
                             <RadioButtonGroup
                                 options={ ["In-Person", "Online Only"] }
                                 name="isVirtual"
-                                onChange={ (e) => { setIsVirtual(e.target.value === "In-Person" ? "true" : "false" ) } }
+                                onChange={ (e) => { setIsVirtual(e.target.value === "In-Person" ? "false" : "true" ) } }
                                 margin={{ bottom: "medium", top: "small" }}
                             />
 
