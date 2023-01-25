@@ -51,6 +51,8 @@ class User(Resource):
                 return None, 204
             return userData
         # get info on user with user_id
+        # re-implement with admin
+        return None, 415
         userData = getUserByUserID(user_id)
         if userData is None:
             return {"message": "User Could Not Be Found"}, 400
