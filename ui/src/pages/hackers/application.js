@@ -282,7 +282,7 @@ export default function HackerApplication() {
                                         <Box pad="small" background="#fff" border={{ color: "#000", size: "medium" }} round="small">
                                             <Image
                                                 round="small"
-                                                src="/REPLACEME_busroutes.jpg"
+                                                src="/wichacks-bus-routes.png"
                                             />
                                         </Box>
                                         <Box direction="row" background="#c94254" round="small" align="center" margin={{ vertical: "small" }} pad="small" gap="small">
