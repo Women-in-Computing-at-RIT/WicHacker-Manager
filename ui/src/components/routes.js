@@ -24,8 +24,6 @@ export default function AppRoutes(){
             <Route path="/auth" element={<LoadingView />} />
             <Route path="/notFound" element={<PageNotFound />} />
             <Route path="*" element={<PageNotFound />} />
-            <Route path="*/*" element={<PageNotFound />} />
-            <Route path="*/*/*" element={<PageNotFound />} />
         </Routes>
     )
 }
