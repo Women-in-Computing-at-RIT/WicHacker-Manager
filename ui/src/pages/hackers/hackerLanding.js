@@ -118,7 +118,7 @@ export default function UserHomepage() {
         <Grommet>
             <Box>
                 <NavBar title="WiCHacks User Home">
-                    <Button plain onClick={ () => logout({ returnTo: "/" }) }>
+                    <Button plain onClick={ () => logout({ returnTo: "https://apply.wichacks.io" }) }>
                         <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
                             <Text weight="bold" color="#714ba0">Logout</Text>
                         </Box>
