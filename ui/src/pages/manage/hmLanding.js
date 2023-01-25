@@ -3,6 +3,8 @@ import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate} from "react-router-dom";
 import {Button, Grommet} from "grommet";
+import {getUserData} from "../../utils/users";
+import LoadingView from "../LoadingView";
 
 const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
     const token = await getAccessTokenSilently({
@@ -20,34 +22,32 @@ const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
 }
 
 export default function HackathonManagerLandingPage() {
-    const [userResponse, setUserResponse] = useState(null);
-    const {user, getAccessTokenSilently} = useAuth0();
+    const [userData, setUserData] = useState(null);
+    const {getAccessTokenSilently, logout} = useAuth0();
+    let navigate = useNavigate()
 
     useEffect(() => {
-        callApi(getAccessTokenSilently, setUserResponse, user.sub)
+        getUserData(getAccessTokenSilently, setUserData, null)
     }, [])
 
-    let navigate = useNavigate()
-    const onClickNavigate = (path) => {
-        navigate(path)
+    if (userData?.error){
+        navigate("/notFound")
+    } else if (!userData?.data){
+        return (
+            <LoadingView />
+        );
     }
 
-    let display;
-    if (userResponse?.error){
-        display = <p>Error</p>
-    } else if (userResponse?.data){
-        display=<div><pre>{JSON.stringify(userResponse.data, null, 2)}</pre></div>
-    } else {
-        display = <p>Loading....</p>
-    }
+    let user = userData.data
 
     return (
         <Grommet>
             <div>
                 <h1>WiCHacks HM Landing</h1>
-                <h3>Hello {user.name}</h3>
-                {display}
-                <Button label="Applications" onClick={() => {onClickNavigate("/manage/applications")}}/>
+                <h3>Hello {user.first_name} {user.last_name}</h3>
+                <p>Admin Console for WiCHacks</p>
+                <Button label="Manage Applications" onClick={() => {navigate("/manage/applications")}}/>
+
             </div>
         </Grommet>
     );

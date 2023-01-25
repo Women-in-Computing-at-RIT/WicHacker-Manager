@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "homepage": ".",
   "private": true,
+  "proxy": "http://localhost:5002",
   "dependencies": {
     "@auth0/auth0-react": "^1.10.2",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
