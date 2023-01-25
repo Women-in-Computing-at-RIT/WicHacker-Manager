@@ -282,7 +282,7 @@ export default function HackerApplication() {
                                         <Box pad="small" background="#fff" border={{ color: "#000", size: "medium" }} round="small">
                                             <Image
                                                 round="small"
-                                                src="/REPLACEME_busroutes.jpg"
+                                                src="/wichacks-bus-routes.png"
                                             />
                                         </Box>
                                         <Box direction="row" background="#c94254" round="small" align="center" margin={{ vertical: "small" }} pad="small" gap="small">
@@ -305,7 +305,7 @@ export default function HackerApplication() {
                                                 placeholder="I will board..."
                                                 value={busStop}
                                                 onChange={ e => setBusStop(e.target.value) }
-                                                options={[ "University of Toronto", "University of Waterloo", "SUNY Buffalo", "Skidmore College", "Rensselaer Polytechnic Institute", "Siena College", "SUNY Albany", "Union College" ]}
+                                                options={[ "University of Toronto", "University of Waterloo", "University of Buffalo", "Syracuse University", "SUNY Polytechnic Institute", "SUNY Albany" ]}
                                             />
                                         </Box>
                                     }
