@@ -2,9 +2,13 @@ import {apiDomain, getAxios} from "../../config/axios";
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate} from "react-router-dom";
-import {Button, Grommet} from "grommet";
+import {Box, Button, Grommet, Text} from "grommet";
 import {getUserData} from "../../utils/users";
 import LoadingView from "../LoadingView";
+import {StatisticsView} from "../../components/statistics";
+import NavBar from "../../components/navBar";
+import {AdminComponent} from "../../hocs/adminRoute";
+import {STATISTICS, READ} from "../../utils/constants";
 
 const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
     const token = await getAccessTokenSilently({
@@ -42,11 +46,21 @@ export default function HackathonManagerLandingPage() {
 
     return (
         <Grommet>
+            <NavBar title="WiCHacks HackManager Admin Portal">
+                <Button plain onClick={ () => logout({ returnTo: "https://apply.wichacks.io" }) }>
+                    <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
+                        <Text weight="bold" color="#714ba0">Logout</Text>
+                    </Box>
+                </Button>
+            </NavBar>
             <div>
-                <h1>WiCHacks HM Landing</h1>
-                <h3>Hello {user.first_name} {user.last_name}</h3>
-                <p>Admin Console for WiCHacks</p>
+                <h2>Hello {user.first_name} {user.last_name}</h2>
                 <Button label="Manage Applications" onClick={() => {navigate("/manage/applications")}}/>
+
+                <div>
+                    <h4>Hacker Statistics</h4>
+                    <AdminComponent permission={STATISTICS} type={READ} children={<StatisticsView />}/>
+                </div>
 
             </div>
         </Grommet>

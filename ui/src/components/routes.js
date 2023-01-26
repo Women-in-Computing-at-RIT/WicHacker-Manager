@@ -9,7 +9,7 @@ import HackerApplicationView from "../pages/hackers/hackerApplicationView";
 import LoadingView from "../pages/LoadingView";
 import {AdminRoute} from "../hocs/adminRoute";
 import HackathonManagerLandingPage from "../pages/manage/hmLanding";
-import ApplicationList from "../pages/manage/applicationList";
+import ManageApplications from "../pages/manage/manageApplications";
 import {CONSOLE, HACKER_DATA, READ} from "../utils/constants";
 
 export default function AppRoutes(){
@@ -22,7 +22,7 @@ export default function AppRoutes(){
             <Route path="/user/application" element={<ProtectedComponent component={HackerApplicationView} />} />
             <Route path="/auth" element={<LoadingView />} />
             <Route path="/manage" element={<ProtectedComponent component={AdminRoute} permission={CONSOLE} type={READ} children={<HackathonManagerLandingPage />} />} />
-            <Route path="/manage/applications" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ApplicationList />} />} />
+            <Route path="/manage/applications" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ManageApplications />} />} />
             <Route path="/manage/admin/signup" element={<ProtectedComponent component={AdminRoute} permission={CONSOLE} type={READ} children={<NewAdminForm />} />} />
             <Route path="/notFound" element={<PageNotFound />} />
             <Route path="*" element={<PageNotFound />} />

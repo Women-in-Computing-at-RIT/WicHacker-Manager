@@ -6,7 +6,7 @@ from data.users import getUserByUserID, getUserByAuthID
 from data.createUser import createUser
 from utils.authentication import authenticate
 from data.validation import validatePhoneNumberString, validateEmailAddress
-from data.permissions import canAccessUserData
+from data.permissions import canAccessUserData, canUpdateApplicationStatus
 
 logger = logging.getLogger("User")
 
@@ -42,7 +42,6 @@ class User(Resource):
         if authenticationPayload is None:
             return {"message": "Must be logged in"}, 401
         auth0_id = authenticationPayload['sub']
-        logger.info(auth0_id)
         if user_id is None:
             # targeting current user, query based on auth id
             userData = getUserByAuthID(auth0_id)

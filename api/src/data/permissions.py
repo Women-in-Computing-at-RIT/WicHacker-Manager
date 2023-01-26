@@ -28,6 +28,10 @@ def canChangeUserPermissions(auth0Id) -> bool:
     return checkUserPermissionsByAuth0Id(auth0Id, PERMISSIONS, WRITE)
 
 
+def canViewStatistics(auth0Id) -> bool:
+    return checkUserPermissionsByAuth0Id(auth0Id, STATISTICS, READ)
+
+
 def checkUserPermissionsByAuth0Id(auth0Id, permission, accessType) -> bool:
     """
     Check if user has a certain permission based on auth0 id
@@ -48,12 +52,4 @@ def checkUserPermissionsByAuth0Id(auth0Id, permission, accessType) -> bool:
     if len(result) > 0:
         # check if there are keys in result, if there are then user has permission
         return True
-    return False
-
-
-
-
-
-
-
     return False
