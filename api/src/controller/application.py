@@ -6,6 +6,7 @@ from data.application import createApplication, updateApplication
 from data.users import getUserByUserID
 from utils.authentication import authenticate
 from data.permissions import canUpdateApplicationStatus
+from data.email import sendEmailByStatus
 
 logger = logging.getLogger("Application")
 
@@ -109,6 +110,10 @@ class Application(Resource):
             return {"message": "Internal Server Error"}, 500
         if len(userData.keys()) == 0:
             return {"message": "Could Not Find User"}, 400
+
+        applicationStatusChange = False
+        if args['status'] is not None:
+            applicationStatusChange = True
         # update application by supplementing passed in data to update with current user data and saving everything
         applicationUpdated = updateApplication(applicationId=userData['application_id'],
                                                status=valueOrDefaultIfNone(args['status'], userData['status']),
@@ -133,4 +138,8 @@ class Application(Resource):
         elif not applicationUpdated:
             # creating application and linking to user failed
             return {"message": "Application Update Failure"}, 400
+
+        # Send emails if necessary
+        if applicationStatusChange:
+            sendEmailByStatus(userID=userId, status=args['status'])
         return {"message": "Application Updated"}, 200
