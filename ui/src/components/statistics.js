@@ -4,6 +4,7 @@ import {getUserData} from "../utils/users";
 import {apiDomain, getAxios} from "../config/axios";
 import LoadingView from "../pages/LoadingView";
 import {WiCHacksTable} from "./table";
+import css from "./style/statistics.module.css"
 
 const getHackathonStatistics = async(getAccessTokenSilently, setStatistics) => {
     const token = await getAccessTokenSilently({
@@ -71,13 +72,13 @@ export function StatisticsView(){
 
     return (
         <div>
-            <div>
-                <WiCHacksTable title={"Application Status Counts"} data={translateCountJSONToList(statistics['applications'])} columns={hackerCountColumns}/>
+            <div className={css.statisticsTable}>
+                <WiCHacksTable title={"Application Statuses"} data={translateCountJSONToList(statistics['applications'])} columns={hackerCountColumns}/>
             </div>
-            <div>
+            <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Hackers By School"} data={translateCountJSONToList(statistics['schools'])} columns={schoolCountColumns}/>
             </div>
-            <div>
+            <div className={css.statisticsTable}>
                 <p>Number of Different Schools Accepted: {statistics['schoolCount']}</p>
             </div>
         </div>

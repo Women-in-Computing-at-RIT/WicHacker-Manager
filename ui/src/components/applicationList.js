@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import LoadingView from "../pages/LoadingView";
 import {WiCHacksTable} from "./table";
 import css from "./style/applicationList.module.css"
+import "./style/applicationList.css"
 
 const getApplicantsFromApi = async(getAccessTokenSilently, setApplicationResponse) => {
     const token = await getAccessTokenSilently({
@@ -45,7 +46,9 @@ export function ApplicationList(){
         },
         {
             displayName: "Application Status",
-            dataKey: 'status'
+            dataKey: 'status',
+            format: userData => <p className={userData.status}>{userData.status}</p>
+            //format: userData => console.log(userData)
         },
         {
             displayName: "First Name",

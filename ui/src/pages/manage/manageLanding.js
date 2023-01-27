@@ -9,6 +9,7 @@ import {StatisticsView} from "../../components/statistics";
 import NavBar from "../../components/navBar";
 import {AdminComponent} from "../../hocs/adminRoute";
 import {STATISTICS, READ} from "../../utils/constants";
+import css from "./style/manageLanding.module.css"
 
 const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
     const token = await getAccessTokenSilently({
@@ -55,10 +56,10 @@ export default function HackathonManagerLandingPage() {
             </NavBar>
             <div>
                 <h2>Hello {user.first_name} {user.last_name}</h2>
-                <Button label="Manage Applications" onClick={() => {navigate("/manage/applications")}}/>
+                <Button className={css.manageApplications} label="Manage Applications" onClick={() => {navigate("/manage/applications")}}/>
 
+                <h3>Hacker Statistics</h3>
                 <div>
-                    <h4>Hacker Statistics</h4>
                     <AdminComponent permission={STATISTICS} type={READ} children={<StatisticsView />}/>
                 </div>
 
