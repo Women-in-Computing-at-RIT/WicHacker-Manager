@@ -2,6 +2,7 @@ import {Box, Button, Grommet, Text} from "grommet";
 import NavBar from "../../components/navBar";
 import {useNavigate} from "react-router-dom";
 import {ApplicationList} from "../../components/applicationList";
+import css from "./style/manageApplications.module.css"
 
 export default function ManageApplications(){
     let navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function ManageApplications(){
                 </NavBar>
             </Grommet>
 
-            <div>
+            <div className={css.applicationTableWrapper}>
                 <ApplicationList />
             </div>
         </div>

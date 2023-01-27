@@ -61,10 +61,6 @@ export function ApplicationList(){
         {
             displayName: "Email",
             dataKey: 'email'
-        },
-        {
-            displayName: "ID",
-            dataKey: "user_id"
         }
     ]
 

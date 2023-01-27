@@ -4,7 +4,7 @@ import {getUserData} from "../../utils/users";
 import {useAuth0} from "@auth0/auth0-react";
 import LoadingView from "../LoadingView";
 import NavBar from "../../components/navBar";
-import {Box, Button, Grommet, Heading, Text} from "grommet";
+import {Box, Button, Grommet, Text} from "grommet";
 import {ApplicationView} from "../../components/applicationView";
 import {apiDomain, getAxios} from "../../config/axios";
 import css from "./style/manageApplicationView.module.css"
