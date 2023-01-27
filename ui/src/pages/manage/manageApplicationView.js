@@ -4,7 +4,7 @@ import {getUserData} from "../../utils/users";
 import {useAuth0} from "@auth0/auth0-react";
 import LoadingView from "../LoadingView";
 import NavBar from "../../components/navBar";
-import {Box, Button, Grommet, Text} from "grommet";
+import {Box, Button, Grommet, Heading, Text} from "grommet";
 import {ApplicationView} from "../../components/applicationView";
 import {apiDomain, getAxios} from "../../config/axios";
 import css from "./style/manageApplicationView.module.css"
@@ -80,6 +80,10 @@ export function ManageApplicationView(){
                     </div>
                     <div className={css.applicationUpdate}>
                         <h2>Hacker Application</h2>
+                    </div>
+                    <div className={css.statusWrapper}>
+                        <p className={css.statusHeader}>Application Status</p>
+                        <p className={css.statusValue}><b>Status: </b>{userResponse.data.status}</p>
                     </div>
                     <ApplicationView userData={userResponse.data} />
                     <div className={css.statusButtonWrapper}>
