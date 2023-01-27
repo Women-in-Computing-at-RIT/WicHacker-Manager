@@ -75,8 +75,11 @@ export function ManageApplicationView(){
             <div>
                 {navbarDisplay}
                 <div>
-                    <div className={css.applicationViewInfo}>
+                    <div className={css.applicationUpdate}>
                         {updateDisplay && updateDisplay}
+                    </div>
+                    <div className={css.applicationUpdate}>
+                        <h2>Hacker Application</h2>
                     </div>
                     <ApplicationView userData={userResponse.data} />
                     <div className={css.statusButtonWrapper}>

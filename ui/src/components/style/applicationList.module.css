@@ -10,4 +10,5 @@
 
 .viewButton:hover{
     background-color: mediumpurple;
+    cursor: pointer;
 }
