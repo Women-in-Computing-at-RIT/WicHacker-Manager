@@ -12,7 +12,7 @@ def getUserQuery():
     return "SELECT u.user_id, u.first_name, u.last_name, u.email, u.phone_number, a.address_id, a.address1, a.address2, a.city, a.subdivision, a.country, " \
            "app.application_id, app.major, app.level_of_study, app.age, app.shirt_size, app.has_attended_wichacks, app.has_attended_hackathons, app.is_virtual, " \
            "s.sponsor_id, s.company_name, app.university, app.status, app.bus_rider, app.bus_stop, app.dietary_restrictions, app.special_accommodations, app.affirmed_agreements, " \
-           "app.gender FROM " \
+           "app.gender, app.allowMlhEmails FROM " \
            "Users as u LEFT JOIN Addresses as a ON u.address_id = a.address_id " \
            "LEFT JOIN Applications as app ON u.application_id = app.application_id " \
            "LEFT JOIN Sponsors as s ON u.sponsor_id = s.sponsor_id "

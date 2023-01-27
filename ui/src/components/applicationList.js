@@ -4,7 +4,7 @@ import {useAuth0} from "@auth0/auth0-react";
 import {useNavigate} from "react-router-dom";
 import LoadingView from "../pages/LoadingView";
 import {WiCHacksTable} from "./table";
-import {Button} from "grommet";
+import css from "./style/applicationList.module.css"
 
 const getApplicantsFromApi = async(getAccessTokenSilently, setApplicationResponse) => {
     const token = await getAccessTokenSilently({
@@ -41,7 +41,27 @@ export function ApplicationList(){
             displayName: "",
             dataKey: 'user_id',
             dataScope: 'row',
-            format: user_id => <Button plain onClick={() => navigate("/manage/applications/" + user_id)}>View</Button>
+            format: userData => <button className={css.viewButton} onClick={() => navigate("/manage/applications/" + userData['user_id'])}>View</button>,
+        },
+        {
+            displayName: "Application Status",
+            dataKey: 'status'
+        },
+        {
+            displayName: "First Name",
+            dataKey: 'first_name'
+        },
+        {
+            displayName: "Last Name",
+            dataKey: 'last_name'
+        },
+        {
+            displayName: "Email",
+            dataKey: 'email'
+        },
+        {
+            displayName: "ID",
+            dataKey: "user_id"
         }
     ]
 

@@ -68,7 +68,6 @@ export function StatisticsView(){
     }
 
     const statistics = statisticsResponse.data;
-    console.log(statistics)
 
     return (
         <div>

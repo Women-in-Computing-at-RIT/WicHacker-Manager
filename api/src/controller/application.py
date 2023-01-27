@@ -10,6 +10,12 @@ from data.permissions import canUpdateApplicationStatus
 logger = logging.getLogger("Application")
 
 
+def valueOrDefaultIfNone(value, default):
+    if value is None:
+        return default
+    return value
+
+
 class Application(Resource):
     PATH = '/user/application'
 
@@ -79,6 +85,7 @@ class Application(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('userId', type=int, required=True)
+        parser.add_argument('status', type=str, required=False)
         parser.add_argument('major', type=str, required=False)
         parser.add_argument('levelOfStudy', type=str, required=False)
         parser.add_argument('age', type=int, required=False)
@@ -96,25 +103,30 @@ class Application(Resource):
         parser.add_argument('mlhEmailsAllowed', type=bool, required=False)
         args = parser.parse_args()
 
-        userId = args['user_id']
+        userId = args['userId']
         userData = getUserByUserID(userId)
+        if userData is None:
+            return {"message": "Internal Server Error"}, 500
+        if len(userData.keys()) == 0:
+            return {"message": "Could Not Find User"}, 400
         # update application by supplementing passed in data to update with current user data and saving everything
         applicationUpdated = updateApplication(applicationId=userData['application_id'],
-                                               major=args.get('major', userData['major']),
-                                               levelOfStudy=args.get('levelOfStudy', userData['level_of_study']),
-                                               age=args.get('age', userData['age']),
-                                               shirtSize=args.get('shirtSize', userData['shirt_size']),
-                                               hasAttendedWiCHacks=args.get('hasAttendedWiCHacks', userData['has_attended_wichacks']),
-                                               hasAttendedHackathons=args.get('hasAttendedHackathons', userData['has_attended_hackathons']),
-                                               university=args.get('university', userData['university']),
-                                               gender=args.get('gender', userData['gender']),
-                                               busRider=args.get('busRider', userData['bus_rider']),
-                                               busStop=args.get('busStop', userData['bus_stop']),
-                                               dietaryRestrictions=args.get('dietaryRestrictions', userData['dietary_restrictions']),
-                                               specialAccommodations=args.get('specialAccommodations', userData['special_accommodations']),
-                                               affirmedAgreements=args.get('affirmedAgreements', userData['affirmed_agreements']),
-                                               isVirtual=args.get("isVirtual", userData['is_virtual']),
-                                               mlhEmailsAllowed=args.get("mlhEmailsAllowed", userData['allowMlhEmails'])
+                                               status=valueOrDefaultIfNone(args['status'], userData['status']),
+                                               major=valueOrDefaultIfNone(args['major'], userData['major']),
+                                               levelOfStudy=valueOrDefaultIfNone(args['levelOfStudy'], userData['level_of_study']),
+                                               age=valueOrDefaultIfNone(args['age'], userData['age']),
+                                               shirtSize=valueOrDefaultIfNone(args['shirtSize'], userData['shirt_size']),
+                                               hasAttendedWiCHacks=valueOrDefaultIfNone(args['hasAttendedWiCHacks'], userData['has_attended_wichacks']),
+                                               hasAttendedHackathons=valueOrDefaultIfNone(args['hasAttendedHackathons'], userData['has_attended_hackathons']),
+                                               university=valueOrDefaultIfNone(args['university'], userData['university']),
+                                               gender=valueOrDefaultIfNone(args['gender'], userData['gender']),
+                                               busRider=valueOrDefaultIfNone(args['busRider'], userData['bus_rider']),
+                                               busStop=valueOrDefaultIfNone(args['busStop'], userData['bus_stop']),
+                                               dietaryRestrictions=valueOrDefaultIfNone(args['dietaryRestrictions'], userData['dietary_restrictions']),
+                                               specialAccommodations=valueOrDefaultIfNone(args['specialAccommodations'], userData['special_accommodations']),
+                                               affirmedAgreements=valueOrDefaultIfNone(args['affirmedAgreements'], userData['affirmed_agreements']),
+                                               isVirtual=valueOrDefaultIfNone(args['isVirtual'], userData['is_virtual']),
+                                               mlhEmailsAllowed=valueOrDefaultIfNone(args['mlhEmailsAllowed'], userData['allowMlhEmails'])
                                                )
         if applicationUpdated is None:
             return {"message": "Internal Server Error"}, 500
