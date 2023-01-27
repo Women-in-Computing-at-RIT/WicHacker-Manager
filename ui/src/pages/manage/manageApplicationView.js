@@ -79,9 +79,9 @@ export function ManageApplicationView(){
                         {updateDisplay && updateDisplay}
                     </div>
                     <ApplicationView userData={userResponse.data} />
-                    <div>
-                        <button onClick={() => changeApplicationStatus(true, userId, getAccessTokenSilently, setApplicationUpdateResponse)}>Accept</button>
-                        <button onClick={() => changeApplicationStatus(false, userId, getAccessTokenSilently, setApplicationUpdateResponse)}>Reject</button>
+                    <div className={css.statusButtonWrapper}>
+                        <button className={css.accept + ' ' + css.statusButton} onClick={() => changeApplicationStatus(true, userId, getAccessTokenSilently, setApplicationUpdateResponse)}>Accept</button>
+                        <button className={css.deny + ' ' + css.statusButton} onClick={() => changeApplicationStatus(false, userId, getAccessTokenSilently, setApplicationUpdateResponse)}>Reject</button>
                     </div>
                 </div>
             </div>

@@ -9,3 +9,31 @@
 .applicationViewInfo{
 
 }
+
+.accept{
+    margin-right: 50px;
+    background-color: forestgreen;
+}
+
+.deny{
+    margin-left: 50px;
+    background-color: #D10000;
+}
+
+.deny:hover{
+    opacity: 75%;
+}
+
+.statusButton{
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    border-style: hidden;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.statusButtonWrapper{
+    display: flex;
+    justify-content: center;
+}
