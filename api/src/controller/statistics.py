@@ -1,25 +1,30 @@
-from flask_restful import Resource, reqparse
+import logging
+
+from flask_restful import Resource
 from flask import request
-from data.users import getUsers
 from utils.authentication import authenticate
-from data.permissions import canAccessUserData
+from data.permissions import canViewStatistics
+from data.statistics import getHackerStatistics
+
+logger = logging.getLogger("Statistics")
 
 
-class Users(Resource):
-    PATH = '/users'
+class Statistics(Resource):
+    PATH = '/statistics'
 
     def get(self):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
             return {"message": "Must be logged in"}, 401
         auth0_id = authenticationPayload['sub']
-        permissions = canAccessUserData(auth0_id)
+
+        permissions = canViewStatistics(auth0_id)
         if permissions is None:
             return {"message": "Internal Server Error"}, 500
         if not permissions:
             return {"message": "Permission Denied"}, 403
 
-        userData = getUsers()
-        if userData is None:
-            return {"message": "User Data Unable to be Returned"}, 400
-        return userData
+        statistics = getHackerStatistics()
+        if statistics is None:
+            return {"message": "Internal Server Error"}, 500
+        return statistics, 200

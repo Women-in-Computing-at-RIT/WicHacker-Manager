@@ -18,3 +18,12 @@
 .viewApplication:hover{
     background-color: mediumpurple;
 }
+
+.navbarButtonWrapper{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.navbarButton{
+    padding-left: 10px;
+}

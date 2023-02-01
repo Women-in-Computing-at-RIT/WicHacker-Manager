@@ -7,25 +7,9 @@ import LoadingView from "../LoadingView";
 import { Grommet, Box, Heading, Text, Button, Paragraph, Form, FileInput } from 'grommet';
 import NavBar from "../../components/navBar";
 import { Help } from "grommet-icons";
-
-const getUserData = async(getAccessTokenSilently, setUserResponse, setNewUser) => {
-    const token = await getAccessTokenSilently({
-        audience: 'wichacks.io',
-    });
-    const config = {
-        headers: { Authorization: `Bearer ${token}`}
-    }
-    getAxios().get(apiDomain() + `/user`, config)
-        .then(async (response) => {
-            if (response.status === 204){
-                setNewUser(true)
-                return
-            }
-            setUserResponse({data: await response.data, error: null})
-        }).catch(async () => {
-        setUserResponse({data: null, error: true})
-    })
-}
+import {getUserData} from "../../utils/users";
+import {checkUserPermissions} from "../../utils/permissions";
+import {CONSOLE, READ} from "../../utils/constants";
 
 const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     e.preventDefault()
@@ -77,6 +61,10 @@ const checkIfUserHasUploadedResume = async (getAccessTokenSilently, setHasUpload
     })
 }
 
+const checkCanUserViewManageButton = async (getAccessTokenSilently, setCanViewManageButton) => {
+    await checkUserPermissions(CONSOLE, READ, getAccessTokenSilently, setCanViewManageButton);
+}
+
 
 export default function UserHomepage() {
     const [userData, setUserData] = useState(null);
@@ -85,9 +73,20 @@ export default function UserHomepage() {
     const {getAccessTokenSilently, logout} = useAuth0();
     const [hasUploadedResume, setHasUploadedResume] = useState();
 
+    // Very Important Note: These variables are DOM modifyable so shouldn't be considered final truths
+    // If someone wants to modify the DOM to get access to this button then all the power to them, there's
+    // permissions attached to the route the button goes to so even if a user can see the button they still can't get
+    // to admin protected routes without permissions
+    const [canViewManageButton, setCanViewManageButton] = useState();
+
     useEffect(() => {
         getUserData(getAccessTokenSilently, setUserData, setNewUser)
     }, [])
+
+    useEffect(() => {
+        //once user is loaded, check permissions for manage button rendering
+        checkCanUserViewManageButton(getAccessTokenSilently, setCanViewManageButton)
+    }, [userData])
 
     // On initial render and when resume upload is attempted, reload if user has already uploaded resume
     useEffect(() => {
@@ -112,17 +111,30 @@ export default function UserHomepage() {
     let displayStatus = "You haven't applied yet";
     if (user?.status === "APPLIED") {
         displayStatus = "Your Application Has Been Received 👍"
-    } // Switch out the different statuses we have once has been implemented
+    } else if (user?.status === "ACCEPTED"){
+        displayStatus = "Congratulations!! Your Application Has Been Accepted"
+    } else if (user?.status === "REJECTED"){
+        displayStatus = "We are sorry to say that your application has been rejected"
+    }
+    // Switch out the different statuses we have once has been implemented
 
     return (
         <Grommet>
             <Box>
                 <NavBar title="WiCHacks User Home">
-                    <Button plain onClick={ () => logout({ returnTo: "https://apply.wichacks.io" }) }>
-                        <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
-                            <Text weight="bold" color="#714ba0">Logout</Text>
-                        </Box>
-                    </Button>
+                    <div className={css.navbarButtonWrapper}>
+                        {canViewManageButton && <Button plain onClick={ () => navigate("/manage") }>
+                            <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
+                                <Text weight="bold" color="#714ba0">Manage</Text>
+                            </Box>
+                        </Button>}
+                        <div className={css.navbarButton}><p></p></div> {/* REMOVE AT SOME POINT, THIS IS BECAUSE THE CONDITIONAL RENDER MESSES WITH THE CSS STYLING FOR SOME REASON*/}
+                        <Button plain className={css.navbarButton} onClick={ () => logout({ returnTo: "https://apply.wichacks.io" }) }>
+                            <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
+                                <Text weight="bold" color="#714ba0">Logout</Text>
+                            </Box>
+                        </Button>
+                    </div>
                 </NavBar>
                 <Box margin="small"> { /* Page content */}
                     <Heading>Welcome { user.first_name }!</Heading>

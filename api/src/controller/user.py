@@ -6,6 +6,7 @@ from data.users import getUserByUserID, getUserByAuthID
 from data.createUser import createUser
 from utils.authentication import authenticate
 from data.validation import validatePhoneNumberString, validateEmailAddress
+from data.permissions import canAccessUserData, canUpdateApplicationStatus
 
 logger = logging.getLogger("User")
 
@@ -37,12 +38,12 @@ class User(Resource):
         return {"user_id": userId}, 200
 
     def get(self, user_id=None):
+        authenticationPayload = authenticate(request.headers)
+        if authenticationPayload is None:
+            return {"message": "Must be logged in"}, 401
+        auth0_id = authenticationPayload['sub']
         if user_id is None:
             # targeting current user, query based on auth id
-            authenticationPayload = authenticate(request.headers)
-            if authenticationPayload is None:
-                return {"message": "Must be logged in"}, 401
-            auth0_id = authenticationPayload['sub']
             userData = getUserByAuthID(auth0_id)
             if userData is None:
                 return {"message": "User not Found"}, 400
@@ -50,9 +51,17 @@ class User(Resource):
                 # User created in Auth0 but not in WiCHacker Manager
                 return None, 204
             return userData
-        # get info on user with user_id
-        # re-implement with admin
-        return None, 415
+
+        # =========================
+        # Permissions Required
+        # =========================
+        permissions = canAccessUserData(auth0_id)
+        if permissions is None:
+            return {"message": "Internal Server Error"}, 500
+        if not permissions:
+            return {"message": "Permission Denied"}, 403
+
+        # User has permission
         userData = getUserByUserID(user_id)
         if userData is None:
             return {"message": "User Could Not Be Found"}, 400

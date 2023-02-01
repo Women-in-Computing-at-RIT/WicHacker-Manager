@@ -11,6 +11,8 @@ from controller.user import User
 from controller.users import Users
 from controller.resume import Resume
 from controller.recaptcha import Recaptcha
+from controller.permissions import Permissions
+from controller.statistics import Statistics
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
@@ -39,6 +41,8 @@ api.add_resource(Users, Users.PATH)
 api.add_resource(Application, Application.PATH)
 api.add_resource(Resume, Resume.PATH)
 api.add_resource(Recaptcha, Recaptcha.PATH)
+api.add_resource(Permissions, Permissions.PATH)
+api.add_resource(Statistics, Statistics.PATH)
 
 if not initializeAWSClients():
     logger.error("AWS Client Initialization Failure")

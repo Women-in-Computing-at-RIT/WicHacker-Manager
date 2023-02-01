@@ -1,0 +1,14 @@
+.viewButton{
+    background-color: #714ba0;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 10px;
+    border-style: solid;
+    border: #714ba0;
+}
+
+.viewButton:hover{
+    background-color: mediumpurple;
+    cursor: pointer;
+}

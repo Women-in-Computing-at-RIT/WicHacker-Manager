@@ -4,6 +4,9 @@ import {apiDomain, getAxios} from "../../config/axios";
 import {useNavigate} from "react-router-dom";
 import LoadingView from "../LoadingView";
 import { ApplicationView } from "../../components/applicationView";
+import {Box, Button, Grommet, Text} from "grommet";
+import NavBar from "../../components/navBar";
+import {LinkPrevious} from "grommet-icons";
 
 const getUserData = async(getAccessTokenSilently, setUserResponse, navigateTo) => {
     const token = await getAccessTokenSilently({
@@ -34,9 +37,33 @@ export default function HackerApplicationView(){
         getUserData(getAccessTokenSilently, setUserData, navigate)
     }, [])
 
+    if (!userData){
+        return (<LoadingView />);
+    }
+
     return(
-        <>
-            {userData ? <ApplicationView userData={userData.data}/> : <LoadingView />}
-        </>
+        <Grommet>
+            <div>
+                <NavBar title="WiCHacks Hacker Application">
+                    <Button plain onClick={ () => navigate("/user") }>
+                        <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
+                            <Text weight="bold" color="#714ba0">Back</Text>
+                        </Box>
+                    </Button>
+                </NavBar>
+            </div>
+            <Box pad="medium" align="start">
+                <Button plain onClick={ () => navigate("/user") }>
+                    <Box gap="small" pad="small" direction="row" align="center" justify="center">
+                        <LinkPrevious color="#714ba0" />
+                        <Text weight="bold" color="#714ba0">Back to user home</Text>
+                    </Box>
+                </Button>
+                <Box background="#ded492" pad="small" round="small">
+                    <Text>Below you can see your application. To change or edit any information, please email <a href="mailto:wichacks@rit.edu" target="_blank" rel="noreferrer">wichacks@rit.edu</a> and an organizer will help you.</Text>
+                </Box>
+            </Box>
+            <ApplicationView userData={userData.data} />
+        </Grommet>
     )
 }

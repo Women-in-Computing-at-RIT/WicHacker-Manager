@@ -1,0 +1,28 @@
+.ACCEPTED{
+    background-color: mediumseagreen;
+    opacity: 80%;
+    text-align: center;
+}
+
+.CONFIRMED{
+    background-color: mediumseagreen;
+    opacity: 80%;
+    text-align: center;
+}
+
+.APPLIED{
+    background-color: mediumpurple;
+    opacity: 80%;
+    text-align: center;
+}
+
+.REJECTED{
+    background: rgba(255,99,71,1);
+    opacity: 80%;
+    text-align: center;
+}
+
+p{
+    margin: 0;
+    padding: 0;
+}

@@ -8,23 +8,7 @@ export function ApplicationView({userData}) {
     return(
         <Grommet>
             <Box>
-                <NavBar title="WiCHacks Hacker Application">
-                    <Button plain onClick={ () => navigate("/user") }>
-                        <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
-                            <Text weight="bold" color="#714ba0">Back</Text>
-                        </Box>
-                    </Button>
-                </NavBar>
                 <Box pad="medium" align="start">
-                    <Button plain onClick={ () => navigate("/user") }>
-                        <Box gap="small" pad="small" direction="row" align="center" justify="center">
-                            <LinkPrevious color="#714ba0" />
-                            <Text weight="bold" color="#714ba0">Back to user home</Text>
-                        </Box>
-                    </Button>
-                    <Box background="#ded492" pad="small" round="small">
-                        <Text>Below you can see your application. To change or edit any information, please email <a href="mailto:wichacks@rit.edu" target="_blank" rel="noreferrer">wichacks@rit.edu</a> and an organizer will help you.</Text>
-                    </Box>
                     <Heading level={2}>User Information</Heading>
                     <Box gap="small">
                         <Text><Text weight="bold">Name:</Text> {userData.first_name} {userData.last_name}</Text>

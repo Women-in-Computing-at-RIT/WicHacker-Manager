@@ -61,10 +61,10 @@ def createApplication(auth0_id, major, levelOfStudy, age, shirtSize, hasAttended
     return False
 
 
-def updateApplication(applicationId, major, levelOfStudy, birthday, shirtSize, hasAttendedWiCHacks,
+def updateApplication(applicationId, major, levelOfStudy, age, shirtSize, hasAttendedWiCHacks,
                       hasAttendedHackathons,
                       university, gender, busRider, busStop, dietaryRestrictions, specialAccommodations,
-                      affirmedAgreements, status, isVirtual):
+                      affirmedAgreements, status, isVirtual, mlhEmailsAllowed):
     """
     Update all values for application id, return number of rows affected
     :param status:
@@ -84,20 +84,26 @@ def updateApplication(applicationId, major, levelOfStudy, birthday, shirtSize, h
     :return:
     """
     createApplicationSQL = "UPDATE Applications " \
-                           " SET major = %(major)s, level_of_study = %(level_of_study)s, birthday = %(birthday)s, shirt_size = %(shirtSize)s, " \
+                           " SET major = %(major)s, level_of_study = %(level_of_study)s, age = %(age)s, shirt_size = %(shirtSize)s, " \
                            " has_attended_wichacks = %(has_attended_wichacks)s, has_attended_hackathons = %(has_attended_hackathons)s, university = %(university)s, " \
                            " status = %(status)s, gender = %(gender)s, bus_rider = %(bus_rider)s, bus_stop = %(bus_stop)s, dietary_restrictions = %(dietary_restrictions)s, " \
-                           " special_accommodations = %(special_accommodations)s, affirmed_agreements = %(affirmed_agreements)s, is_virtual = %(is_virtual)s " \
+                           " special_accommodations = %(special_accommodations)s, affirmed_agreements = %(affirmed_agreements)s, is_virtual = %(is_virtual)s," \
+                           " allowMlhEmails = %(mlhEmails)s " \
                            " WHERE application_id = %(applicationId)s"
-    applicationArgs = {"major": major, "level_of_study": levelOfStudy, "birthday": birthday,
+    applicationArgs = {"major": major, "level_of_study": levelOfStudy, "age": age,
                        "shirtSize": shirtSize, "has_attended_wichacks": hasAttendedWiCHacks,
                        "has_attended_hackathons": hasAttendedHackathons, "university": university,
                        "gender": gender, "bus_rider": busRider, "bus_stop": busStop,
                        "dietary_restrictions": dietaryRestrictions, "special_accommodations": specialAccommodations,
                        "affirmed_agreements": affirmedAgreements, "status": status, "is_virtual": isVirtual,
-                       "applicationId": applicationId}
+                       "applicationId": applicationId, "mlhEmails": mlhEmailsAllowed}
 
-    return exec_commit(createApplicationSQL, applicationArgs)
+    numberOfRowsAffected = exec_commit(createApplicationSQL, applicationArgs)
+    if numberOfRowsAffected is None:
+        return None
+    if numberOfRowsAffected != 1:
+        return False
+    return True
 
 
 def getApplicationSelectSQL():
