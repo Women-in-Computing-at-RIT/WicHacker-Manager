@@ -15,9 +15,9 @@ export const localApiDomain = "http://localhost:5002"
 export const prodApiDomain = "https://api.wichacks.io"
 
 export const apiDomain = () => {
-    return localApiDomain
+    return prodApiDomain
 }
 
 export const getAxios = () => {
-    return localAxios
+    return prodAxios
 }
