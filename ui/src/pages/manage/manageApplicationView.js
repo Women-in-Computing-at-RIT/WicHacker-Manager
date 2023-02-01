@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getUserData} from "../../utils/users";
+import {getUserDataByUserId} from "../../utils/users";
 import {useAuth0} from "@auth0/auth0-react";
 import LoadingView from "../LoadingView";
 import NavBar from "../../components/navBar";
@@ -34,10 +34,10 @@ export function ManageApplicationView(){
     const {userId} = useParams();
     const [userResponse, setUserResponse] = useState();
     const [applicationUpdateResponse, setApplicationUpdateResponse] = useState();
-    const {getAccessTokenSilently, logout} = useAuth0();
+    const {getAccessTokenSilently} = useAuth0();
 
     useEffect( () => {
-        getUserData(getAccessTokenSilently, setUserResponse, null)
+        getUserDataByUserId(getAccessTokenSilently, setUserResponse, userId)
     }, [])
 
     let navigate = useNavigate();

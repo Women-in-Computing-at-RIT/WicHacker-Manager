@@ -18,3 +18,18 @@ export const getUserData = async(getAccessTokenSilently, setUserResponse, setNew
         setUserResponse({data: null, error: true})
     })
 }
+
+export const getUserDataByUserId = async(getAccessTokenSilently, setUserResponse, userId) => {
+    const token = await getAccessTokenSilently({
+        audience: 'wichacks.io',
+    });
+    const config = {
+        headers: { Authorization: `Bearer ${token}`}
+    }
+    getAxios().get(apiDomain() + `/user/id/` + userId.toString(), config)
+        .then(async (response) => {
+            setUserResponse({data: await response.data, error: null})
+        }).catch(async () => {
+            setUserResponse({data: null, error: true})
+    })
+}
