@@ -2,7 +2,7 @@
 version: '3.7'
 services:
     api:
-        image: wichacks-api:latest
+        image: ghcr.io/women-in-computing-at-rit/wichacker-manager/api:latest
         logging:
             options:
                 awslogs-stream: api
@@ -18,8 +18,8 @@ services:
         volumes:
             -   ~/.aws:/root/.aws:ro
     ui:
-       image: wichacks-ui:latest
-       restart: always
-       ports:
+        image: ghcr.io/women-in-computing-at-rit/wichacker-manager/ui:latest
+        restart: always
+        ports:
             - "5002:3000"
 
