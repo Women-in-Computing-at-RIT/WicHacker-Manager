@@ -1,5 +1,5 @@
 flask
-auth0-python
+auth0-python==3.24.1
 python-dotenv
 flask-cors
 flask-restful
