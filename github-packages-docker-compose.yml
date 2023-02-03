@@ -18,8 +18,8 @@ services:
         volumes:
             -   ~/.aws:/root/.aws:ro
     ui:
-        image: ghcr.io/women-in-computing-at-rit/wichacker-manager/ui:latest
-        restart: always
-        ports:
+       image: ghcr.io/women-in-computing-at-rit/wichacker-manager/ui:latest
+       restart: always
+       ports:
             - "5002:3000"
 
