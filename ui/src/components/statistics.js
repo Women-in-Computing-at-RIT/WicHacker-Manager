@@ -5,6 +5,7 @@ import {apiDomain, getAxios} from "../config/axios";
 import LoadingView from "../pages/LoadingView";
 import {WiCHacksTable} from "./table";
 import css from "./style/statistics.module.css"
+import { Box, Heading, Text } from "grommet";
 
 const getHackathonStatistics = async(getAccessTokenSilently, setStatistics) => {
     const token = await getAccessTokenSilently({
@@ -24,6 +25,18 @@ const getHackathonStatistics = async(getAccessTokenSilently, setStatistics) => {
 const hackerCountColumns = [
     {
         displayName: 'Status',
+        dataKey: 'value',
+        dataScope: 'row'
+    },
+    {
+        displayName: 'Count',
+        dataKey: 'count',
+    }
+];
+
+const shirtCountColumns = [
+    {
+        displayName: 'Size',
         dataKey: 'value',
         dataScope: 'row'
     },
@@ -75,6 +88,11 @@ export function StatisticsView(){
             <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Application Statuses"} data={translateCountJSONToList(statistics['applications'])} columns={hackerCountColumns}/>
             </div>
+            <Box pad="medium">
+                <Heading margin="none" level={3}>Shirt Sizes</Heading>
+                
+                <WiCHacksTable title={"Shirt Size Counts"} data={translateCountJSONToList(statistics['shirts'])} columns={shirtCountColumns}/>
+            </Box>
             <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Hackers By School"} data={translateCountJSONToList(statistics['schools'])} columns={schoolCountColumns}/>
             </div>
@@ -83,5 +101,4 @@ export function StatisticsView(){
             </div>
         </div>
     );
-
 }
