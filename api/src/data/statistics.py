@@ -28,7 +28,7 @@ def getHackerStatistics() -> dict:
 
     # ===== T Shirt Sizes
     shirtCountSQL = 'SELECT count(*) as count, shirt_size FROM Applications WHERE status in (\'ACCEPTED\', \'CONFIRMED\')  ' \
-                     'GROUP BY shirt_size ORDER BY count DESC;'
+                    'GROUP BY shirt_size ORDER BY count DESC;'
     shirts = exec_get_all(shirtCountSQL)
     if shirts is not None:
         statistics["shirts"] = {}
@@ -36,5 +36,30 @@ def getHackerStatistics() -> dict:
             statistics["shirts"][row['shirt_size']] = row['count']
     else:
         statistics["shirts"] = None
+
+    # ===== Bus Riding
+    busCountSQL = 'SELECT count(*) as count, bus_stop FROM Applications WHERE bus_rider AND status in (\'ACCEPTED\', \'CONFIRMED\') GROUP BY bus_stop;'
+    busInfo = exec_get_all(busCountSQL)
+    if busInfo is not None:
+        statistics["busStops"] = {}
+        for row in busInfo:
+            statistics["busStops"][row['bus_stop']] = row['count']
+    else:
+        statistics["busStops"] = None
+
+    # ===== Dietary Restrictions and Special accommodations
+    accomodationsSQL = 'SELECT dietary_restrictions, special_accommodations FROM Applications WHERE (dietary_restrictions IS NOT NULL OR special_accommodations IS NOT NULL) AND status in (\'ACCEPTED\', \'CONFIRMED\');'
+    accomodationInfo = exec_get_all(accomodationsSQL)
+    if accomodationInfo is not None:
+        statistics['dietaryRestrictions'] = []
+        statistics['specialAccommodations'] = []
+        for row in accomodationInfo:
+            if row['dietary_restrictions'] is not None:
+                statistics['dietaryRestrictions'].append(row['dietary_restrictions'])
+            if row['special_accommodations'] is not None:
+                statistics['specialAccommodations'].append(row['special_accommodations'])
+    else:
+        statistics['dietaryRestrictions'] = None
+        statistics['specialAccommodations'] = None
 
     return statistics
