@@ -10,7 +10,7 @@ logger = logging.getLogger("Statistics")
 
 
 class Accommodations(Resource):
-    PATH = '/statistics'
+    PATH = '/accommodations'
 
     def get(self):
         authenticationPayload = authenticate(request.headers)

@@ -59,12 +59,13 @@ export function AccommodationsView(){
         return (<p>Error Loading Accommodations, please contact the website manager</p>);
     }
 
+    console.log(accommodationsResponse.data)
     const accommodations = accommodationsResponse.data;
 
     return (
         <div>
             <div className={css.statisticsTable}>
-                <WiCHacksTable title={"Accommodations"} data={accommodations} columns={hackerAccomodationsColumns}/>
+                <WiCHacksTable title={"Accommodations"} data={accommodations["accommodations"]} columns={hackerAccomodationsColumns}/>
             </div>
         </div>
     );

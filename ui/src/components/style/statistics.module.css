@@ -11,6 +11,6 @@ table {
 td {
     width: 10px;
     min-width:10px; /* change the value for whatever fits you better */
-    max-width: 300px;
+    max-width: 500px;
     word-wrap:break-word
 }
