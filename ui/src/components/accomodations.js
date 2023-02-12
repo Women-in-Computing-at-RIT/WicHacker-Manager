@@ -56,7 +56,7 @@ export function AccommodationsView(){
         return (<LoadingView />);
     }
     if (accommodationsResponse?.error){
-        return (<p>Error Loading Statistics, please contact the website manager</p>);
+        return (<p>Error Loading Accommodations, please contact the website manager</p>);
     }
 
     const accommodations = accommodationsResponse.data;

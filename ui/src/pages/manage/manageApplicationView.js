@@ -53,7 +53,7 @@ export function ManageApplicationView(){
     }
 
     const navbarDisplay = <Grommet>
-        <NavBar title="WiCHacks HackManager Admin Portal">
+        <NavBar title="WiCHacks HackManager Application View">
             <Button plain onClick={ () => navigate("/manage/applications") }>
                 <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
                     <Text weight="bold" color="#714ba0">Back</Text>

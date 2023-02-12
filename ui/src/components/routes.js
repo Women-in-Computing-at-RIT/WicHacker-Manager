@@ -27,7 +27,7 @@ export default function AppRoutes(){
             <Route path="/manage/applications" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ManageApplications />} />} />
             <Route path="/manage/applications/:userId" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ManageApplicationView />} />} />
             <Route path="/manage/admin/signup" element={<ProtectedComponent component={AdminRoute} permission={CONSOLE} type={READ} children={<NewAdminForm />} />} /> {/* There's no way for this to work currently, including as placeholder for future*/}
-            <Route path="/manage" element={<ProtectedComponent component={AdminRoute} permission={STATISTICS} type={READ} children={<ManageAccommodations />} />} />
+            <Route path="/manage/accommodations" element={<ProtectedComponent component={AdminRoute} permission={STATISTICS} type={READ} children={<ManageAccommodations />} />} />
             <Route path="/notFound" element={<PageNotFound />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>

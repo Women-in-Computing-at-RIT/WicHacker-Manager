@@ -17,7 +17,7 @@ export default function ManageAccommodations() {
 
     return (
         <Grommet>
-            <NavBar title="WiCHacks HackManager Admin Portal">
+            <NavBar title="WiCHacks HackManager Accommodation View">
                 <Button plain onClick={ () => navigate("/manage") }>
                     <Box background="white" round="15px" height="30px" pad="small" align="center" justify="center">
                         <Text weight="bold" color="#714ba0">Manage Home</Text>
