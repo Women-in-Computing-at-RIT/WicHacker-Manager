@@ -11,21 +11,6 @@ import {AdminComponent} from "../../hocs/adminRoute";
 import {STATISTICS, READ} from "../../utils/constants";
 import css from "./style/manageLanding.module.css"
 
-const callApi = async(getAccessTokenSilently, setUserResponse, userId) => {
-    const token = await getAccessTokenSilently({
-        audience: 'wichacks.io',
-    });
-    const config = {
-        headers: { Authorization: `Bearer ${token}`}
-    }
-    getAxios().get(apiDomain() + `/userTest/${userId}`, config)
-        .then(async (response) => {
-            setUserResponse({data: await response.data, error: null})
-        }).catch((response, error) => {
-            setUserResponse({data: null, error: error})
-        })
-}
-
 export default function HackathonManagerLandingPage() {
     const [userData, setUserData] = useState(null);
     const {getAccessTokenSilently, logout} = useAuth0();
@@ -61,6 +46,10 @@ export default function HackathonManagerLandingPage() {
                 <h3>Hacker Statistics</h3>
                 <div>
                     <AdminComponent permission={STATISTICS} type={READ} children={<StatisticsView />}/>
+                </div>
+
+                <div>
+                    <button className={css.accommodationsButton} onClick={navigate("/manage/accommodations")}>View Accommodations</button>
                 </div>
 
             </div>

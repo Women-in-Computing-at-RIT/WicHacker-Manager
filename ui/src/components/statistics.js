@@ -6,6 +6,7 @@ import LoadingView from "../pages/LoadingView";
 import {WiCHacksTable} from "./table";
 import css from "./style/statistics.module.css"
 import { Box, Heading, Text } from "grommet";
+import {useNavigate} from "react-router-dom";
 
 const getHackathonStatistics = async(getAccessTokenSilently, setStatistics) => {
     const token = await getAccessTokenSilently({
@@ -26,7 +27,6 @@ const hackerCountColumns = [
     {
         displayName: 'Status',
         dataKey: 'value',
-        dataScope: 'row'
     },
     {
         displayName: 'Count',
@@ -38,7 +38,6 @@ const shirtCountColumns = [
     {
         displayName: 'Size',
         dataKey: 'value',
-        dataScope: 'row'
     },
     {
         displayName: 'Count',
@@ -50,6 +49,18 @@ const schoolCountColumns = [
     {
         displayName: 'School',
         dataKey: 'value',
+        dataScope: 'row' // exception not rule to avoid formatting
+    },
+    {
+        displayName: 'Count',
+        dataKey: 'count',
+    }
+];
+
+const busStopCountColumns = [
+    {
+        displayName: 'Bus Stop',
+        dataKey: 'value',
         dataScope: 'row'
     },
     {
@@ -59,6 +70,9 @@ const schoolCountColumns = [
 ];
 
 const translateCountJSONToList = (map) => {
+    if(!map){
+        return []
+    }
     let list = []
     for (const [key, value] of Object.entries(map)) {
         list.push({"count": value, "value": key})
@@ -68,7 +82,7 @@ const translateCountJSONToList = (map) => {
 
 export function StatisticsView(){
     const [statisticsResponse, setStatisticsResponse] = useState();
-    const {getAccessTokenSilently, logout} = useAuth0();
+    const {getAccessTokenSilently} = useAuth0();
 
     useEffect(() => {
         getHackathonStatistics(getAccessTokenSilently, setStatisticsResponse)
@@ -88,16 +102,17 @@ export function StatisticsView(){
             <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Application Statuses"} data={translateCountJSONToList(statistics['applications'])} columns={hackerCountColumns}/>
             </div>
-            <Box pad="medium">
-                <Heading margin="none" level={3}>Shirt Sizes</Heading>
-                
+            <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Shirt Size Counts"} data={translateCountJSONToList(statistics['shirts'])} columns={shirtCountColumns}/>
-            </Box>
+            </div>
             <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Hackers By School"} data={translateCountJSONToList(statistics['schools'])} columns={schoolCountColumns}/>
             </div>
             <div className={css.statisticsTable}>
                 <p>Number of Different Schools Accepted: {statistics['schoolCount']}</p>
+            </div>
+            <div className={css.statisticsTable}>
+                <WiCHacksTable title={"Bussing"} data={translateCountJSONToList(statistics['busStops'])} columns={busStopCountColumns}/>
             </div>
         </div>
     );

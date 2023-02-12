@@ -3,3 +3,14 @@
     padding-bottom: 30px;
     padding-left: 10px;
 }
+
+table {
+    width: 100%;
+}
+
+td {
+    width: 10px;
+    min-width:10px; /* change the value for whatever fits you better */
+    max-width: 300px;
+    word-wrap:break-word
+}

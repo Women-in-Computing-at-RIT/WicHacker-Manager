@@ -47,19 +47,18 @@ def getHackerStatistics() -> dict:
     else:
         statistics["busStops"] = None
 
+    return statistics
+
+
+def getHackerAccommodations() -> dict:
+    accommodations = []
+    accommodationsWrapper = {"accommodations": accommodations}
+
     # ===== Dietary Restrictions and Special accommodations
-    accomodationsSQL = 'SELECT dietary_restrictions, special_accommodations FROM Applications WHERE (dietary_restrictions IS NOT NULL OR special_accommodations IS NOT NULL) AND status in (\'ACCEPTED\', \'CONFIRMED\');'
+    accomodationsSQL = 'SELECT dietary_restrictions, special_accommodations, email, first_name, last_name FROM Applications a INNER JOIN Users u ON a.application_id = u.application_id WHERE (dietary_restrictions IS NOT NULL OR special_accommodations IS NOT NULL) AND status in (\'ACCEPTED\', \'CONFIRMED\');'
     accomodationInfo = exec_get_all(accomodationsSQL)
     if accomodationInfo is not None:
-        statistics['dietaryRestrictions'] = []
-        statistics['specialAccommodations'] = []
         for row in accomodationInfo:
-            if row['dietary_restrictions'] is not None:
-                statistics['dietaryRestrictions'].append(row['dietary_restrictions'])
-            if row['special_accommodations'] is not None:
-                statistics['specialAccommodations'].append(row['special_accommodations'])
-    else:
-        statistics['dietaryRestrictions'] = None
-        statistics['specialAccommodations'] = None
+            accommodations.append({'dietaryRestrictions': row['dietary_restrictions'], 'specialAccommodations': row['special_accommodations'], 'email': row['email'], 'firstName': row['first_name'], 'lastName': row['last_name']})
 
-    return statistics
+    return accommodationsWrapper
