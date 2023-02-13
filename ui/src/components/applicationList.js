@@ -48,7 +48,6 @@ export function ApplicationList(){
             displayName: "Application Status",
             dataKey: 'status',
             format: userData => <p className={userData.status}>{userData.status}</p>
-            //format: userData => console.log(userData)
         },
         {
             displayName: "First Name",

@@ -2,8 +2,28 @@
     padding-left: 50px;
 }
 
-.manageApplications{
+.manageButton{
     margin-left: 10px;
+    width: 200px;
+    height: 40px;
+    border-radius: 16px;
+    border-style: hidden;
+    font-weight: 700;
+    font-size: 15px;
     background: rgba(113, 75, 160, 0.7);
+    margin-bottom: 15px;
     color: white;
+    margin-right: 10px;
+}
+
+.manageButton:hover{
+    opacity: 80%;
+    cursor: pointer;
+    border-style: solid;
+    border-color: #714ba0;
+}
+
+.buttonWrapper{
+    display: flex;
+    justify-content: center;
 }

@@ -5,6 +5,8 @@ import {apiDomain, getAxios} from "../config/axios";
 import LoadingView from "../pages/LoadingView";
 import {WiCHacksTable} from "./table";
 import css from "./style/statistics.module.css"
+import { Box, Heading, Text } from "grommet";
+import {useNavigate} from "react-router-dom";
 
 const getHackathonStatistics = async(getAccessTokenSilently, setStatistics) => {
     const token = await getAccessTokenSilently({
@@ -25,7 +27,17 @@ const hackerCountColumns = [
     {
         displayName: 'Status',
         dataKey: 'value',
-        dataScope: 'row'
+    },
+    {
+        displayName: 'Count',
+        dataKey: 'count',
+    }
+];
+
+const shirtCountColumns = [
+    {
+        displayName: 'Size',
+        dataKey: 'value',
     },
     {
         displayName: 'Count',
@@ -37,6 +49,18 @@ const schoolCountColumns = [
     {
         displayName: 'School',
         dataKey: 'value',
+        dataScope: 'row' // exception not rule to avoid formatting
+    },
+    {
+        displayName: 'Count',
+        dataKey: 'count',
+    }
+];
+
+const busStopCountColumns = [
+    {
+        displayName: 'Bus Stop',
+        dataKey: 'value',
         dataScope: 'row'
     },
     {
@@ -45,7 +69,23 @@ const schoolCountColumns = [
     }
 ];
 
+const isVirtualCountColumns = [
+    {
+        displayName: 'Hacker Attendance',
+        dataKey: 'value',
+        dataScope: 'row',
+        format: userData => userData["value"] === "1" ? "Virtual" : "In Person",
+    },
+    {
+        displayName: 'Count',
+        dataKey: 'count',
+    }
+];
+
 const translateCountJSONToList = (map) => {
+    if(!map){
+        return []
+    }
     let list = []
     for (const [key, value] of Object.entries(map)) {
         list.push({"count": value, "value": key})
@@ -55,7 +95,7 @@ const translateCountJSONToList = (map) => {
 
 export function StatisticsView(){
     const [statisticsResponse, setStatisticsResponse] = useState();
-    const {getAccessTokenSilently, logout} = useAuth0();
+    const {getAccessTokenSilently} = useAuth0();
 
     useEffect(() => {
         getHackathonStatistics(getAccessTokenSilently, setStatisticsResponse)
@@ -76,12 +116,20 @@ export function StatisticsView(){
                 <WiCHacksTable title={"Application Statuses"} data={translateCountJSONToList(statistics['applications'])} columns={hackerCountColumns}/>
             </div>
             <div className={css.statisticsTable}>
+                <WiCHacksTable title={"Shirt Size Counts"} data={translateCountJSONToList(statistics['shirts'])} columns={shirtCountColumns}/>
+            </div>
+            <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Hackers By School"} data={translateCountJSONToList(statistics['schools'])} columns={schoolCountColumns}/>
             </div>
             <div className={css.statisticsTable}>
                 <p>Number of Different Schools Accepted: {statistics['schoolCount']}</p>
             </div>
+            <div className={css.statisticsTable}>
+                <WiCHacksTable title={"Bussing"} data={translateCountJSONToList(statistics['busStops'])} columns={busStopCountColumns}/>
+            </div>
+            <div className={css.statisticsTable}>
+                <WiCHacksTable title={"Attendance"} data={translateCountJSONToList(statistics['isVirtual'])} columns={isVirtualCountColumns} />
+            </div>
         </div>
     );
-
 }
