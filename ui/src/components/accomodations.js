@@ -59,7 +59,6 @@ export function AccommodationsView(){
         return (<p>Error Loading Accommodations, please contact the website manager</p>);
     }
 
-    console.log(accommodationsResponse.data)
     const accommodations = accommodationsResponse.data;
 
     return (
