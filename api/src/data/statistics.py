@@ -47,6 +47,17 @@ def getHackerStatistics() -> dict:
     else:
         statistics["busStops"] = None
 
+
+    # ==== Is Virtual
+    irVirtualSQL = 'SELECT count(*) as count, is_virtual FROM Applications WHERE bus_rider AND status in (\'ACCEPTED\', \'CONFIRMED\') GROUP BY is_virtual;'
+    virtualInfo = exec_get_all(irVirtualSQL)
+    if virtualInfo is not None:
+        statistics["isVirtual"] = {}
+        for row in virtualInfo:
+            statistics["isVirtual"][row["is_virtual"]] = row["count"]
+    else:
+        statistics["isVirtual"] = None
+
     return statistics
 
 

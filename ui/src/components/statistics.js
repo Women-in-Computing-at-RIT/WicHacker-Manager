@@ -69,6 +69,19 @@ const busStopCountColumns = [
     }
 ];
 
+const isVirtualCountColumns = [
+    {
+        displayName: 'Hacker Attendance',
+        dataKey: 'value',
+        dataScope: 'row',
+        format: userData => userData["value"] === "1" ? "Virtual" : "In Person",
+    },
+    {
+        displayName: 'Count',
+        dataKey: 'count',
+    }
+];
+
 const translateCountJSONToList = (map) => {
     if(!map){
         return []
@@ -113,6 +126,9 @@ export function StatisticsView(){
             </div>
             <div className={css.statisticsTable}>
                 <WiCHacksTable title={"Bussing"} data={translateCountJSONToList(statistics['busStops'])} columns={busStopCountColumns}/>
+            </div>
+            <div className={css.statisticsTable}>
+                <WiCHacksTable title={"Attendance"} data={translateCountJSONToList(statistics['isVirtual'])} columns={isVirtualCountColumns} />
             </div>
         </div>
     );
