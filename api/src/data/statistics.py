@@ -49,7 +49,7 @@ def getHackerStatistics() -> dict:
 
 
     # ==== Is Virtual
-    irVirtualSQL = 'SELECT count(*) as count, is_virtual FROM Applications WHERE bus_rider AND status in (\'ACCEPTED\', \'CONFIRMED\') GROUP BY is_virtual;'
+    irVirtualSQL = 'SELECT count(*) as count, is_virtual FROM Applications WHERE status in (\'ACCEPTED\', \'CONFIRMED\') GROUP BY is_virtual;'
     virtualInfo = exec_get_all(irVirtualSQL)
     if virtualInfo is not None:
         statistics["isVirtual"] = {}
