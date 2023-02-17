@@ -105,7 +105,7 @@ export default function HackerApplication() {
             "hasAttendedHackathons": (hasAttendedHackathons && hasAttendedHackathons === "true"),
             "university": university,
             "gender": gender,
-            "busRider": (eligibleForBusing && busRider === "true"),
+            "busRider": false,
             "busStop": busStop,
             "dietaryRestrictions": dietaryRestriction,
             "specialAccommodations": specialAccommodations,
@@ -265,7 +265,7 @@ export default function HackerApplication() {
                             <Box background="#714ba0" height="4px" round="2px"/>
 
                             <Heading level={4} margin={{ top: "medium", bottom: "small" }}>How will you be participating?</Heading>
-                            <Text>This year, WiCHacks is inviting all individuals to participate in person at RIT, or online through our Discord platform. If in-person, you can take one of the provided buses or your own transportation to RIT. Parking will be provided.</Text>
+                            <Text>This year, WiCHacks is inviting all individuals to participate in person at RIT, or online through our Discord platform. Parking will be provided.</Text>
                             <RadioButtonGroup
                                 options={ ["In-Person", "Online Only"] }
                                 name="isVirtual"
@@ -273,9 +273,9 @@ export default function HackerApplication() {
                                 margin={{ bottom: "medium", top: "small" }}
                             />
 
-                            {eligibleForBusing &&
+                            {/* {eligibleForBusing &&
                                 <Box pad="small" background="#ded492" round="small">
-                                    <Box> {/** Information on bussing */}
+                                    <Box> {/** Information on bussing }
                                         <Heading level={3} margin={{ vertical: "small" }}>WiCHacks has buses this year!</Heading>
                                         <Text>To help more of our participants enjoy WiCHacks in person this year, we'll be sending out two buses to provide you transportation to and from the event. Buses will pick up participants early Saturday 3/4/23 morning, and return you to your respective stops Sunday 3/5/23 evening. One bus will be traveling from Toronto, and the other from Albany area.</Text>
                                         <Text weight="bold">See Image Below For Bus Route Information</Text>
@@ -310,7 +310,7 @@ export default function HackerApplication() {
                                         </Box>
                                     }
                                 </Box>
-                            }
+                            } */ }
                             <hr className={css.sectionBreak}/>
                         </Box>
                         {/** MARK: Section Three */}
