@@ -1,28 +1,49 @@
 import os
 
-from data.users import getUserByAuthID, getUserByUserID
+from data.users import getUserByAuthID, getUserByUserID, getUserEmailsWithFilter
 from data.emailTemplates.applied import getAppliedEmail, getAppliedSubjectLine
 from data.emailTemplates.accepted import getAcceptedEmail, getAcceptedSubjectLine
 from data.emailTemplates.rejected import getRejectedEmail, getRejectedSubjectLine
-from data.emailTemplates.confirmed import getConfirmedEmail, getConfirmedSubjectLine
+from data.emailTemplates.confirmed import getConfirmedEmail, getConfirmedSubjectLine, getRequestConfirmedEmail, \
+    getRequestConfirmedSubjectLine
 import logging
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-from typing import Union, List
+from sendgrid.helpers.mail import Mail, Personalization, Bcc
+from typing import Union, List, Tuple
 from utils.aws import getSendgridAPIKey
 
 logger = logging.getLogger("email")
 WICHACKS_EMAIL = "organizers@wichacks.io"
 
+ACCEPTED = "ACCEPTED"
+REJECTED = "REJECTED"
+CONFIRMED = "CONFIRMED"
+
+
+def sendPresetEmail(emailName) -> Tuple[List[str], bool]:
+    """
+    Send preset email
+    :param emailName:
+    :return:
+    """
+    if emailName == "requestConfirmation":
+        return sendRequestConfirmedEmail()
+
+    # default behavior mimic crash
+    return None, False
+
+
 def sendEmailByStatus(userID, status) -> bool:
-    if status == "ACCEPTED":
+    if status == ACCEPTED:
         return sendAcceptedEmail(userID)
-    elif status == "REJECTED":
+    elif status == REJECTED:
         return sendRejectedEmail(userID)
-    elif status == "CONFIRMED":
+    elif status == CONFIRMED:
         return sendConfirmedEmail(userID)
     else:
         logger.error("Application Status Change, Status not recognized: %s for user %s", status, userID)
+
+
 def sendAppliedEmail(auth0ID) -> bool:
     """
     Wrapper of send email for applied email
@@ -39,7 +60,7 @@ def sendAppliedEmail(auth0ID) -> bool:
         return False
     messageContent = getAppliedEmail(firstName, lastName)
     subjectLine = getAppliedSubjectLine()
-    return sendEmail(emailAddresses=emailAddress, subject=subjectLine, content=messageContent)
+    return sendEmailToSingleRecipient(emailAddress=emailAddress, subject=subjectLine, content=messageContent)
 
 
 def sendConfirmedEmail(userId) -> bool:
@@ -53,9 +74,6 @@ def sendConfirmedEmail(userId) -> bool:
         :param auth0ID:
         :return: bool success
         """
-    logger.error("Confirmation Email Not Enabled")
-    return False  # REMOVE BEFORE ENABLING
-
     userData = getUserByUserID(userId)
     emailAddress = userData.get("email", None)
     firstName = userData.get("first_name", None)
@@ -66,7 +84,24 @@ def sendConfirmedEmail(userId) -> bool:
         return False
     messageContent = getConfirmedEmail(firstName, lastName)
     subjectLine = getConfirmedSubjectLine()
-    return sendEmail(emailAddresses=emailAddress, subject=subjectLine, content=messageContent)
+    return sendEmailToSingleRecipient(emailAddress=emailAddress, subject=subjectLine, content=messageContent)
+
+
+def sendRequestConfirmedEmail() -> Tuple[List[str], bool]:
+    """
+        Wrapper of send email for requesting confirmation email
+        :param: applicationStatusFilterList list of application statuses that will receive the email, default is email goes to nobody
+        :return: list of failed email addresses
+        """
+    """
+        Wrapper of send email for applied email
+        :return: bool success
+        """
+    userEmails = getUserEmailsWithFilter([ACCEPTED])
+    messageContent = getRequestConfirmedEmail()
+    subjectLine = getRequestConfirmedSubjectLine()
+
+    return sendGroupEmail(emailAddresses=userEmails, subject=subjectLine, content=messageContent)
 
 
 def sendAcceptedEmail(userId) -> bool:
@@ -85,7 +120,7 @@ def sendAcceptedEmail(userId) -> bool:
         return False
     messageContent = getAcceptedEmail(firstName, lastName)
     subjectLine = getAcceptedSubjectLine()
-    return sendEmail(emailAddresses=emailAddress, subject=subjectLine, content=messageContent)
+    return sendEmailToSingleRecipient(emailAddress=emailAddress, subject=subjectLine, content=messageContent)
 
 
 def sendRejectedEmail(userId) -> bool:
@@ -104,21 +139,21 @@ def sendRejectedEmail(userId) -> bool:
         return False
     messageContent = getRejectedEmail(firstName, lastName)
     subjectLine = getRejectedSubjectLine()
-    return sendEmail(emailAddresses=emailAddress, subject=subjectLine, content=messageContent)
+    return sendEmailToSingleRecipient(emailAddress=emailAddress, subject=subjectLine, content=messageContent)
 
 
-def sendEmail(emailAddresses: Union[List[str], str], subject, content) -> bool:
+def sendEmailToSingleRecipient(emailAddress: str, subject, content) -> bool:
     """
-    Send emailType to user based on id
+    Send email with subject line and content to email address
     :param subject: subject line of the email
-    :param emailAddresses:  single or list of string email addresses to send email to
+    :param emailAddress:  single email address to send email to
     :param content: HTML to send
     :return:
     """
 
     message = Mail(
         from_email=WICHACKS_EMAIL,
-        to_emails=emailAddresses,
+        to_emails=emailAddress,
         subject=subject,
         html_content=content
     )
@@ -130,6 +165,26 @@ def sendEmail(emailAddresses: Union[List[str], str], subject, content) -> bool:
         logger.error("Send Email Error: %s", e)
         return False
     return True
+
+
+def sendGroupEmail(emailAddresses: List[str], subject, content) -> Tuple[List[str], bool]:
+    """
+    Send email to group of users
+    :param subject: subject line of the email
+    :param emailAddresses:  single or list of string email addresses to send email to
+    :param content: HTML to send
+    :return: list of emails that the email failed to send to
+    """
+    failedEmailList = []
+    for email in emailAddresses:
+        emailSuccessfullySent = sendEmailToSingleRecipient(emailAddress=email, subject=subject, content=content)
+        if not emailSuccessfullySent:
+            failedEmailList.append(email)
+    emailsSuccessful = True
+    if len(failedEmailList) > 0:
+        emailsSuccessful = False
+        logger.error("Sending Group Email Failed. Email errors for: %s", failedEmailList)
+    return failedEmailList, emailsSuccessful
 
 
 def getSendGridClient():

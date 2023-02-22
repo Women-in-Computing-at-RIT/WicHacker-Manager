@@ -32,6 +32,11 @@ def canViewStatistics(auth0Id) -> bool:
     return checkUserPermissionsByAuth0Id(auth0Id, STATISTICS, READ)
 
 
+def canSendEmails(auth0Id) -> bool:
+    # TODO: update to have its own permission at some point
+    return checkUserPermissionsByAuth0Id(auth0Id, HACKER_DATA, WRITE)
+
+
 def checkUserPermissionsByAuth0Id(auth0Id, permission, accessType) -> bool:
     """
     Check if user has a certain permission based on auth0 id

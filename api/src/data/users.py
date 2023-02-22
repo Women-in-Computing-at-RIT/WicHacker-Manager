@@ -1,4 +1,6 @@
-from db.db_utils import exec_get_one, exec_commit_return_autoincremented_id, exec_get_all
+from typing import List
+
+from db.db_utils import exec_get_one, exec_get_all
 import logging
 
 logger = logging.getLogger("User Data")
@@ -102,3 +104,21 @@ def getUserById(auth_id=None, user_id=None) -> dict:
     elif userData is None:
         return {}
     return userData
+
+
+def getUserEmailsWithFilter(applicationStatusFilterList: List[str]):
+    """
+    Gets users' emails from those whose application status is in the filter list
+    :param applicationStatusFilterList:
+    :return:
+    """
+    emailSql = getUserQuery() + f" WHERE app.status in ({','.join(['%s'] * len(applicationStatusFilterList))})"
+    args = tuple(applicationStatusFilterList)
+
+    users = exec_get_all(emailSql, args)
+    emailList = []
+    for u in users:
+        if len(u['email']) > 1:
+            emailList.append(u['email'])
+    return emailList
+

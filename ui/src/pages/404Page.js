@@ -1,4 +1,4 @@
-import { Grommet, Box, Text, Button } from "grommet";
+import { Grommet, Heading, Box, Text, Button } from "grommet";
 import { Twitter, Facebook, Instagram } from "grommet-icons";
 
 export default function PageNotFound() {
@@ -9,6 +9,8 @@ export default function PageNotFound() {
                 <Box>
                     <Text margin={{ vertical: "large" }} size="large" weight="bold">We ran into a problem, and we didn't know where to send you. Now you need to choose.</Text>
                     <Text>You can't search online for the solution, but you can click a link below!</Text>
+                    
+                    <Heading level={3}>😧 Do you think something went wrong? Email us at: <Button href="mailto:wichacks@rit.edu" target="_blank" plain style={{ textDecoration: "underline"}}>wichacks@rit.edu</Button></Heading>
                     <Button plain href="/user" margin={{ vertical: "medium" }}>
                         <Box background="white" style={{ borderRadius: "20px"}} pad="medium" width="medium" align="center" justify="center">
                             <Text weight="bold" color="#714ba0" size="large">Apply to WiCHacks</Text>

@@ -10,6 +10,7 @@ import { Help } from "grommet-icons";
 import {getUserData} from "../../utils/users";
 import {checkUserPermissions} from "../../utils/permissions";
 import {CONSOLE, READ} from "../../utils/constants";
+import {sendConfirmUser} from "./confirmAttendance";
 
 const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     e.preventDefault()
@@ -72,12 +73,16 @@ export default function UserHomepage() {
     const [resumeUpload, setResumeUpload] = useState(null);
     const {getAccessTokenSilently, logout} = useAuth0();
     const [hasUploadedResume, setHasUploadedResume] = useState();
+    const [confirmationResponse, setConfirmationResponse] = useState();
 
     // Very Important Note: These variables are DOM modifyable so shouldn't be considered final truths
     // If someone wants to modify the DOM to get access to this button then all the power to them, there's
     // permissions attached to the route the button goes to so even if a user can see the button they still can't get
     // to admin protected routes without permissions
     const [canViewManageButton, setCanViewManageButton] = useState();
+
+    // @TODO: set programmatic/dynamic way to set this so we can open up confirmations at a specified time closer to event
+    const acceptingConfirmations = true;
 
     useEffect(() => {
         getUserData(getAccessTokenSilently, setUserData, setNewUser)
@@ -115,6 +120,8 @@ export default function UserHomepage() {
         displayStatus = "Congratulations!! Your Application Has Been Accepted"
     } else if (user?.status === "REJECTED"){
         displayStatus = "We are sorry to say that your application has been rejected"
+    } else if (user?.status === "CONFIRMED"){
+        displayStatus = "Thank you for confirming, we'll see you at WiCHacks!"
     }
     // Switch out the different statuses we have once has been implemented
 
@@ -153,6 +160,15 @@ export default function UserHomepage() {
                             </Button>
 
                             <Heading level={3} margin={{ bottom: "none" }}>Get Ready For WiCHacks</Heading>
+                            {(acceptingConfirmations && user?.status === "ACCEPTED") &&
+                                <Button plain onClick={ () => navigate("/user/confirm") }>
+                                    <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                        <Text weight="bold" size="medium">RSVP/Confirm Attendance</Text>
+                                    </Box>
+                                </Button>
+                            }
+
+
                             <Heading level={4} margin={{ bottom: "none" }}>Share your resume</Heading>
                             <Text>Please upload your resume, we will share your resume with qualifying sponsors for job opportunities! Lots of hackers connect with companies in unique ways during hackathons, and it can be a great way to show potential employers your skills.</Text>
                             { hasUploadedResume ?

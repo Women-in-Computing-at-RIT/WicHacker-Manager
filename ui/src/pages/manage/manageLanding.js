@@ -44,6 +44,7 @@ export default function HackathonManagerLandingPage() {
                 <div className={css.buttonWrapper}>
                     <button className={css.manageButton} onClick={() => {navigate("/manage/applications")}}>Manage Applications</button>
                     <button className={css.manageButton} onClick={() => {navigate("/manage/accommodations")}}>View Accommodations</button>
+                    <button className={css.manageButton} onClick={() => {navigate("/manage/emails")}}>Send Emails</button>
                 </div>
 
                 <h3>Hacker Statistics</h3>
