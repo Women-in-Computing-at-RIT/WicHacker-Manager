@@ -27,7 +27,7 @@ def getHackerStatistics() -> dict:
         statistics["schools"] = None
 
     # ===== T Shirt Sizes
-    shirtCountSQL = 'SELECT count(*) as count, shirt_size FROM Applications WHERE status in (\'ACCEPTED\', \'CONFIRMED\')  ' \
+    shirtCountSQL = 'SELECT count(*) as count, shirt_size FROM Applications WHERE status in (\'ACCEPTED\', \'CONFIRMED\') AND NOT is_virtual ' \
                     'GROUP BY shirt_size ORDER BY count DESC;'
     shirts = exec_get_all(shirtCountSQL)
     if shirts is not None:
