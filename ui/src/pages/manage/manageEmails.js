@@ -20,6 +20,7 @@ const sendPresetEmail = async(getAccessTokenSilently, setEmailResponse, presetNa
         }).catch(async () => {
             setEmailResponse({status: false})
     })
+    window.scrollTo(0, 0)
 }
 
 const sendCustomEmail = async(getAccessTokenSilently, setEmailResponse, content, subject, statusFilters) => {
@@ -43,10 +44,12 @@ const sendCustomEmail = async(getAccessTokenSilently, setEmailResponse, content,
     }
     getAxios().post(apiDomain() + `/email`, payload, config)
         .then(async (response) => {
-            setEmailResponse({status: true})
-        }).catch(async () => {
-            setEmailResponse({status: false})
+            setEmailResponse({failedEmails: null, status: true})
+        }).catch(async (error) => {
+            const responseData = await error?.response?.data
+            setEmailResponse({failedEmails: responseData["failedEmailAddresses"], status: false})
         })
+    window.scrollTo(0, 0)
 }
 
 export default function ManageEmails() {
@@ -65,6 +68,25 @@ export default function ManageEmails() {
     const {getAccessTokenSilently, logout} = useAuth0();
     let navigate = useNavigate()
 
+    let emailStatus = null
+    if (emailResponse){
+        if (emailResponse?.status){
+            emailStatus = <div className={css.success}>Email Sent Successfully</div>
+        } else {
+            emailStatus = <>
+                <div className={css.failure}>Email Sending Failed</div>
+                {(emailResponse['failedEmails'] && emailResponse['failedEmails'].length > 0)  &&
+                    <div>
+                    <p>There were {emailResponse['failedEmails'].length} failures</p>
+                    <h4>Failed Email Addresses:</h4>
+                    {emailResponse['failedEmails'].map((data) => <li>{data}</li>)}
+                    </div>
+                }
+
+            </>
+        }
+    }
+
     return (
         <Grommet>
             <NavBar title="WiCHacks HackManager Admin Portal">
@@ -74,6 +96,10 @@ export default function ManageEmails() {
                     </Box>
                 </Button>
             </NavBar>
+
+            {emailStatus &&
+                emailStatus
+            }
 
             <div>
                 <h2>Send Preset Emails</h2>

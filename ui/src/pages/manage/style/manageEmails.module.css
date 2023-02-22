@@ -68,3 +68,25 @@ label{
     opacity: 80%;
     cursor: pointer;
 }
+
+.success{
+    background-color: forestgreen;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    height: 40px;
+    padding-top: 10px;
+    font-weight: 550;
+    margin-top: 10px;
+}
+
+.failure{
+    background-color: #D10000;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    height: 40px;
+    padding-top: 10px;
+    font-weight: 550;
+    margin-top: 10px;
+}
