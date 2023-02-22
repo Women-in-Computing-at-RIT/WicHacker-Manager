@@ -1,10 +1,11 @@
 import os
 
-from data.users import getUserByAuthID, getUserByUserID
+from data.users import getUserByAuthID, getUserByUserID, getUserEmailsWithFilter
 from data.emailTemplates.applied import getAppliedEmail, getAppliedSubjectLine
 from data.emailTemplates.accepted import getAcceptedEmail, getAcceptedSubjectLine
 from data.emailTemplates.rejected import getRejectedEmail, getRejectedSubjectLine
-from data.emailTemplates.confirmed import getConfirmedEmail, getConfirmedSubjectLine
+from data.emailTemplates.confirmed import getConfirmedEmail, getConfirmedSubjectLine, getRequestConfirmedEmail, \
+    getRequestConfirmedSubjectLine
 import logging
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -14,15 +15,20 @@ from utils.aws import getSendgridAPIKey
 logger = logging.getLogger("email")
 WICHACKS_EMAIL = "organizers@wichacks.io"
 
+ACCEPTED = "ACCEPTED"
+REJECTED = "REJECTED"
+CONFIRMED = "CONFIRMED"
 def sendEmailByStatus(userID, status) -> bool:
-    if status == "ACCEPTED":
+    if status == ACCEPTED:
         return sendAcceptedEmail(userID)
-    elif status == "REJECTED":
+    elif status == REJECTED:
         return sendRejectedEmail(userID)
-    elif status == "CONFIRMED":
+    elif status == CONFIRMED:
         return sendConfirmedEmail(userID)
     else:
         logger.error("Application Status Change, Status not recognized: %s for user %s", status, userID)
+
+
 def sendAppliedEmail(auth0ID) -> bool:
     """
     Wrapper of send email for applied email
@@ -53,9 +59,6 @@ def sendConfirmedEmail(userId) -> bool:
         :param auth0ID:
         :return: bool success
         """
-    logger.error("Confirmation Email Not Enabled")
-    return False  # REMOVE BEFORE ENABLING
-
     userData = getUserByUserID(userId)
     emailAddress = userData.get("email", None)
     firstName = userData.get("first_name", None)
@@ -67,6 +70,23 @@ def sendConfirmedEmail(userId) -> bool:
     messageContent = getConfirmedEmail(firstName, lastName)
     subjectLine = getConfirmedSubjectLine()
     return sendEmail(emailAddresses=emailAddress, subject=subjectLine, content=messageContent)
+
+
+def sendRequestConfirmedEmail(applicationStatusFilterList: List[str]) -> bool:
+    """
+        Wrapper of send email for requesting confirmation email
+        :param: applicationStatusFilterList list of application statuses that will receive the email, default is email goes to nobody
+        :return: bool success
+        """
+    """
+        Wrapper of send email for applied email
+        :return: bool success
+        """
+    userEmails = getUserEmailsWithFilter(applicationStatusFilterList)
+    messageContent = getRequestConfirmedEmail()
+    subjectLine = getRequestConfirmedSubjectLine()
+
+    return sendEmail(emailAddresses=userEmails, subject=subjectLine, content=messageContent)
 
 
 def sendAcceptedEmail(userId) -> bool:
