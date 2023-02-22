@@ -1,6 +1,6 @@
 from typing import List
 
-from db.db_utils import exec_get_one, exec_commit_return_autoincremented_id, exec_get_all
+from db.db_utils import exec_get_one, exec_get_all
 import logging
 
 logger = logging.getLogger("User Data")
@@ -112,12 +112,13 @@ def getUserEmailsWithFilter(applicationStatusFilterList: List[str]):
     :param applicationStatusFilterList:
     :return:
     """
-    emailSql = getUserQuery() + "WHERE app.status in %(statusFilter)s"
-    args = {"statusFilter": str(tuple(applicationStatusFilterList))}
+    emailSql = getUserQuery() + f" WHERE app.status in ({','.join(['%s'] * len(applicationStatusFilterList))})"
+    args = tuple(applicationStatusFilterList)
 
     users = exec_get_all(emailSql, args)
     emailList = []
     for u in users:
-        emailList.append(u['email'])
+        if len(u['email']) > 1:
+            emailList.append(u['email'])
     return emailList
 

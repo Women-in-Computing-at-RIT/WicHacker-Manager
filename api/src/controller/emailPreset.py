@@ -4,19 +4,13 @@ from flask import request
 from data.users import getUserEmailsWithFilter
 from utils.authentication import authenticate, getAuthToken
 from data.permissions import canSendEmails
-from data.email import sendGroupEmail
+from data.email import sendPresetEmail
 
 
-class Email(Resource):
-    PATH = '/email'
+class EmailPreset(Resource):
+    PATH = '/email/preset/<emailName>'
 
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('body', type=str, required=True)
-        parser.add_argument('subjectLine', type=str, required=True)
-        parser.add_argument('recipientStatusFilter', type=str, required=True, action="append")
-        args = parser.parse_args()
-
+    def post(self, emailName):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
             return {"message": "Must be logged in"}, 401
@@ -28,13 +22,7 @@ class Email(Resource):
         if not permissions:
             return {"message": "Permission Denied"}, 403
 
-        userEmails = getUserEmailsWithFilter(args['recipientStatusFilter'])
-
-        if len(userEmails) == 0:
-            # no recipients
-            return {"message": "No Recipients"}, 400
-
-        failedEmailList, didSucceed = sendGroupEmail(emailAddresses=userEmails, subject=args['subjectLine'], content=args['body'])
+        failedEmailList, didSucceed = sendPresetEmail(emailName)
         if didSucceed:
             return {"message": "Email Successfully Sent"}
         else:

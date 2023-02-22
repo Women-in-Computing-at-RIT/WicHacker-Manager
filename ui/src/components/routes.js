@@ -10,9 +10,11 @@ import LoadingView from "../pages/LoadingView";
 import {AdminRoute} from "../hocs/adminRoute";
 import HackathonManagerLandingPage from "../pages/manage/manageLanding";
 import ManageApplications from "../pages/manage/manageApplications";
-import {CONSOLE, HACKER_DATA, READ, STATISTICS} from "../utils/constants";
+import {CONSOLE, HACKER_DATA, READ, STATISTICS, WRITE} from "../utils/constants";
 import {ManageApplicationView} from "../pages/manage/manageApplicationView";
 import ManageAccommodations from "../pages/manage/manageAccomodations";
+import ManageEmails from "../pages/manage/manageEmails";
+import {ConfirmUser} from "../pages/hackers/confirmAttendance";
 
 export default function AppRoutes(){
     return (
@@ -22,10 +24,12 @@ export default function AppRoutes(){
             <Route path="/user/create" element={<ProtectedComponent component={NewHackerForm} />} />
             <Route path="/user/apply" element={<ProtectedComponent component={HackerApplication} />} />
             <Route path="/user/application" element={<ProtectedComponent component={HackerApplicationView} />} />
+            <Route path="/user/confirm" element={<ProtectedComponent component={ConfirmUser} />} />
             <Route path="/auth" element={<LoadingView />} />
             <Route path="/manage" element={<ProtectedComponent component={AdminRoute} permission={CONSOLE} type={READ} children={<HackathonManagerLandingPage />} />} />
             <Route path="/manage/applications" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ManageApplications />} />} />
             <Route path="/manage/applications/:userId" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ManageApplicationView />} />} />
+            <Route path="/manage/emails" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={WRITE} children={<ManageEmails />} />} />
             <Route path="/manage/admin/signup" element={<ProtectedComponent component={AdminRoute} permission={CONSOLE} type={READ} children={<NewAdminForm />} />} /> {/* There's no way for this to work currently, including as placeholder for future*/}
             <Route path="/manage/accommodations" element={<ProtectedComponent component={AdminRoute} permission={STATISTICS} type={READ} children={<ManageAccommodations />} />} />
             <Route path="/notFound" element={<PageNotFound />} />
