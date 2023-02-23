@@ -10,7 +10,6 @@ import { Help } from "grommet-icons";
 import {getUserData} from "../../utils/users";
 import {checkUserPermissions} from "../../utils/permissions";
 import {CONSOLE, READ} from "../../utils/constants";
-import {sendConfirmUser} from "./confirmAttendance";
 
 const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     e.preventDefault()
@@ -73,7 +72,6 @@ export default function UserHomepage() {
     const [resumeUpload, setResumeUpload] = useState(null);
     const {getAccessTokenSilently, logout} = useAuth0();
     const [hasUploadedResume, setHasUploadedResume] = useState();
-    const [confirmationResponse, setConfirmationResponse] = useState();
 
     // Very Important Note: These variables are DOM modifyable so shouldn't be considered final truths
     // If someone wants to modify the DOM to get access to this button then all the power to them, there's
@@ -83,6 +81,9 @@ export default function UserHomepage() {
 
     // @TODO: set programmatic/dynamic way to set this so we can open up confirmations at a specified time closer to event
     const acceptingConfirmations = true;
+
+    // @TODO: set programmatic/dynamic way to set that discord is open
+    const discordReadyForConnections = true;
 
     useEffect(() => {
         getUserData(getAccessTokenSilently, setUserData, setNewUser)
@@ -166,6 +167,13 @@ export default function UserHomepage() {
                                         <Text weight="bold" size="medium">RSVP/Confirm Attendance</Text>
                                     </Box>
                                 </Button>
+                            }
+                            {(discordReadyForConnections && (user?.status === "ACCEPTED" || user?.status === "CONFIRMED")) &&
+                            <Button plain href={apiDomain()+"/discord?id=" + user?.user_id}>
+                                <Box background="#714ba0" pad="medium" align="center" justify="center" style={{ borderRadius: "20px" }} width="medium">
+                                    <Text weight="bold" size="medium">Connect to Discord</Text>
+                                </Box>
+                            </Button>
                             }
 
 
