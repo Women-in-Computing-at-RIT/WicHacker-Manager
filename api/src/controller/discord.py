@@ -1,9 +1,11 @@
+import logging
+
 from flask_restful import Resource
 from flask import request
 from utils.authentication import authenticate
 from data.discord import getHackerDataByDiscordId
 
-
+logger = logging.getLogger("Discord")
 class Discord(Resource):
     PATH = '/discord/user/<discord_id>'
 
@@ -11,6 +13,9 @@ class Discord(Resource):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
             return {"message": "Must be logged in"}, 401
+        if not authenticationPayload['gty'] == 'client-credentials':
+            logger.error("Non-Bot/Non-Client Request to get discord information")
+            return {"message": "You shall not pass"}, 403
 
         if discord_id is None:
             return {"Message": "Must include discord id"}, 400
