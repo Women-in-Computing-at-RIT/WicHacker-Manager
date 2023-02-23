@@ -14,6 +14,8 @@ class Discord(Resource):
         if authenticationPayload is None:
             return {"message": "Must be logged in"}, 401
         if not authenticationPayload['gty'] == 'client-credentials':
+            # check that the grant type is client-credentials which will exist only for the machine to machine
+            # auth0 connections using client id and secret, aka: discord bots
             logger.error("Non-Bot/Non-Client Request to get discord information")
             return {"message": "You shall not pass"}, 403
 
