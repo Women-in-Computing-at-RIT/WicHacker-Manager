@@ -54,6 +54,8 @@ def checkUserPermissionsByAuth0Id(auth0Id, permission, accessType) -> bool:
     result, err = exec_get_one(sql, args)
     if err:
         return None
+    if result is None:
+        return False
     if len(result) > 0:
         # check if there are keys in result, if there are then user has permission
         return True

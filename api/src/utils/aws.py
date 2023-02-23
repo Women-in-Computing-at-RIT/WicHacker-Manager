@@ -66,6 +66,18 @@ def getAuth0ClientID() -> str:
     return getSSMSecureParameter('AUTH0_CLIENT_ID')
 
 
+def getDiscordClientID() -> str:
+    return getSSMSecureParameter('DISCORD_CLIENT_ID')
+
+
+def getDiscordClientSecret() -> str:
+    return getSSMSecureParameter('DISCORD_CLIENT_SECRET')
+
+
+def getRedirectDomain() -> str:
+    return getSSMSecureParameter(f'/{environment}/REDIRECT_URL')
+
+
 def getSSMSecureParameter(parameterName) -> str:
     ssmResponse = None
     try:
