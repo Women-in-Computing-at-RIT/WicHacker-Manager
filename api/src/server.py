@@ -18,6 +18,8 @@ from controller.email import Email
 from controller.emailPreset import EmailPreset
 from controller.confirmation import Confirmation
 from controller.userSearch import UserSearch
+from controller.discordIntegration import DiscordIntegration
+from controller.discord import Discord
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
@@ -53,6 +55,8 @@ api.add_resource(Email, Email.PATH)
 api.add_resource(EmailPreset, EmailPreset.PATH)
 api.add_resource(Confirmation, Confirmation.PATH)
 api.add_resource(UserSearch, UserSearch.PATH)
+api.add_resource(DiscordIntegration, DiscordIntegration.PATH)
+api.add_resource(Discord, Discord.PATH)
 
 if not initializeAWSClients():
     logger.error("AWS Client Initialization Failure")

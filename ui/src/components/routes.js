@@ -15,6 +15,7 @@ import {ManageApplicationView} from "../pages/manage/manageApplicationView";
 import ManageAccommodations from "../pages/manage/manageAccomodations";
 import ManageEmails from "../pages/manage/manageEmails";
 import {ConfirmUser} from "../pages/hackers/confirmAttendance";
+import {DiscordCallback} from "../pages/hackers/discord";
 
 export default function AppRoutes(){
     return (
@@ -26,6 +27,7 @@ export default function AppRoutes(){
             <Route path="/user/application" element={<ProtectedComponent component={HackerApplicationView} />} />
             <Route path="/user/confirm" element={<ProtectedComponent component={ConfirmUser} />} />
             <Route path="/auth" element={<LoadingView />} />
+            <Route path="/discord/callback" element={<ProtectedComponent component={DiscordCallback} />} />
             <Route path="/manage" element={<ProtectedComponent component={AdminRoute} permission={CONSOLE} type={READ} children={<HackathonManagerLandingPage />} />} />
             <Route path="/manage/applications" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ManageApplications />} />} />
             <Route path="/manage/applications/:userId" element={<ProtectedComponent component={AdminRoute} permission={HACKER_DATA} type={READ} children={<ManageApplicationView />} />} />
