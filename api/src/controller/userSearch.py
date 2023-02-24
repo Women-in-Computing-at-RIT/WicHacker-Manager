@@ -17,7 +17,9 @@ class UserSearch(Resource):
         permissions = canAccessUserData(auth0_id)
         if permissions is None:
             return {"message": "Internal Server Error"}, 500
-        if not permissions:
+        if not (permissions or authenticationPayload['gty'] == 'client-credentials'):
+            # check that the grant type is client-credentials which will exist only for the machine to machine
+            # auth0 connections using client id and secret, aka: discord bots and s3 resume downloader
             return {"message": "Permission Denied"}, 403
 
         parser = reqparse.RequestParser()

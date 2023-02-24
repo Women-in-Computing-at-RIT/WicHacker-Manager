@@ -4,7 +4,6 @@ from data.users import getUsers
 from utils.authentication import authenticate
 from data.permissions import canAccessUserData
 
-
 class Users(Resource):
     PATH = '/users'
 
@@ -13,6 +12,7 @@ class Users(Resource):
         if authenticationPayload is None:
             return {"message": "Must be logged in"}, 401
         auth0_id = authenticationPayload['sub']
+
         permissions = canAccessUserData(auth0_id)
         if permissions is None:
             return {"message": "Internal Server Error"}, 500

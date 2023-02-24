@@ -39,7 +39,8 @@ def getUsers(applicationStatusFilterList: List[str] = None, is_virtual=None, fir
 
     if applicationStatusFilterList is not None:
         sql += f" WHERE app.status in ({','.join(['%s'] * len(applicationStatusFilterList))}) "
-        args = args + (tuple(applicationStatusFilterList),)
+        for status in applicationStatusFilterList:
+            args = args + (status,)
     if is_virtual is not None:
         sql += getOptionalAnd(firstWhereClause) + " WHERE app.is_virtual = %s "
         args = args + (is_virtual,)
