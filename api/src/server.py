@@ -17,6 +17,7 @@ from controller.accommodations import Accommodations
 from controller.email import Email
 from controller.emailPreset import EmailPreset
 from controller.confirmation import Confirmation
+from controller.userSearch import UserSearch
 from db.migration import migration
 import logging
 from dotenv import load_dotenv
@@ -51,6 +52,7 @@ api.add_resource(Accommodations, Accommodations.PATH)
 api.add_resource(Email, Email.PATH)
 api.add_resource(EmailPreset, EmailPreset.PATH)
 api.add_resource(Confirmation, Confirmation.PATH)
+api.add_resource(UserSearch, UserSearch.PATH)
 
 if not initializeAWSClients():
     logger.error("AWS Client Initialization Failure")
