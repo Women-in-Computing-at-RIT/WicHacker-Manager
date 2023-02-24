@@ -134,7 +134,7 @@ def exec_get_all(sql, args={}) -> dict:
         return None
 
 
-def exec_commit(sql, args={}) -> dict:
+def exec_commit(sql, args={}) -> int:
     """
     executes sql statement and commits transaction
     :param sql:
