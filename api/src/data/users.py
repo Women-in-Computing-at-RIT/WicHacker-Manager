@@ -20,27 +20,59 @@ def getUserQuery():
            "LEFT JOIN Sponsors as s ON u.sponsor_id = s.sponsor_id "
 
 
-def getUsers(status=None, is_virtual=None) -> list:
+def getUsers(applicationStatusFilterList: List[str] = None, is_virtual=None, firstName=None, lastName=None, userId=None,
+             email=None, applicationId=None) -> list:
     """
     Get a filtered list of all users in json/dictionary format
-    :param status: string matching user application status
+    :param applicationId:
+    :param email:
+    :param userId:
+    :param lastName:
+    :param firstName:
+    :param applicationStatusFilterList: list of statuses to match
     :param is_virtual: boolean for if you want all virtual/in person users
-    :return: list of dictionaries with user information
+    :return: list of dictionaries with user information, None if error
     """
-
     sql = getUserQuery()
+    firstWhereClause = True
     args = ()
-    if status is not None:
-        sql += "WHERE app.status = %s"
-        args = args + (status,)
-        if is_virtual is not None:
-            sql += "AND WHERE app.is_virtual = %s"
-            args = args + (is_virtual,)
-    elif is_virtual is not None:
-        sql += "WHERE app.is_virtual = %s"
+
+    if applicationStatusFilterList is not None:
+        sql += f" WHERE app.status in ({','.join(['%s'] * len(applicationStatusFilterList))}) "
+        for status in applicationStatusFilterList:
+            args = args + (status,)
+    if is_virtual is not None:
+        sql += getOptionalAnd(firstWhereClause) + " WHERE app.is_virtual = %s "
         args = args + (is_virtual,)
+    if firstName is not None:
+        sql += getOptionalAnd(firstWhereClause) + " WHERE u.first_name = %s "
+        args = args + (firstName,)
+    if lastName is not None:
+        sql += getOptionalAnd(firstWhereClause) + " WHERE u.last_name = %s "
+        args = args + (lastName,)
+    if userId is not None:
+        sql += getOptionalAnd(firstWhereClause) + " WHERE u.user_id = %s "
+        args = args + (userId,)
+    if email is not None:
+        sql += getOptionalAnd(firstWhereClause) + " WHERE u.email = %s "
+        args = args + (email,)
+    if applicationId is not None:
+        sql += getOptionalAnd(firstWhereClause) + " WHERE app.application_id = %s "
+        args = args + (applicationId,)
 
     return exec_get_all(sql, args)
+
+
+def getOptionalAnd(isFirstWhereClause) -> str:
+    """
+    Helper function, returns "AND " if clause isn't the first and empty string if it is
+    :param isFirstWhereClause:
+    :return:
+    """
+    if isFirstWhereClause:
+        return ""
+    else:
+        return " AND "
 
 
 def getUserByAuthID(auth_id) -> dict:
@@ -94,7 +126,7 @@ def getUserById(auth_id=None, user_id=None) -> dict:
     if auth_id is not None:
         sql += "WHERE u.auth0_id = %s"
         args = args + (auth_id,)
-    if user_id is not None:
+    elif user_id is not None:
         sql += "WHERE u.user_id = %s"
         args = args + (user_id,)
 
@@ -121,4 +153,3 @@ def getUserEmailsWithFilter(applicationStatusFilterList: List[str]):
         if len(u['email']) > 1:
             emailList.append(u['email'])
     return emailList
-

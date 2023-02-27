@@ -3,6 +3,7 @@ import os
 import db.db_utils as db_utils
 import glob
 import logging
+
 logger = logging.getLogger("Migrations")
 
 version = None
@@ -17,17 +18,23 @@ def initializeMigrations() -> bool:
     global version
     global dirtyVersion
     migrationInformation = getCurrentMigration()
+    if migrationInformation is None:
+        # db error
+        return False
     version = migrationInformation["version"]
     dirtyVersion = migrationInformation["dirtyVersion"]
     return not dirtyVersion
+
 
 def getCurrentMigration() -> dict:
     sql = "SELECT version, dirtyVersion FROM Migrations ORDER BY version DESC LIMIT 1;"
     migrationInformation, didError = db_utils.exec_get_one(sql)
     if migrationInformation is None or didError:
-        logger.error("Migration Information is None")
-        return None, True
+        logger.error("Migration Information is None migrationInformation: %s didError: %s", migrationInformation,
+                     didError)
+        return None
     return migrationInformation
+
 
 def up() -> bool:
     global version
@@ -38,6 +45,8 @@ def up() -> bool:
 
     # get current state of migrations
     migrationInformation = getCurrentMigration()
+    if migrationInformation is None:
+        return False
     version = migrationInformation["version"]
     dirtyVersion = migrationInformation["dirtyVersion"]
 
@@ -85,6 +94,8 @@ def down(rollbackNumber=1) -> bool:
 
     # get current state of migrations
     migrationInformation = getCurrentMigration()
+    if migrationInformation is None:
+        return False
     version = migrationInformation["version"]
     dirtyVersion = migrationInformation["dirtyVersion"]
 

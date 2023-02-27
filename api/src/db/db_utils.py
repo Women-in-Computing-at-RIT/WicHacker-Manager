@@ -109,7 +109,7 @@ def exec_get_one(sql, args={}) -> (dict, bool):
         return None, True
 
 
-def exec_get_all(sql, args={}) -> dict:
+def exec_get_all(sql, args={}) -> list:
     """
     Retrieves many records from the dictionary
     :param sql:
@@ -118,6 +118,7 @@ def exec_get_all(sql, args={}) -> dict:
     """
     conn = connect()
     if conn is None:
+        logger.error("SQL Connection Error")
         return None
     cur = conn.cursor(dictionary=True)
     try:
