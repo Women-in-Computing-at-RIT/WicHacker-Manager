@@ -105,11 +105,6 @@ export default function UserHomepage() {
         navigate("/user/create");
     }
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    if (searchParams.get('code') && searchParams.get('state')){
-        navigate("discord/callback?code="+searchParams.get('code')+"&state="+searchParams.get('state'))
-    }
-
     if (userData?.error){
         navigate("/notFound")
     } else if (!userData?.data){
