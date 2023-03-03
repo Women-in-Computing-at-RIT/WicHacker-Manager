@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
 import {apiDomain, getAxios} from "../../config/axios";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import css from "./style/hackerLanding.module.css"
 import LoadingView from "../LoadingView";
 import { Grommet, Box, Heading, Text, Button, Paragraph, Form, FileInput } from 'grommet';
@@ -10,6 +10,7 @@ import { Help } from "grommet-icons";
 import {getUserData} from "../../utils/users";
 import {checkUserPermissions} from "../../utils/permissions";
 import {CONSOLE, READ} from "../../utils/constants";
+import {sendSaveDiscordId} from "./discord";
 
 const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     e.preventDefault()
@@ -83,7 +84,7 @@ export default function UserHomepage() {
     const acceptingConfirmations = true;
 
     // @TODO: set programmatic/dynamic way to set that discord is open
-    const discordReadyForConnections = false;
+    const discordReadyForConnections = true;
 
     useEffect(() => {
         getUserData(getAccessTokenSilently, setUserData, setNewUser)
@@ -102,6 +103,11 @@ export default function UserHomepage() {
     let navigate = useNavigate()
     if (newUser){
         navigate("/user/create");
+    }
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    if (searchParams.get('code') && searchParams.get('state')){
+        navigate("discord/callback?code="+searchParams.get('code')+"&state="+searchParams.get('state'))
     }
 
     if (userData?.error){
