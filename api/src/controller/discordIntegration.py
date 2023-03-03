@@ -14,7 +14,9 @@ logger = logging.getLogger("Discord")
 
 
 def getRedirectUrl():
-    return getRedirectDomain() + "/discord/callback"
+    # @TODO find true solution for hotfix
+    # return getRedirectDomain() + "/discord/callback"
+    return getRedirectDomain()
 
 
 def getUrlSafeRedirectUrl():

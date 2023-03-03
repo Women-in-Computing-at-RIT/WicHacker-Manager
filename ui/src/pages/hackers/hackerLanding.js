@@ -83,7 +83,7 @@ export default function UserHomepage() {
     const acceptingConfirmations = true;
 
     // @TODO: set programmatic/dynamic way to set that discord is open
-    const discordReadyForConnections = false;
+    const discordReadyForConnections = true;
 
     useEffect(() => {
         getUserData(getAccessTokenSilently, setUserData, setNewUser)

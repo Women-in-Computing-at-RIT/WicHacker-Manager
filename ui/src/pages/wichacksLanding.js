@@ -1,10 +1,32 @@
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams, createSearchParams} from "react-router-dom";
 import {Grommet, Button, Box, Heading, Paragraph, Image, Text } from "grommet";
 import { Home } from "grommet-icons";
 import NavBar from "../components/navBar";
+import {useEffect} from "react";
+
+// @TODO: Remove hotfix
+const checkDiscordIntegration = (searchParams, navigate) => {
+    if (searchParams.get('code') && searchParams.get('state')){
+        console.log("navigate")
+        navigate({
+            pathname: "discord/callback",
+            search: '?' + createSearchParams({
+                "code": searchParams.get('code'),
+                "state": searchParams.get('state')
+            })
+        })
+    }
+}
 
 export default function WiCHacksLanding() {
     let navigate = useNavigate()
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    useEffect(() => {
+        checkDiscordIntegration(searchParams, navigate)
+    }, [])
+
+
     return (
         <Grommet>
             <NavBar title="WiCHacks" />
