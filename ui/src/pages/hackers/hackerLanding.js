@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useAuth0} from "@auth0/auth0-react";
 import {apiDomain, getAxios} from "../../config/axios";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import css from "./style/hackerLanding.module.css"
 import LoadingView from "../LoadingView";
 import { Grommet, Box, Heading, Text, Button, Paragraph, Form, FileInput } from 'grommet';
@@ -10,7 +10,6 @@ import { Help } from "grommet-icons";
 import {getUserData} from "../../utils/users";
 import {checkUserPermissions} from "../../utils/permissions";
 import {CONSOLE, READ} from "../../utils/constants";
-import {sendSaveDiscordId} from "./discord";
 
 const uploadResume = async (e, getAccessTokenSilently, setResumeUpload) => {
     e.preventDefault()
