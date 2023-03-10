@@ -12,7 +12,7 @@ Currently, WiCHacker-Manager implements a variety of useful features for running
 - Email blasts to attendees
 - Information gathering and summaries
 - Resume gathering
-- And more!!
+- And more!
 
 ### Upcoming
 
