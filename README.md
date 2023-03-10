@@ -28,7 +28,7 @@ Please add yourself as an assignee to a `bug` issue. All work pertinent to fixin
 
 ### Improvements
 
-Please create a `Feature Request` issue as well defining what you would like to accomplish. Then, please complete relevant issue in a pertinent git branch. All commits to the `main` branch will need to be reviewed by an administrator of this repo.
+Please create a `Feature Request` issue as well defining what you would like to accomplish. Then, please complete relevant issue in a pertinent git branch. All commits to the `main` branch will need to be reviewed by an administrator of this repo and have a pull request approved.
 
 ## License
 
