@@ -7,26 +7,46 @@ from data.createUser import createUser
 from utils.authentication import authenticate
 from data.validation import validatePhoneNumberString, validateEmailAddress
 from data.permissions import canAccessUserData, canUpdateApplicationStatus
+from flask_restful_swagger_2 import swagger
+from utils.swagger import USERS_TAG, UserResponseModel
 
 logger = logging.getLogger("User")
 
+def getUserParser() -> reqparse.RequestParser:
+    """
+    Method to get request parser for requests with a user in the body
+    :return:
+    """
+    parser = reqparse.RequestParser()
+    parser.add_argument('firstName', type=str, required=True)
+    parser.add_argument('lastName', type=str, required=True)
+    parser.add_argument('email', type=str, required=True)
+    parser.add_argument('phoneNumber', type=str, required=True, help="format agnostic phone number")
+    return parser
 
 class User(Resource):
     PATH = '/user'
     PATH_WITH_ID = '/user/id/<user_id>'
 
+    @swagger.doc({
+        'tags': [USERS_TAG],
+        'description': "Model to represent a User",
+        'reqparser': {'name': 'UserParser', 'parser': getUserParser()},
+        'responses': {
+            '200': {
+                'description': 'User Created Successfully',
+                'schema': UserResponseModel
+            }
+        }
+    })
     def post(self):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
             return {"message": "Authorization Header Failure"}, 401
         auth0_id = authenticationPayload['sub']
 
-        parser = reqparse.RequestParser()
-        parser.add_argument('firstName', type=str, required=True)
-        parser.add_argument('lastName', type=str, required=True)
-        parser.add_argument('email', type=str, required=True)
-        parser.add_argument('phoneNumber', type=str, required=True)
-        args = parser.parse_args()
+        # Parse request body
+        args = getUserParser().parse_args()
 
         # Validate phone number and email
         if not (validatePhoneNumberString(args['phoneNumber']) and validateEmailAddress(args['email'])):
