@@ -3,10 +3,9 @@ import {useEffect, useState} from "react";
 import {apiDomain, getAxios} from "../../config/axios";
 import {useAuth0} from "@auth0/auth0-react";
 import css from "./style/form.module.css"
-import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea, DateInput, Image } from 'grommet';
+import { Grommet, Box, Form, Heading, Button, Paragraph, FormField, TextInput, Text, Select, CheckBox, RadioButtonGroup, TextArea } from 'grommet';
 import { Close } from "grommet-icons";
 import wichacksGrommetTheme from "../../wichacksGrommetTheme";
-import Autocomplete from "../../components/autocompleteTextbox";
 import { NumberInput } from 'grommet-controls';
 import { Alert } from 'grommet-icons';
 import {mlhSchoolList} from "../../data/mlh";
@@ -365,51 +364,21 @@ export default function HackerApplication() {
                             <Box gap="small">
                                 <CheckBox label={
                                     <Text>I have read and agree to the <a href="https://www.rit.edu/academicaffairs/policiesmanual/c000" target="_blank" rel="noreferrer">RIT Code of Ethical Conduct and Compliance</a> </Text>
-                                } onChange={(e) => {
-                                    if (e.target.type === 'checkbox') {
-                                        setRitEventPolicies(true)
-                                    } else {
-                                        setRitEventPolicies(false)
-                                    }
-                                }}/>
+                                } onChange={(e) => {setRitEventPolicies(e.target.checked)}}/>
                                 <CheckBox label={
                                     <Text>I have read and agree to the <a href="https://static.mlh.io/mlh-code-of-conduct.pdf" target="_blank" rel="noreferrer">MLH Code of Conduct</a></Text>
-                                } onChange={(e) => {
-                                    if (e.target.type === 'checkbox') {
-                                        setMlhCodeOfConduct(true)
-                                    } else {
-                                        setMlhCodeOfConduct(false)
-                                    }
-                                }}/>
+                                } onChange={(e) => {setMlhCodeOfConduct(e.target.checked)}}/>
                                 <CheckBox label={
                                     <Text>I authorize WiCHacks to share my application/registration information with Major League Hacking for event administration,
                                     ranking, and MLH administration in-line with the <a href="https://mlh.io/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>. I further agree to the
                                     terms of both the <a href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md" >MLH Contest Terms and Conditions</a> and the <a href="https://mlh.io/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>.</Text>
-                                } onChange={(e) => {
-                                    if (e.target.type === 'checkbox') {
-                                        setMlhDataSharing(true)
-                                    } else {
-                                        setMlhDataSharing(false)
-                                    }
-                                }}/>
+                                } onChange={(e) => {setMlhDataSharing(e.target.checked)}}/>
                                 <CheckBox label={
                                     <Text>[OPTIONAL] I authorize MLH to send me an email where I can further opt into the MLH Hacker, Events, or Organizer Newsletters and other communications from MLH.</Text>
-                                } onChange={(e) => {
-                                    if (e.target.type === 'checkbox') {
-                                        setMLHEmails(true)
-                                    } else {
-                                        setMLHEmails(false)
-                                    }
-                                }}/>
+                                } onChange={(e) => {setMLHEmails(e.target.checked)}}/>
                                 <CheckBox label={
                                     <Text>By submitting my application to WiCHacks I confirm all provided information is accurate and I will inform the WiCHackshackathon organizers should any information change</Text>
-                                } onChange={(e) => {
-                                    if (e.target.type === 'checkbox') {
-                                        setAllInformationCorrect(true)
-                                    } else {
-                                        setAllInformationCorrect(false)
-                                    }
-                                }}/>
+                                } onChange={(e) => {setAllInformationCorrect(e.target.checked)}}/>
                             </Box>
                         </Box>
                         <Box margin={{ vertical: "medium" }}>
