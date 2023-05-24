@@ -1,15 +1,39 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from flask import request
+from flask_restful_swagger_2 import swagger
 
-from data.users import getUserEmailsWithFilter
-from utils.authentication import authenticate, getAuthToken
+from controller.email import EmailPartialFailureResponseModel
+from utils.authentication import authenticate
 from data.permissions import canSendEmails
 from data.email import sendPresetEmail
+from utils.swagger import EMAILS_TAG
 
 
 class EmailPreset(Resource):
     PATH = '/email/preset/<emailName>'
 
+    @swagger.doc({
+        'tags': [EMAILS_TAG],
+        'description': "Send a preset email",
+        'parameters': [
+            {
+                'name': 'emailName',
+                'description': 'Name of preset email to send. Ex: "ACCEPTED","REJECTED","CONFIRMED"',
+                'required': True,
+                'in': 'path',
+                'type': 'string'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'Emails successfully sent'
+            },
+            '500': {
+                'description': 'DB querying or email sending failure',
+                'schema': EmailPartialFailureResponseModel
+            }
+        }
+    })
     def post(self, emailName):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:

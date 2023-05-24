@@ -2,13 +2,35 @@ import logging
 
 from flask_restful import Resource
 from flask import request
+from flask_restful_swagger_2 import swagger
+
 from utils.authentication import authenticate
 from data.discord import getHackerDataByDiscordId
 
+from utils.swagger import DISCORD_TAG
+
 logger = logging.getLogger("Discord")
+
+
 class Discord(Resource):
     PATH = '/discord/user/<discord_id>'
 
+    @swagger.doc({
+        'tags': [DISCORD_TAG],
+        'description': "Get statistics for the event",
+        'responses': {
+            '200': {
+                'description': "event statistics",
+                'examples': {
+                    "application/json": {
+                        "first_name": "alexander",
+                        "last_name": "levie",
+                        "status": "CONFIRMED"
+                    }
+                }
+            }
+        }
+    })
     def get(self, discord_id):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:

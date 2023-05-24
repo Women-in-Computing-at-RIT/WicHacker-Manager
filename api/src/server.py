@@ -1,3 +1,4 @@
+import json
 import sys
 
 from flask import Flask, render_template
@@ -98,7 +99,12 @@ def writeSwaggerDoc():
     """
     logger.info("Writing Swagger Docs")
     with open("swagger/static/swagger.json", "w") as file:
-        file.write(str(api.get_swagger_doc()))
+        swaggerDict = api.get_swagger_doc()
+
+        # Exception for getting users because of how I implemented the overloading of the get method
+        swaggerDict["paths"]["/user/id/{user_id}"].pop('post', None)
+
+        file.write(json.dumps(swaggerDict))
 
 
 if __name__ == '__main__':

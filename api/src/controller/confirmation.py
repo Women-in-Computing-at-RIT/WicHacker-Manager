@@ -1,12 +1,14 @@
 import logging
 
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from flask import request
-from data.application import createApplication, updateApplication
+from flask_restful_swagger_2 import swagger
+
+from data.application import updateApplication
 from data.users import getUserByAuthID, getUserIdFromAuthID
 from utils.authentication import authenticate
-from data.permissions import canUpdateApplicationStatus
 from data.email import sendConfirmedEmail, CONFIRMED, ACCEPTED
+from utils.swagger import APPLICATIONS_TAG
 
 logger = logging.getLogger("Confirmation")
 
@@ -14,6 +16,15 @@ logger = logging.getLogger("Confirmation")
 class Confirmation(Resource):
     PATH = '/user/application/confirm'
 
+    @swagger.doc({
+        'tags': [APPLICATIONS_TAG],
+        'description': "Update application status to confirmed if able",
+        'responses': {
+            '200': {
+                'description': 'Application Status Updated Successfully'
+            }
+        }
+    })
     def post(self):
         """
         Update user application status to CONFIRMED

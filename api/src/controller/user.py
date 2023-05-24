@@ -1,13 +1,13 @@
 import logging
 
-from flask_restful import Resource, reqparse
+from flask_restful import reqparse
 from flask import request
 from data.users import getUserByUserID, getUserByAuthID
 from data.createUser import createUser
 from utils.authentication import authenticate
 from data.validation import validatePhoneNumberString, validateEmailAddress
 from data.permissions import canAccessUserData, canUpdateApplicationStatus
-from flask_restful_swagger_2 import swagger
+from flask_restful_swagger_2 import swagger, Resource
 from utils.swagger import USERS_TAG, UserResponseModel
 
 logger = logging.getLogger("User")
@@ -30,8 +30,8 @@ class User(Resource):
 
     @swagger.doc({
         'tags': [USERS_TAG],
-        'description': "Model to represent a User",
-        'reqparser': {'name': 'UserParser', 'parser': getUserParser()},
+        'description': "Create a new user",
+        'reqparser': {'name': 'ShortenedUserModel', 'parser': getUserParser()},
         'responses': {
             '200': {
                 'description': 'User Created Successfully',
@@ -57,6 +57,24 @@ class User(Resource):
             return {"message": "Internal Server Error"}, 500
         return {"user_id": userId}, 200
 
+    @swagger.doc({
+        'tags': [USERS_TAG],
+        'description': 'Get information from user. Defaults to self if user_id not provided',
+        'parameters': [
+            {
+                'name': 'user_id',
+                'description': 'Optional WiCHacks User ID',
+                'required': False,
+                'in': 'path',
+                'type': 'integer'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'User Information'
+            }
+        }
+    })
     def get(self, user_id=None):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:

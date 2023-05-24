@@ -7,6 +7,9 @@ from data.users import getUserByUserID
 from utils.authentication import authenticate
 from data.permissions import canUpdateApplicationStatus
 from data.email import sendEmailByStatus
+from utils.swagger import APPLICATIONS_TAG
+
+from flask_restful_swagger_2 import swagger
 
 logger = logging.getLogger("Application")
 
@@ -17,32 +20,76 @@ def valueOrDefaultIfNone(value, default):
     return value
 
 
+def getCreateApplicationParser() -> reqparse.RequestParser:
+    """
+    Method to get request parser for creation of a new applicaiton
+    :return:
+    """
+    parser = reqparse.RequestParser()
+    parser.add_argument('major', type=str, required=True)
+    parser.add_argument('levelOfStudy', type=str, required=True)
+    parser.add_argument('age', type=int, required=True)
+    parser.add_argument('shirtSize', type=str, required=True)
+    parser.add_argument('hasAttendedWiCHacks', type=bool, required=True)
+    parser.add_argument('hasAttendedHackathons', type=bool, required=True)
+    parser.add_argument('university', type=str, required=True)
+    parser.add_argument('gender', type=str, required=True)
+    parser.add_argument('busRider', type=bool, required=True)
+    parser.add_argument('busStop', type=str, required=False, default=False)
+    parser.add_argument('dietaryRestrictions', type=str, required=False, default=None)
+    parser.add_argument('specialAccommodations', type=str, required=False, default=None)
+    parser.add_argument('affirmedAgreements', type=bool, required=True)
+    parser.add_argument('isVirtual', type=bool, required=True)
+    parser.add_argument('mlhEmailsAllowed', type=bool, required=False)
+    return parser
+
+
+def getUpdateApplicationParser() -> reqparse.RequestParser:
+    """
+    Method to get request parser for the update of an application
+    :return:
+    """
+    parser = reqparse.RequestParser()
+    parser.add_argument('userId', type=int, required=True)
+    parser.add_argument('status', type=str, required=False)
+    parser.add_argument('major', type=str, required=False)
+    parser.add_argument('levelOfStudy', type=str, required=False)
+    parser.add_argument('age', type=int, required=False)
+    parser.add_argument('shirtSize', type=str, required=False)
+    parser.add_argument('hasAttendedWiCHacks', type=bool, required=False)
+    parser.add_argument('hasAttendedHackathons', type=bool, required=False)
+    parser.add_argument('university', type=str, required=False)
+    parser.add_argument('gender', type=str, required=False)
+    parser.add_argument('busRider', type=bool, required=False)
+    parser.add_argument('busStop', type=str, required=False, default=None)
+    parser.add_argument('dietaryRestrictions', type=str, required=False, default=None)
+    parser.add_argument('specialAccommodations', type=str, required=False, default=None)
+    parser.add_argument('affirmedAgreements', type=bool, required=False)
+    parser.add_argument('isVirtual', type=bool, required=False)
+    parser.add_argument('mlhEmailsAllowed', type=bool, required=False)
+    return parser
+
 class Application(Resource):
     PATH = '/user/application'
 
+    @swagger.doc({
+        'tags': [APPLICATIONS_TAG],
+        'description': "Create a new application",
+        'reqparser': {'name': 'ApplicationCreationModel', 'parser': getCreateApplicationParser()},
+        'responses': {
+            '200': {
+                'description': 'Application saved'
+            }
+        }
+    })
     def post(self):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
             return {"message": "Authorization Header Failure"}, 401
         auth0_id = authenticationPayload['sub']
 
-        parser = reqparse.RequestParser()
-        parser.add_argument('major', type=str, required=True)
-        parser.add_argument('levelOfStudy', type=str, required=True)
-        parser.add_argument('age', type=int, required=True)
-        parser.add_argument('shirtSize', type=str, required=True)
-        parser.add_argument('hasAttendedWiCHacks', type=bool, required=True)
-        parser.add_argument('hasAttendedHackathons', type=bool, required=True)
-        parser.add_argument('university', type=str, required=True)
-        parser.add_argument('gender', type=str, required=True)
-        parser.add_argument('busRider', type=bool, required=True)
-        parser.add_argument('busStop', type=str, required=False, default=False)
-        parser.add_argument('dietaryRestrictions', type=str, required=False, default=None)
-        parser.add_argument('specialAccommodations', type=str, required=False, default=None)
-        parser.add_argument('affirmedAgreements', type=bool, required=True)
-        parser.add_argument('isVirtual', type=bool, required=True)
-        parser.add_argument('mlhEmailsAllowed', type=bool, required=False)
-        args = parser.parse_args()
+        # parse request body
+        args = getCreateApplicationParser().parse_args()
 
         applicationCreated = createApplication(auth0_id=auth0_id, major=args['major'],
                                                levelOfStudy=args['levelOfStudy'],
@@ -67,6 +114,17 @@ class Application(Resource):
             return {"message": "Internal Server Error"}, 500
         return {}, 200
 
+    @swagger.doc({
+        'tags': [APPLICATIONS_TAG],
+        'description': "Update an existing application based on user id. If application status is changed will send "
+                       "out appropriate email",
+        'reqparser': {'name': 'ApplicationUpdateModel', 'parser': getUpdateApplicationParser()},
+        'responses': {
+            '200': {
+                'description': 'Application updated'
+            }
+        }
+    })
     def put(self):
         """
         UserID in body is the user id of the user that will be updated
@@ -84,25 +142,8 @@ class Application(Resource):
         if not permissions:
             return {"message": "Permission Denied"}, 403
 
-        parser = reqparse.RequestParser()
-        parser.add_argument('userId', type=int, required=True)
-        parser.add_argument('status', type=str, required=False)
-        parser.add_argument('major', type=str, required=False)
-        parser.add_argument('levelOfStudy', type=str, required=False)
-        parser.add_argument('age', type=int, required=False)
-        parser.add_argument('shirtSize', type=str, required=False)
-        parser.add_argument('hasAttendedWiCHacks', type=bool, required=False)
-        parser.add_argument('hasAttendedHackathons', type=bool, required=False)
-        parser.add_argument('university', type=str, required=False)
-        parser.add_argument('gender', type=str, required=False)
-        parser.add_argument('busRider', type=bool, required=False)
-        parser.add_argument('busStop', type=str, required=False, default=None)
-        parser.add_argument('dietaryRestrictions', type=str, required=False, default=None)
-        parser.add_argument('specialAccommodations', type=str, required=False, default=None)
-        parser.add_argument('affirmedAgreements', type=bool, required=False)
-        parser.add_argument('isVirtual', type=bool, required=False)
-        parser.add_argument('mlhEmailsAllowed', type=bool, required=False)
-        args = parser.parse_args()
+        # parse request body
+        args = getUpdateApplicationParser().parse_args()
 
         userId = args['userId']
         userData = getUserByUserID(userId)
@@ -118,20 +159,34 @@ class Application(Resource):
         applicationUpdated = updateApplication(applicationId=userData['application_id'],
                                                status=valueOrDefaultIfNone(args['status'], userData['status']),
                                                major=valueOrDefaultIfNone(args['major'], userData['major']),
-                                               levelOfStudy=valueOrDefaultIfNone(args['levelOfStudy'], userData['level_of_study']),
+                                               levelOfStudy=valueOrDefaultIfNone(args['levelOfStudy'],
+                                                                                 userData['level_of_study']),
                                                age=valueOrDefaultIfNone(args['age'], userData['age']),
-                                               shirtSize=valueOrDefaultIfNone(args['shirtSize'], userData['shirt_size']),
-                                               hasAttendedWiCHacks=valueOrDefaultIfNone(args['hasAttendedWiCHacks'], userData['has_attended_wichacks']),
-                                               hasAttendedHackathons=valueOrDefaultIfNone(args['hasAttendedHackathons'], userData['has_attended_hackathons']),
-                                               university=valueOrDefaultIfNone(args['university'], userData['university']),
+                                               shirtSize=valueOrDefaultIfNone(args['shirtSize'],
+                                                                              userData['shirt_size']),
+                                               hasAttendedWiCHacks=valueOrDefaultIfNone(args['hasAttendedWiCHacks'],
+                                                                                        userData[
+                                                                                            'has_attended_wichacks']),
+                                               hasAttendedHackathons=valueOrDefaultIfNone(args['hasAttendedHackathons'],
+                                                                                          userData[
+                                                                                              'has_attended_hackathons']),
+                                               university=valueOrDefaultIfNone(args['university'],
+                                                                               userData['university']),
                                                gender=valueOrDefaultIfNone(args['gender'], userData['gender']),
                                                busRider=valueOrDefaultIfNone(args['busRider'], userData['bus_rider']),
                                                busStop=valueOrDefaultIfNone(args['busStop'], userData['bus_stop']),
-                                               dietaryRestrictions=valueOrDefaultIfNone(args['dietaryRestrictions'], userData['dietary_restrictions']),
-                                               specialAccommodations=valueOrDefaultIfNone(args['specialAccommodations'], userData['special_accommodations']),
-                                               affirmedAgreements=valueOrDefaultIfNone(args['affirmedAgreements'], userData['affirmed_agreements']),
-                                               isVirtual=valueOrDefaultIfNone(args['isVirtual'], userData['is_virtual']),
-                                               mlhEmailsAllowed=valueOrDefaultIfNone(args['mlhEmailsAllowed'], userData['allowMlhEmails'])
+                                               dietaryRestrictions=valueOrDefaultIfNone(args['dietaryRestrictions'],
+                                                                                        userData[
+                                                                                            'dietary_restrictions']),
+                                               specialAccommodations=valueOrDefaultIfNone(args['specialAccommodations'],
+                                                                                          userData[
+                                                                                              'special_accommodations']),
+                                               affirmedAgreements=valueOrDefaultIfNone(args['affirmedAgreements'],
+                                                                                       userData['affirmed_agreements']),
+                                               isVirtual=valueOrDefaultIfNone(args['isVirtual'],
+                                                                              userData['is_virtual']),
+                                               mlhEmailsAllowed=valueOrDefaultIfNone(args['mlhEmailsAllowed'],
+                                                                                     userData['allowMlhEmails'])
                                                )
         if applicationUpdated is None:
             return {"message": "Internal Server Error"}, 500
