@@ -44,6 +44,7 @@ class Email(Resource):
     PATH = '/email'
 
     @swagger.doc({
+        'summary': "send custom email",
         'tags': [EMAILS_TAG],
         'description': "Send email to hackers based on application status",
         'reqparser': {'name': 'EmailModel', 'parser': getEmailParser()},

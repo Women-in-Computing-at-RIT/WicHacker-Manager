@@ -16,6 +16,7 @@ class Statistics(Resource):
     PATH = '/statistics'
 
     @swagger.doc({
+        'summary': "get event statistics",
         'tags': [STATISTICS_TAG],
         'description': "Get statistics for the event",
         'responses': {

@@ -32,6 +32,7 @@ class Resume(Resource):
     PATH = '/user/resume'
 
     @swagger.doc({
+        'summary': "resume upload",
         'tags': [USERS_TAG],
         'description': 'Verify recaptcha',
         'consumes': ['multipart/form-data'],
@@ -77,6 +78,19 @@ class Resume(Resource):
         else:
             return {"message": "Resume upload failure"}, 500
 
+    @swagger.doc({
+        'summary': "check if user has uploaded resume",
+        'tags': [USERS_TAG],
+        'description': "endpoint to determine if the hacker has previously uploaded a resume",
+        'responses': {
+            '200': {
+                'description': 'hacker has uploaded resume'
+            },
+            '400': {
+                'description': 'hacker has not uploaded resume'
+            }
+        }
+    })
     def get(self):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:

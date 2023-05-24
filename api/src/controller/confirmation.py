@@ -17,6 +17,7 @@ class Confirmation(Resource):
     PATH = '/user/application/confirm'
 
     @swagger.doc({
+        'summary': "confirm attendance for hacker",
         'tags': [APPLICATIONS_TAG],
         'description': "Update application status to confirmed if able",
         'responses': {

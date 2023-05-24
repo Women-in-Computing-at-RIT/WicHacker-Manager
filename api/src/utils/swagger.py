@@ -2,15 +2,16 @@ from enum import Enum
 from flask_restful_swagger_2 import Schema
 
 # Tags
-USERS_TAG = "users"
-EMAILS_TAG = "emails"
-PERMISSIONS_TAG = "permissions"
-DISCORD_TAG = "discord"
-STATISTICS_TAG = "statistics"
-APPLICATIONS_TAG = "applications"
+USERS_TAG = "Users"
+EMAILS_TAG = "Emails"
+PERMISSIONS_TAG = "Permissions"
+DISCORD_TAG = "Discord"
+STATISTICS_TAG = "Statistics"
+APPLICATIONS_TAG = "Applications"
+HEALTHCHECK_TAG = "Healthcheck"
 
 
-# Response Models (request models built off reqparse)
+# Response Models
 class UserResponseModel(Schema):
     type = 'object'
     properties = {
@@ -18,6 +19,28 @@ class UserResponseModel(Schema):
             'type': 'integer'
         }
     }
+
+
+class AccommodationModel(Schema):
+    type = 'object'
+    properties = {
+        'dietaryRestrictions': {
+            'type': 'string'
+        },
+        'specialAccommodations': {
+            'type': 'string'
+        },
+        'email': {
+            'type': 'string'
+        },
+        'firstName': {
+            'type': 'string'
+        },
+        'lastName': {
+            'type': 'string'
+        }
+    }
+
 
 class UserModel(Schema):
     type = 'object'

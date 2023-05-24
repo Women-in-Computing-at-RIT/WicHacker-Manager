@@ -16,11 +16,12 @@ class Discord(Resource):
     PATH = '/discord/user/<discord_id>'
 
     @swagger.doc({
+        'summary': "get user information from discord id",
         'tags': [DISCORD_TAG],
-        'description': "Get statistics for the event",
+        'description': "retrieve information needed by discord bots based on a hacker's discord id",
         'responses': {
             '200': {
-                'description': "event statistics",
+                'description': "user information",
                 'examples': {
                     "application/json": {
                         "first_name": "alexander",

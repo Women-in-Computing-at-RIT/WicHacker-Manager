@@ -73,6 +73,7 @@ class Application(Resource):
     PATH = '/user/application'
 
     @swagger.doc({
+        'summary': "create new application",
         'tags': [APPLICATIONS_TAG],
         'description': "Create a new application",
         'reqparser': {'name': 'ApplicationCreationModel', 'parser': getCreateApplicationParser()},
@@ -115,6 +116,7 @@ class Application(Resource):
         return {}, 200
 
     @swagger.doc({
+        'summary': "Update Application",
         'tags': [APPLICATIONS_TAG],
         'description': "Update an existing application based on user id. If application status is changed will send "
                        "out appropriate email",

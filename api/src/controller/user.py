@@ -29,6 +29,7 @@ class User(Resource):
     PATH_WITH_ID = '/user/id/<user_id>'
 
     @swagger.doc({
+        'summary': "Create new user",
         'tags': [USERS_TAG],
         'description': "Create a new user",
         'reqparser': {'name': 'ShortenedUserModel', 'parser': getUserParser()},
@@ -58,6 +59,7 @@ class User(Resource):
         return {"user_id": userId}, 200
 
     @swagger.doc({
+        'summary': "get user information",
         'tags': [USERS_TAG],
         'description': 'Get information from user. Defaults to self if user_id not provided',
         'parameters': [

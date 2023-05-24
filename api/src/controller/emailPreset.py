@@ -13,6 +13,7 @@ class EmailPreset(Resource):
     PATH = '/email/preset/<emailName>'
 
     @swagger.doc({
+        'summary': "send preset email",
         'tags': [EMAILS_TAG],
         'description': "Send a preset email",
         'parameters': [

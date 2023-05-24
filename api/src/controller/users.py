@@ -12,6 +12,7 @@ class Users(Resource):
     PATH = '/users'
 
     @swagger.doc({
+        'summary': "get all users",
         'tags': [USERS_TAG],
         'description': "Get all users",
         'responses': {

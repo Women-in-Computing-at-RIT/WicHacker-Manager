@@ -16,6 +16,7 @@ class Permissions(Resource):
     PATH = "/permission/<permission>/<accessType>"
 
     @swagger.doc({
+        'summary': "check user permissions",
         'tags': [PERMISSIONS_TAG],
         'description': 'check if user has access',
         'parameters': [

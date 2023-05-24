@@ -19,8 +19,11 @@ def getUserSearchParser() -> reqparse.RequestParser:
     parser.add_argument('email', type=str, required=False)
     parser.add_argument('applicationId', type=str, required=False)
     parser.add_argument('userId', type=str, required=False)
-    parser.add_argument('recipientStatusFilter', type=str, required=False, action="append")
+    parser.add_argument('recipientStatusFilter', type=str, required=False, action="append",
+                        help="csv list of statuses of hackers that will get the email, search criteria finds users "
+                             "that have a status that matches at least 1 criteria in the list")
     return parser
+
 
 class UserSearch(Resource):
     PATH = '/user/search'

@@ -31,6 +31,7 @@ class DiscordIntegration(Resource):
     PATH = '/discord'
 
     @swagger.doc({
+        'summary': "get discord oauth redirect",
         'tags': [DISCORD_TAG],
         'description': "Get redirect to discord authorization page",
         'parameters': [
@@ -59,6 +60,7 @@ class DiscordIntegration(Resource):
         return redirect(discordAuthorizationURL, code=302)
 
     @swagger.doc({
+        'summary': "discord callback endpoint for integration",
         'tags': [DISCORD_TAG],
         'description': "callback endpoint from discord integration to connect WiCHacks Hacker with a Discord User",
         'parameters': [

@@ -21,6 +21,7 @@ class Recaptcha(Resource):
     PATH = "/recaptcha"
 
     @swagger.doc({
+        'summary': "recaptcha verification",
         'tags': [PERMISSIONS_TAG],
         'description': 'Verify recaptcha',
         'parameters': [
