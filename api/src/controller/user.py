@@ -8,7 +8,7 @@ from utils.authentication import authenticate
 from data.validation import validatePhoneNumberString, validateEmailAddress
 from data.permissions import canAccessUserData, canUpdateApplicationStatus
 from flask_restful_swagger_2 import swagger, Resource
-from utils.swagger import USERS_TAG, UserResponseModel
+from utils.swagger import USERS_TAG, UserResponseModel, UserModel
 
 logger = logging.getLogger("User")
 
@@ -71,7 +71,8 @@ class User(Resource):
         ],
         'responses': {
             '200': {
-                'description': 'User Information'
+                'description': 'user information',
+                'schema': UserModel
             }
         }
     })

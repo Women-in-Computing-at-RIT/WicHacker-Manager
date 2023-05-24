@@ -7,7 +7,6 @@ from flask_restful_swagger_2 import Api
 
 from controller.application import Application
 from controller.healthcheck import Healthcheck
-from controller.test import Test
 from controller.user import User
 from controller.users import Users
 from controller.resume import Resume
@@ -48,7 +47,6 @@ cors = CORS(app)  # , resources={r"/*": {"origins": "localhost:3000"}}
 load_dotenv()
 
 api.add_resource(Healthcheck, Healthcheck.PATH)
-api.add_resource(Test, Test.PATH)
 api.add_resource(User, User.PATH, endpoint="user")
 api.add_resource(User, User.PATH_WITH_ID, endpoint="user_with_id")
 api.add_resource(Users, Users.PATH)
