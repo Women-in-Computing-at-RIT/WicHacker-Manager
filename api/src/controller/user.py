@@ -1,32 +1,53 @@
 import logging
 
-from flask_restful import Resource, reqparse
+from flask_restful import reqparse
 from flask import request
 from data.users import getUserByUserID, getUserByAuthID
 from data.createUser import createUser
 from utils.authentication import authenticate
 from data.validation import validatePhoneNumberString, validateEmailAddress
 from data.permissions import canAccessUserData, canUpdateApplicationStatus
+from flask_restful_swagger_2 import swagger, Resource
+from utils.swagger import USERS_TAG, UserResponseModel, UserModel
 
 logger = logging.getLogger("User")
 
+def getUserParser() -> reqparse.RequestParser:
+    """
+    Method to get request parser for requests with a user in the body
+    :return:
+    """
+    parser = reqparse.RequestParser()
+    parser.add_argument('firstName', type=str, required=True)
+    parser.add_argument('lastName', type=str, required=True)
+    parser.add_argument('email', type=str, required=True)
+    parser.add_argument('phoneNumber', type=str, required=True, help="format agnostic phone number")
+    return parser
 
 class User(Resource):
     PATH = '/user'
     PATH_WITH_ID = '/user/id/<user_id>'
 
+    @swagger.doc({
+        'summary': "Create new user",
+        'tags': [USERS_TAG],
+        'description': "Create a new user",
+        'reqparser': {'name': 'ShortenedUserModel', 'parser': getUserParser()},
+        'responses': {
+            '200': {
+                'description': 'User Created Successfully',
+                'schema': UserResponseModel
+            }
+        }
+    })
     def post(self):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
             return {"message": "Authorization Header Failure"}, 401
         auth0_id = authenticationPayload['sub']
 
-        parser = reqparse.RequestParser()
-        parser.add_argument('firstName', type=str, required=True)
-        parser.add_argument('lastName', type=str, required=True)
-        parser.add_argument('email', type=str, required=True)
-        parser.add_argument('phoneNumber', type=str, required=True)
-        args = parser.parse_args()
+        # Parse request body
+        args = getUserParser().parse_args()
 
         # Validate phone number and email
         if not (validatePhoneNumberString(args['phoneNumber']) and validateEmailAddress(args['email'])):
@@ -37,6 +58,26 @@ class User(Resource):
             return {"message": "Internal Server Error"}, 500
         return {"user_id": userId}, 200
 
+    @swagger.doc({
+        'summary': "get user information",
+        'tags': [USERS_TAG],
+        'description': 'Get information from user. Defaults to self if user_id not provided',
+        'parameters': [
+            {
+                'name': 'user_id',
+                'description': 'Optional WiCHacks User ID',
+                'required': False,
+                'in': 'path',
+                'type': 'integer'
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'user information',
+                'schema': UserModel
+            }
+        }
+    })
     def get(self, user_id=None):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:

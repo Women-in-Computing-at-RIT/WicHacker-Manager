@@ -11,6 +11,7 @@ def getUserQuery():
     Accessor for reuse of user query
     :return:
     """
+    # Dev note, when updating this query please update the Swagger model in utils/swagger.py UserModel
     return "SELECT u.user_id, u.first_name, u.last_name, u.email, u.phone_number, a.address_id, a.address1, a.address2, a.city, a.subdivision, a.country, " \
            "app.application_id, app.major, app.level_of_study, app.age, app.shirt_size, app.has_attended_wichacks, app.has_attended_hackathons, app.is_virtual, " \
            "s.sponsor_id, s.company_name, app.university, app.status, app.bus_rider, app.bus_stop, app.dietary_restrictions, app.special_accommodations, app.affirmed_agreements, " \
