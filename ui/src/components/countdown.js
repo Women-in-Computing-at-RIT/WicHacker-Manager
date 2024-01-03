@@ -13,7 +13,7 @@ class WHCountdown extends Component {
         return (
             <Grommet>
                 <Box background="#714ba0" direction="row" align="center" gap="small">
-                    <Countdown date={ new Date("March 4, 2023 12:00:00") }/>
+                    <Countdown date={ new Date("March 2, 2024 12:00:00") }/>
                     <Text>Until WiCHacks</Text>
                 </Box>
             </Grommet>

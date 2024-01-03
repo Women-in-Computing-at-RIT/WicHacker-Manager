@@ -159,7 +159,7 @@ export default function HackerApplication() {
             <Box pad="small">
                 <Heading>WiCHacks Application</Heading>
                 <Box background="#ded492" round="small" align="center" justify="between" pad="medium" margin={{ bottom: "medium" }} direction="row">
-                    <Text>We're excited you want to apply to attend WiCHacks 2023! This form will collect information about you, and how you'd like to attend. If you have any questions or concerns about this form, please email <a href="mailto:wichacks@rit.edu" target="_blank" rel="noreferrer">wichacks@rit.edu</a> and our team will work with you.</Text>
+                    <Text>We're excited you want to apply to attend WiCHacks 2024! This form will collect information about you, and how you'd like to attend. If you have any questions or concerns about this form, please email <a href="mailto:wichacks@rit.edu" target="_blank" rel="noreferrer">wichacks@rit.edu</a> and our team will work with you.</Text>
                 </Box>
                 {submissionError?.error && /** Ruh roh scooby doo */
                     <Box background="#c94254" round="small" align="center" justify="between" pad="medium" margin={{ bottom: "medium" }} direction="row">
