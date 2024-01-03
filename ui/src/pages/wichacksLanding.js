@@ -34,7 +34,7 @@ export default function WiCHacksLanding() {
                 <Box pad={{left: "large", right: "large"}}>
                     <Image src="/wichackslogo.svg" a11yTitle="WiCHacks Logo, beneath is RIT Women in Computing written out" style={{ maxWidth: "100%", maxHeight: "100%" }} />
                 </Box>
-                <Heading responsive margin="none" level={2}>March 4th - 5th, 2023</Heading>
+                <Heading responsive margin="none" level={2}>March 2nd - 3rd, 2024</Heading>
                 <Heading fill responsive margin="small" textAlign="center" level={3}>MAGIC Spell Studios at RIT, or digitally from anywhere in the world</Heading>
                 <Paragraph fill responsive margin={{ left: "large", right: "large", top: "small"}} textAlign="center">💜 WiCHacks is coming up soon! Our annual hackathon will be happening this March, and registration is open now! You can participate in-person at RIT, or online from anywhere in the world. Click below to get started! 💜</Paragraph>
                 <Box direction="column">
