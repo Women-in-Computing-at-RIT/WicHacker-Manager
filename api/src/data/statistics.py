@@ -1,3 +1,5 @@
+from flask_restful_swagger_2 import Schema
+
 from db.db_utils import exec_get_all
 
 

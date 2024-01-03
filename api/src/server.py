@@ -1,12 +1,12 @@
+import json
 import sys
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
-from flask_restful import Resource, Api
+from flask_restful_swagger_2 import Api
 
 from controller.application import Application
 from controller.healthcheck import Healthcheck
-from controller.test import Test
 from controller.user import User
 from controller.users import Users
 from controller.resume import Resume
@@ -32,16 +32,21 @@ from utils.authentication import initializeAuthentication
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("server")
 
-app = Flask(__name__)
+app = Flask(__name__,
+            static_url_path='',
+            static_folder='swagger/static',
+            template_folder='swagger/templates')
 app.register_error_handler(AuthError, handle_auth_error)
 app.register_error_handler(Exception, handle_error)
 app.config['BUNDLE_ERRORS'] = True
-api = Api(app)
+api = Api(app,
+          title="WiCHacker Manager API",
+          api_spec_url="/docs/api/swagger",
+          )
 cors = CORS(app)  # , resources={r"/*": {"origins": "localhost:3000"}}
 load_dotenv()
 
 api.add_resource(Healthcheck, Healthcheck.PATH)
-api.add_resource(Test, Test.PATH)
 api.add_resource(User, User.PATH, endpoint="user")
 api.add_resource(User, User.PATH_WITH_ID, endpoint="user_with_id")
 api.add_resource(Users, Users.PATH)
@@ -58,6 +63,16 @@ api.add_resource(UserSearch, UserSearch.PATH)
 api.add_resource(DiscordIntegration, DiscordIntegration.PATH)
 api.add_resource(Discord, Discord.PATH)
 
+
+@app.route("/docs/swagger")
+def testSwagger():
+    """
+    Serves up swagger page
+    :return:
+    """
+    return render_template("swaggerui.html")
+
+
 if not initializeAWSClients():
     logger.error("AWS Client Initialization Failure")
     sys.exit(1)
@@ -73,7 +88,24 @@ if not migration.up():
 if not initializeAuthentication():
     logger.error("Authentication Initialization Failure")
     sys.exit(1)
-logger.info("Starting Server")
+
+
+def writeSwaggerDoc():
+    """
+    Generates swagger docs from annotations
+    :return:
+    """
+    logger.info("Writing Swagger Docs")
+    with open("swagger/static/swagger.json", "w") as file:
+        swaggerDict = api.get_swagger_doc()
+
+        # Exception for getting users because of how I implemented the overloading of the get method
+        swaggerDict["paths"]["/user/id/{user_id}"].pop('post', None)
+
+        file.write(json.dumps(swaggerDict))
+
 
 if __name__ == '__main__':
+    writeSwaggerDoc()
+    logger.info("Starting Server")
     app.run(debug=True, host='0.0.0.0')
