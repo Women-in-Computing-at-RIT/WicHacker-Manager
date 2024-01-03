@@ -1,13 +1,45 @@
 from flask_restful import Resource, reqparse
 from flask import request
+from flask_restful_swagger_2 import swagger
+
 from data.users import getUsers
 from utils.authentication import authenticate
 from data.permissions import canAccessUserData
+from utils.swagger import USERS_TAG, UserModel
+
+
+def getUserSearchParser() -> reqparse.RequestParser:
+    """
+    method to get the parser for a user search
+    :return:
+    """
+    parser = reqparse.RequestParser()
+    parser.add_argument('firstName', type=str, required=False)
+    parser.add_argument('lastName', type=str, required=False)
+    parser.add_argument('email', type=str, required=False)
+    parser.add_argument('applicationId', type=str, required=False)
+    parser.add_argument('userId', type=str, required=False)
+    parser.add_argument('recipientStatusFilter', type=str, required=False, action="append",
+                        help="csv list of statuses of hackers that will get the email, search criteria finds users "
+                             "that have a status that matches at least 1 criteria in the list")
+    return parser
 
 
 class UserSearch(Resource):
     PATH = '/user/search'
 
+    @swagger.doc({
+        'summary': "search for a user",
+        'tags': [USERS_TAG],
+        'description': "Get all users matching the search criteria",
+        'reqparser': {'name': 'UserSearchModel', 'parser': getUserSearchParser()},
+        'responses': {
+            '200': {
+                'description': 'users',
+                'schema': UserModel.array()
+            }
+        }
+    })
     def get(self):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
@@ -22,14 +54,7 @@ class UserSearch(Resource):
             # auth0 connections using client id and secret, aka: discord bots and s3 resume downloader
             return {"message": "Permission Denied"}, 403
 
-        parser = reqparse.RequestParser()
-        parser.add_argument('firstName', type=str, required=False)
-        parser.add_argument('lastName', type=str, required=False)
-        parser.add_argument('email', type=str, required=False)
-        parser.add_argument('applicationId', type=str, required=False)
-        parser.add_argument('userId', type=str, required=False)
-        parser.add_argument('recipientStatusFilter', type=str, required=False, action="append")
-        args = parser.parse_args()
+        args = getUserSearchParser().parse_args()
 
         matchingUsers = getUsers(applicationStatusFilterList=args['recipientStatusFilter'],
                                  firstName=args['firstName'],

@@ -1,12 +1,27 @@
 from flask_restful import Resource, reqparse
 from flask import request
+from flask_restful_swagger_2 import swagger
+
 from data.users import getUsers
 from utils.authentication import authenticate
 from data.permissions import canAccessUserData
+from utils.swagger import USERS_TAG, UserModel
+
 
 class Users(Resource):
     PATH = '/users'
 
+    @swagger.doc({
+        'summary': "get all users",
+        'tags': [USERS_TAG],
+        'description': "Get all users",
+        'responses': {
+            '200': {
+                'description': 'users',
+                'schema': UserModel.array()
+            }
+        }
+    })
     def get(self):
         authenticationPayload = authenticate(request.headers)
         if authenticationPayload is None:
