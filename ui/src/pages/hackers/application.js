@@ -178,7 +178,7 @@ export default function HackerApplication() {
 
                             <Box>
                                 <Heading margin="none" level={4}>Gender</Heading>
-                                <Text size="small" color="gray">Due to the proven systematic oppression of people identifying as gender minority in computing fields, WICHacks is a gender-minority only hackathon. Gender minority is being defined as cisgendered women, nonbinary individuals, transgender people, and all other people who have been systematically oppressed on the basis of gender identity. As such, we are collecting information about how you identify to determine your eligibility to participate. Others, including cisgender men, will be denied participation for this event</Text>
+                                <Text size="small" color="gray">Any undergraduate or graduate college student, who supports the mission of WiCHacks can participate! As a reminder, The Women in Computing Hackathon (WiCHacks) mission is to enhance opportunities for students who identify as women or gender minorities in the tech industry and all students who support them including those of other genders or sex</Text>
                                 <TextInput placeholder="How you identify" value={gender} onChange={ e => setGender(e.target.value) } />
                             </Box>
 
