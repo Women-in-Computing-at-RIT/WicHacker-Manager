@@ -12,3 +12,4 @@ sendgrid
 requests
 botocore
 DateTime
+flask-restful-swagger-2 
