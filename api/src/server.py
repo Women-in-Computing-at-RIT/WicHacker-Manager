@@ -96,7 +96,7 @@ def writeSwaggerDoc():
     :return:
     """
     logger.info("Writing Swagger Docs")
-    with open("swagger/static/swagger.json", "w") as file:
+    with open("src/swagger/static/swagger.json", "w") as file:
         swaggerDict = api.get_swagger_doc()
 
         # Exception for getting users because of how I implemented the overloading of the get method
