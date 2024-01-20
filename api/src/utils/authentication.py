@@ -54,6 +54,8 @@ def authenticate(headers):
     unverified_header = None
     try:
         unverified_header = jwt.get_unverified_header(token)
+        print("UNVERIFIED HEADER")
+        print(unverified_header)
     except JWTError:
         raise AuthError({"code": "invalid_header",
                          "description":
