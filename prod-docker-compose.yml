@@ -10,9 +10,9 @@ services:
         ports:
             - "5001:5000"
         environment:
-            AUTH0_DOMAIN: 'wichacks.us.auth0.com'
+            AUTH0_DOMAIN: 'dev-5fez71a01xmz0e34.us.auth0.com'
             DBNAME: 'wichacks'
-            AUTH0_CLIENT_ID: 'oTpWdnroYxfqQrprklhfXTGxIK5Vn8Df'
+            AUTH0_CLIENT_ID: 'cxaFtmQ0ZZ8agA8nelHbdAaAecgTO8iH'
             AWS_DEFAULT_REGION: 'us-east-1'
             ENV: 'PROD'
         volumes:
