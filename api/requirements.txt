@@ -1,4 +1,5 @@
-flask
+Werkzeug==2.2.2
+flask==2.2.3
 auth0-python==3.24.1
 python-dotenv
 flask-cors
