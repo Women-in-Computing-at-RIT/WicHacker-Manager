@@ -14,8 +14,8 @@ function App() {
 
   return (
       <Auth0Provider
-        domain="wichacks.us.auth0.com"
-        clientId="oTpWdnroYxfqQrprklhfXTGxIK5Vn8Df"
+        domain="dev-5fez71a01xmz0e34.us.auth0.com"
+        clientId="cxaFtmQ0ZZ8agA8nelHbdAaAecgTO8iH"
         redirectUri={`${window.location.origin}/auth`}
         audience='wichacks.io'
         onRedirectCallback={onRedirectCallback}
