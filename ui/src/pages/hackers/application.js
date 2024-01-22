@@ -265,9 +265,9 @@ export default function HackerApplication() {
                             <Box background="#714ba0" height="4px" round="2px"/>
 
                             <Heading level={4} margin={{ top: "medium", bottom: "small" }}>How will you be participating?</Heading>
-                            <Text>This year, WiCHacks is inviting all individuals to participate in person at RIT, or online through our Discord platform. Parking will be provided.</Text>
+                            <Text>This year, WiCHacks is inviting all individuals to participate in person at RIT. Parking will be provided, and only an in-person option is available.</Text>
                             <RadioButtonGroup
-                                options={ ["In-Person", "Online Only"] }
+                                options={ ["In-Person"] }
                                 name="isVirtual"
                                 onChange={ (e) => { setIsVirtual(e.target.value === "In-Person" ? "false" : "true" ) } }
                                 margin={{ bottom: "medium", top: "small" }}
@@ -339,7 +339,7 @@ export default function HackerApplication() {
                             }
 
                             <Text margin={{ top: "medium" }}>Will you require any special accommodations you feel may not be already planned?</Text>
-                            <Text color="gray" size="small" margin={{ bottom: "small" }}>Please note, this includes a need for interpreting/captioning services. WiCHacks plans to provide these services during opening and closing ceremonies but needs to identify those requiring these services to RIT. Additionally, please report this request to RIT Department of Access Services.</Text>
+                            <Text color="gray" size="small" margin={{ bottom: "small" }}>Please note, this includes a need for interpreting/captioning services. If you are an RIT Student, and this is for interpreting/captioning, please report this request to RIT Department of Access Services as well.</Text>
 
                             <RadioButtonGroup
                                 options={ ["Yes ", "No "] }
