@@ -37,7 +37,8 @@ export default function WiCHacksLanding() {
                 <Heading responsive margin="none" level={2}>March 2nd - 3rd, 2024</Heading>
                 <Heading fill responsive margin="small" textAlign="center" level={3}>MAGIC Spell Studios at RIT</Heading>
                 <Paragraph fill responsive margin={{ left: "large", right: "large", top: "small"}} textAlign="center">💜 WiCHacks is coming up soon! Our annual hackathon will be happening this March, and registration is open now! You can participate in-person at RIT! 
-                Please note that due to the size of the hacker space, non-rit students may be contacted to fill out additional information. 
+                Please note that while the event is open to both RIT and non-RIT community members, due to the size of the hackerspace, attendance will be limited. As a result, priority for attendance will be given to RIT community members. 
+                Non-RIT community members will be asked to fill out a registration form and may be contacted for additional information. 
                 Click below to get started! 💜</Paragraph>
                 <Box direction="column">
                     <Button onClick={() => {navigate("/user")}}>
